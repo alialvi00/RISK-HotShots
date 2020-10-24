@@ -11,17 +11,27 @@ public class Continent{
     private String continentName;
     private int numCountries;
     private int extraTroops;
+    private int continentSize;
 
-    public Continent(String continentName, int numCountries, int extraTroops){
+
+    public Continent(String continentName, int numCountries, int extraTroops, int continentSize){
 
         this.continentName = continentName;
         this.numCountries = numCountries;
         this.extraTroops = extraTroops;
+        this.continentSize = continentSize;
     }
 
     public int getNumCountries(){
 
         return numCountries;
+    }
+
+    public boolean isContinentFull(){
+        if(numCountries == continentSize){
+            return true;
+        }
+        return false;
     }
 
 }
