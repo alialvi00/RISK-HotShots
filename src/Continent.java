@@ -34,4 +34,8 @@ public class Continent{
         return false;
     }
 
+    public int getExtraTroops(){
+        return extraTroops;
+    }
+
 }
