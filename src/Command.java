@@ -14,67 +14,41 @@ import java.util.HashMap;
 
 public class Command
 {
-    private CommandWords commandWord;
-    private String secondWord;
-    private HashMap<String, CommandWords> validCommands;
+    private CommandWords firstCommand;
+    private String secondCommand;
 
     /**
      * The constructor for the Command Class.
-     * Purpose: Initialize the commandWord and secondWord fields.
+     * Purpose: Initialize the firstCommand object and secondCommand field.
      *
-     * @param  commandWord This is the Command Word (first)
-     * @param  secondWord This is the second word (2nd)
+     * @param  firstCommand This is the first Command (first)
+     * @param  secondCommand This is the second Command (2nd)
      */
-    public Command(CommandWords commandWord, String secondWord){
-        this.commandWord = commandWord;
-        this.secondWord = secondWord;
+    public Command(CommandWords firstCommand, String secondCommand) {
 
-        validCommands = new HashMap<>();
-        for(CommandWords cmd: CommandWords.values()){
-            validCommands.put(cmd.toString(), cmd);
-        }
+        this.firstCommand = firstCommand;
+        this.secondCommand = secondCommand;
+    }
 
+    public CommandWords getFirstCommand(){
+        return firstCommand;
     }
 
     /**
-     * This method will check to see if there is a second word.
-     * Return true if there is a second word.
-     *
+     * Determines if the input has a second word
+     * @return Boolean to determine if secondWord null
      */
-    public boolean checkSecondWord(){
-        if (secondWord != null){
-            return true;
-        }
-        return false;
+    public boolean ifSecondCommand(){
+        return !(secondCommand == null);
     }
 
-    /**
-     * Return the command word
-     */
-    public CommandWords getCommandWord() {
-        return commandWord;
+    public boolean wrongCommand(){
+        return (firstCommand == CommandWords.PASS);
     }
 
-    /**
-     * Return the second word
-     */
-    public String getSecondWord() {
-        return secondWord;
+    public String getSecondCommand(){
+        return secondCommand;
     }
-
-    /**
-     * Return true if the command is valid
-     */
-    public boolean checkIfCommand(String cmd) {
-        if (validCommands.containsKey(cmd)){
-            return true;
-        }
-            return false;
-
-    }
-
-
-
 
 }
 

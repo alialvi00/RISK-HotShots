@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 /**
  * Enum class of all valid command words for the RISK game
  * This phrase will perform the tasks that the words are assigned to.
@@ -7,17 +9,18 @@
 
 public enum CommandWords
 {
-    PLAY("play"), ATTACK("attack"), DRAFT("draft"), REINFORCE ("reinforce"), QUIT("quit");
 
-    private String command;
+    PLAY("play"), ATTACK("attack"), PASS("pass turn"), INCORRECT("incorrect"), QUIT("quit");
 
-    CommandWords(String command){
-        this.command = command;
+    private String userCommand;
+
+    CommandWords(String userCommand){
+        this.userCommand = userCommand;
     }
 
     public String toString()
     {
-        return command;
+        return userCommand;
     }
 }
 
