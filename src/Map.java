@@ -1,13 +1,14 @@
 import java.util.*;
 
-public class Game{
-
+public class Map {
     private Continent northAmerica;
     private Continent europe;
     private Continent africa;
     private Continent asia;
     private Continent australia;
     private Continent southAmerica;
+
+    private ArrayList<Continent> continentList;
 
     //Arraylists of countries
     private ArrayList<Country> northAmericaList;
@@ -71,26 +72,35 @@ public class Game{
     private Country westernAustralia;
     private Country easternAustralia;
 
-    //Game related fields
-    int playerCount;
 
     ArrayList<Country> countryList;
 
-    private ProcessInput input;
 
-    private Random randInt;
-
-
-    public Game(){
+    public Map(){
         initializeMap();
-        countryList = new ArrayList<Country>();
         createCountyList();
-        input = new ProcessInput();
-      //  initializeGame();
     }
 
     public void createCountyList() {
-        for 
+        countryList = new ArrayList<Country>();
+        for(Country c: northAmericaList){
+            countryList.add(c);
+        }
+        for(Country c: europeList){
+            countryList.add(c);
+        }
+        for(Country c: asiaList){
+            countryList.add(c);
+        }
+        for(Country c: africaList){
+            countryList.add(c);
+        }
+        for(Country c: australiaList){
+            countryList.add(c);
+        }
+        for(Country c: southAmericaList){
+            countryList.add(c);
+        }
     }
 
     public void initializeMap() {
@@ -100,6 +110,7 @@ public class Game{
         asia = new Continent("Asia", 12, 7);
         australia = new Continent("Australia", 4, 2);
         southAmerica = new Continent("South America", 4, 2);
+
 
         //countries in north america
         alaska = new Country("Alaska", northAmerica);
@@ -341,60 +352,7 @@ public class Game{
         australiaList.add(westernAustralia);
     }
 
-   public void initializeGame() {
-        welcome();
-        setPlayerCount();
-        checkPlayerCount();
-        distributeTroops(playerCount);
-   }
-
-   public void checkPlayerCount() {
-       if(playerCount < 2){
-            System.out.println("This game requires atleast 2 players");
-            setPlayerCount();
-        }
-        else if(playerCount > 6){
-            System.out.println("The maximum amount of players allowed is 6");
-            setPlayerCount();
-        }
-   }
-
-   public void setPlayerCount() {
-        Scanner input = new Scanner(System.in);
-        System.out.println("Please enter the amount of player: ");
-        playerCount = Integer.parseInt(input.nextLine());
-        input.close();
-   }
-
-    public void welcome(){
-        System.out.println("Welcome to RISK: Global Domination!");
-        System.out.println("RISK is a classic strategy game filled with conquest and intrigue.\n"
-        + "This game can be played with 2-6 players." + 
-        "To win, you must strive to capture all of the continents and countries in the game, while eliminating other players.\n" +
-        "The last man standing is the winner!");
-        
+    public ArrayList<Country> getCountryList() {
+        return countryList;
     }
-
-    public void distributeTroops(int playerCount) {
-        randInt = new Random();
-        int initialTroops = randInt.nextInt(getInitialTroops(playerCount) + 1);
-
-    }
-
-    public int getInitialTroops(int playerCount) {
-        switch (playerCount){
-            case 2: return 50;
-            case 3: return 35;
-            case 4: return 30;
-            case 5: return 25;
-        }
-        return 20;
-    }
-
-
-    public static void main(String[] args) {
-        Game game1 = new Game();
-        game1.welcome();
-    }
-
 }

@@ -10,18 +10,18 @@ import java.util.*;
 public class Country {
 
     private String countryName;
-    private ArrayList<String> adjacentCountries;
+    private String[] adjacentCountries;
     private Continent continent;
 
     public Country(String countryName, Continent continent){
 
         this.countryName = countryName;
-        adjacentCountries = new ArrayList<>();
+        adjacentCountries = new String[]{};
         this.continent = continent;
     }
 
-    public void setBorders(String borderName){
-        adjacentCountries.add(borderName);
+    public void setBorders(String[] border){
+        adjacentCountries = border;
     }
 
     public String getContinentName(String continentName){
