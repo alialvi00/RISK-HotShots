@@ -13,20 +13,23 @@ public class Country {
     private ArrayList<String> adjacentCountries;
     private Continent continent;
 
-    public Country(String continentName, String countryName, Continent continent){
+    public Country(String countryName, Continent continent){
 
         this.countryName = countryName;
         adjacentCountries = new ArrayList<>();
         this.continent = continent;
     }
 
-    public void setBorders(String borderName){
-        adjacentCountries.add(borderName);
+    public void setBorders(String[] border){
+        for(String s : border){
+            adjacentCountries.add(s);
+        }
     }
 
-    public String getContinentName(String continentName){
-        return continentName;
+    public String getContinentName(){
+        return continent.getName();
     }
+
 
     public boolean equals(String country) {
         if (country.equals(countryName)) {
@@ -34,5 +37,10 @@ public class Country {
         }
         return false;
     }
+
+    public String hhh() {
+        return adjacentCountries.get(0);
+    }
+
 
 }
