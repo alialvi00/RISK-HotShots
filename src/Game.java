@@ -109,6 +109,15 @@ public class Game{
 
     }
 
+    public Country randomCountry(){
+        forCountryList = new Random();
+        int value = forCountryList.nextInt(map.getCountryList().size());
+        Country temp = map.getCountryList().get(value);
+
+        map.getCountryList().remove(temp);
+        return temp;
+    }
+
     public int getInitialTroops(int playerCount) {
         switch (playerCount){
             case 2: return 50;
@@ -122,7 +131,10 @@ public class Game{
 
     public static void main(String[] args) {
         Game game1 = new Game();
-        game1.welcome();
+        Country s = game1.randomCountry();
+        System.out.print(game1.map.getCountryList());
+
+
     }
 
 
