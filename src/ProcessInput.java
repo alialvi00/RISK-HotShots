@@ -19,12 +19,9 @@ public class ProcessInput {
 
     public Command getCommand(){
 
-        Command cmd;
         String scanInput;
         String firstWord = null;
         String secondWord = null;
-
-        System.out.print("Choose a command: ");
 
         scanInput = readInput.nextLine();
 
@@ -35,7 +32,7 @@ public class ProcessInput {
                 secondWord = tokenizer.next();
             }
         }
-        return cmd = new Command(userCommands.getCommandWords(firstWord),secondWord);
+        return new Command(userCommands.getCommandWords(firstWord),secondWord);
     }
 
     public void printAllCommands(){

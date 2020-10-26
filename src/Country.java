@@ -24,6 +24,11 @@ public class Country {
         adjacentCountries = border;
     }
 
+    public String[] getAdjacentCountries(){
+
+        return adjacentCountries;
+    }
+
     public String getContinentName(String continentName){
         return continentName;
     }
@@ -33,6 +38,11 @@ public class Country {
             return true;
         }
         return false;
+    }
+
+    public String toString(){
+
+        return countryName;
     }
 
 }

@@ -42,10 +42,6 @@ public class Command
         return !(secondCommand == null);
     }
 
-    public boolean wrongCommand(){
-        return (firstCommand == CommandWords.PASS);
-    }
-
     public String getSecondCommand(){
         return secondCommand;
     }

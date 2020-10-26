@@ -8,8 +8,6 @@ public class Map {
     private Continent australia;
     private Continent southAmerica;
 
-    private ArrayList<Continent> continentList;
-
     //Arraylists of countries
     private ArrayList<Country> northAmericaList;
     private ArrayList<Country> europeList;
@@ -73,18 +71,48 @@ public class Map {
     private Country easternAustralia;
 
     ArrayList<Country> countryList;
+    private ArrayList<Continent> continentList;
 
 
     public Map(){
+
+        countryList = new ArrayList<Country>();
+        continentList = new ArrayList<Continent>();
+
+        northAmerica = new Continent("North America", 9, 5);
+        europe = new Continent("Europe", 7, 5);
+        africa = new Continent("Africa", 6, 3);
+        asia = new Continent("Asia", 12, 7);
+        australia = new Continent("Australia", 4, 2);
+        southAmerica = new Continent("South America", 4, 2);
+
         initializeMap();
         createCountryList();
+        createContinentList();
+    }
+
+    public void createContinentList() {
+
+        continentList.add(northAmerica);
+        continentList.add(europe);
+        continentList.add(africa);
+        continentList.add(asia);
+        continentList.add(australia);
+        continentList.add(southAmerica);
+    }
+
+
+    public Continent getContinent(String continentName){
+
+        for(int i = 0; i< continentList.size(); i++){
+            if(continentName.equals(continentList.get(i).getName()))
+                return continentList.get(i);
+        }
+        return null;
     }
 
     public void createCountryList() {
-      
 
-        
-        countryList = new ArrayList<Country>();
         Random randIndex = new Random();
         int i = randIndex.nextInt(countryList.size());
 
@@ -109,13 +137,17 @@ public class Map {
         }
     }
 
+    public boolean checkCountry(String countryName){
+
+        for(int i = 0; i< countryList.size(); i++){
+            if(countryName.equals(countryList.get(i).toString()))
+                return true;
+        }
+        return false;
+    }
+
+
     public void initializeMap() {
-        northAmerica = new Continent("North America", 9, 5);
-        europe = new Continent("Europe", 7, 5);
-        africa = new Continent("Africa", 6, 3);
-        asia = new Continent("Asia", 12, 7);
-        australia = new Continent("Australia", 4, 2);
-        southAmerica = new Continent("South America", 4, 2);
 
 
         //countries in north america

@@ -8,8 +8,8 @@ public class Game{
     private Random forCountryList;
     private Dice rollToBegin;
     private Player starter;
+    private Command userCommand;
     private int playerCount;
-    private int firstPlayer;
     private int currentPlayer;
     private int attackingTroops;
     private ProcessInput readInput;
@@ -20,6 +20,7 @@ public class Game{
 
     public Game(){
 
+        readInput = new ProcessInput();
         playerNames = new ArrayList<>();
         playerList = new ArrayList<>();
         isGameOver = false;
@@ -27,33 +28,60 @@ public class Game{
         initializeGame();
     }
 
-    public void attack(Command command) {
-        if(command.ifSecondCommand()){
+    public void attack() {
+        if(userCommand.ifSecondCommand()){
             System.out.println("attack what?");
         }
         else{
-            playerList.get(playerTurn()).attackCountry(attackingTroops);
+            Scanner attackInput = new Scanner(System.in);
+            System.out.println("Which continent to launch an attack from? \n");
+            String continentOrigin = attackInput.nextLine();
+            continentOrigin.toLowerCase();
+            Continent currentCont = map.getContinent(continentOrigin);
+
+            if(currentCont != null) {
+
+                System.out.println("Among the countries that you rule in" + continentOrigin + ", where do you want to launch the attack from? \n");
+                String countryOrigin = attackInput.nextLine();
+                if(map.checkCountry(countryOrigin)) {
+                    Country originCountry = new Country(countryOrigin, currentCont);
+                }
+                else{
+                    System.out.println("Not a valid country in " + continentOrigin);
+                    attack();
+                }
+            }
         }
     }
 
     public void play(){
 
-        boolean gameEnded = false;
-        while(!gameEnded){
-            Command command = readInput.getCommand();
-            gameEnded = processCommand(command);
-        }
-        System.out.println("Game over");
-    }
 
-   public void initializeGame() {
         welcome();
         setPlayerCount();
         checkPlayerCount();
         setPlayerNames();
         setPlayers();
         setCountry();
-        distributeTroops(playerCount);
+        System.out.println("The game will now start");
+        System.out.println("The current state of map is: ");
+        stateOfMap();
+        System.out.println("Dice is now being rolled for all" + playerCount + "players.");
+        whoStarts();
+        System.out.println("Player" + currentPlayer + "has the highest number rolled so they will start");
+        System.out.println("Player" + currentPlayer + "has the choice to pass turn or attack");
+        System.out.println("If attacking, refer to the map given and choose an enemy country");
+        boolean gameEnded = false;
+        while(!gameEnded){
+            Command command = readInput.getCommand();
+            userCommand = command;
+            gameEnded = processCommand();
+        }
+        System.out.println("Game over");
+    }
+
+   public void initializeGame() {
+        map.initializeMap();
         play();
    }
 
@@ -148,7 +176,7 @@ public class Game{
         return 20;
     }
 
-    public int whoStarts(){
+    public void whoStarts(){
         rolls = new ArrayList<Integer>();
         for(int i =0; i < playerList.size(); i++) {
             rolls.add(rollDice());
@@ -157,14 +185,18 @@ public class Game{
         int maxValue = Collections.max(rolls);
         for (int i = 0; i < rolls.size(); i++){
             if(rolls.get(i) == maxValue){
-                firstPlayer = i;
+                currentPlayer = i;
             }
         }
-        return firstPlayer;
     }
 
-    public int playerTurn() {
-        currentPlayer = whoStarts();
+    public int nextTurn() {
+        if(currentPlayer < playerCount && currentPlayer != 5) {
+            currentPlayer += 1;
+        }
+        else if(currentPlayer == 5){
+            currentPlayer = 0;
+        }
         return currentPlayer;
     }
 
@@ -174,37 +206,33 @@ public class Game{
         return rollToBegin.getDiceValue();
     }
 
-    public void passTurn(Command command){
-        if(!command.ifSecondCommand()){
-            System.out.println("Play what?");
+    public void passTurn(){
+        if(!userCommand.ifSecondCommand()){
+            System.out.println("Pass what?");
         }
         else {
-            System.out.println("Player" + playerTurn() + "has skipped its turn");
+            System.out.println("Player" + currentPlayer + "has skipped its turn");
             currentPlayer += 1;
         }
     }
 
-    public void stateOfMap(Command command){
 
-        if(command.ifSecondCommand()){
-            System.out.println("Map what?");
-        }
-        else {
-            for (int i = 0; i < playerCount; i++) {
+    public void stateOfMap(){
 
-                for (Object eachCountry : playerList.get(i).getPlayerData().keySet()) {
+        for (int i = 0; i < playerCount; i++) {
 
-                    String key = eachCountry.toString();
-                    String numTroops = playerList.get(i).getPlayerData().get(key).toString();
-                    System.out.println("Player" + i + "has");
-                    System.out.println(key + " " + numTroops);
-                }
+            for (Object eachCountry : playerList.get(i).getPlayerData().keySet()) {
+
+                String key = eachCountry.toString();
+                String numTroops = playerList.get(i).getPlayerData().get(key).toString();
+                System.out.println("Player" + i + "has");
+                System.out.println(key + " " + numTroops);
             }
         }
     }
 
-    public boolean quit(Command command){
-        if(command.ifSecondCommand()){
+    public boolean quit(){
+        if(userCommand.ifSecondCommand()){
             System.out.println("Quit what?");
             return false;
         }
@@ -213,7 +241,7 @@ public class Game{
         }
     }
 
-    public boolean processCommand(Command userCommand){
+    public boolean processCommand(){
 
         boolean quitGame = false;
         CommandWords commandWord = userCommand.getFirstCommand();
@@ -222,21 +250,20 @@ public class Game{
 
             case INCORRECT:
                 System.out.println("Wrong command, please enter a command from the available commands");
-            case PLAY:
-                play();
+                break;
             case PASS:
-                passTurn(userCommand);
+                passTurn();
                 System.out.println("Next player turn");
+                break;
             case ATTACK:
-                Scanner input = new Scanner(System.in);
-                System.out.println("With how many troops to attack with?");
-                int num = Integer.parseInt(input.nextLine());
-                attackingTroops = num;
-                attack(userCommand);
+                attack();
+                break;
             case QUIT:
-                quitGame = quit(userCommand);
+                quitGame = quit();
+                break;
             case MAP:
-                stateOfMap(userCommand);
+                stateOfMap();
+                break;
         }
         return quitGame;
     }
