@@ -7,12 +7,14 @@ public class Game{
     private Random randInt;
     private Random forCountryList;
 
-    int playerCount;
+    private int playerCount;
     private ArrayList<String> playerNames;
     private ArrayList<Player> playerList;
 
-    public Game(){
+    private Boolean isGameOver;
 
+    public Game(){
+        isGameOver = false;
         playerNames = new ArrayList<>();
         playerList = new ArrayList<>();
         map = new Map();
@@ -28,6 +30,7 @@ public class Game{
         setPlayers();
         setCountry();
         distributeTroops(playerCount);
+        play();
    }
 
     public void welcome(){
@@ -109,15 +112,6 @@ public class Game{
 
     }
 
-    public Country randomCountry(){
-        forCountryList = new Random();
-        int value = forCountryList.nextInt(map.getCountryList().size());
-        Country temp = map.getCountryList().get(value);
-
-        map.getCountryList().remove(temp);
-        return temp;
-    }
-
     public int getInitialTroops(int playerCount) {
         switch (playerCount){
             case 2: return 50;
@@ -128,14 +122,35 @@ public class Game{
         return 20;
     }
 
+    public void attack(Player attackingPlayer, Country countryOrigin, Country countryDestination, int troops)
+    {
+        if(troops >= attackingPlayer.getCountryTroops(countryOrigin)){
+            System.out.println("you don't have enought troops for this attack. Please try again.");
+            play();
+        }
+        
 
-    public static void main(String[] args) {
-        Game game1 = new Game();
-        Country s = game1.randomCountry();
-        System.out.print(game1.map.getCountryList());
+        Player defendingPlayer = playerList.get(0);
+        //finding the defending player
+        for(Player p: playerList){
+            if(p.getCountries().contains(countryDestination)){
+                defendingPlayer = p;
+            }
+        }
+
+        int[] attackDice = new int[]{};
+        attackDice = attackingPlayer.attackCountry(troops);
+
+        Scanner numTroops = new Scanner(System.in);
+        System.out.println(defendingPlayer.getName() + " how many troops would you like to defend with?");
+        int defendingTroops = Integer.parseInt(numTroops.nextLine());
+
+        int[] defendingDice = new int[]{};
+        defendingDice = defendingPlayer.defendCountry(defendingTroops);
+
+        //logic would go here to compare the dice in the defendingDice array and the attackingDice array then remove respective troops from either player
 
 
     }
-
 
 }

@@ -60,7 +60,7 @@ public class Player{
      * @param troops number of troops used to defend of type int
      * @return array of int object(s)
      */
-    public int[] defendCountry(String countryName, int troops) {
+    public int[] defendCountry(int troops) {
         int[] diceArray = new int[troops];
         
         if (troops == 1){
@@ -84,7 +84,7 @@ public class Player{
      * @param troops number of troops attacking with of type int
      * @return array int object(s)
      */
-    public int[] attackCountry(String countryName, int troops) {
+    public int[] attackCountry(int troops) {
         int[] diceArray = new int[troops];
         
         if (troops == 1){
@@ -152,5 +152,9 @@ public class Player{
      */
     public void updateCountry(Country country, int troops){
         conqueredCountries.put(country, conqueredCountries.get(country) + troops);
+    }
+
+    public String getName() {
+        return playerName;
     }
 }
