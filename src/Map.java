@@ -78,10 +78,10 @@ public class Map {
 
     public Map(){
         initializeMap();
-        createCountyList();
+        createCountryList();
     }
 
-    public void createCountyList() {
+    public void createCountryList() {
         countryList = new ArrayList<Country>();
         for(Country c: northAmericaList){
             countryList.add(c);
@@ -219,7 +219,7 @@ public class Map {
 
         //ASIA
         afghanistan = new Country("Afghanistan", asia);
-        String[] afghanistanAdj = new String[]{"Afghanistan","Ukraine","Ural","Siberia","China","India","Middle East"}
+        String[] afghanistanAdj = new String[]{"Afghanistan","Ukraine","Ural","Siberia","China","India","Middle East"};
         afghanistan.setBorders(afghanistanAdj);
 
 
