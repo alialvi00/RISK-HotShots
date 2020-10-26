@@ -6,7 +6,7 @@ public class Player{
     private int availableEnforcement;
     private HashMap<Country, Integer> conqueredCountries;
     private Boolean isDefending;
-
+    private Dice die;
     /**
      * constructor for the player class
      * the number of troops they each contain
@@ -153,4 +153,5 @@ public class Player{
     public void updateCountry(Country country, int troops){
         conqueredCountries.put(country, conqueredCountries.get(country) + troops);
     }
+
 }

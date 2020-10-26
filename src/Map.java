@@ -82,7 +82,7 @@ public class Map {
 
     public void createCountryList() {
       
-      Ali_RISK_Update_Version1 main
+
         
         countryList = new ArrayList<Country>();
         Random randIndex = new Random();
