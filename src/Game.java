@@ -142,7 +142,6 @@ public class Game{
 
     public int playerTurn(int initialTurn) {
         int turnIndex = initialTurn;
-
         return turnIndex;
 
     }
