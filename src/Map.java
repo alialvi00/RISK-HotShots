@@ -72,17 +72,20 @@ public class Map {
     private Country westernAustralia;
     private Country easternAustralia;
 
-
     ArrayList<Country> countryList;
 
 
     public Map(){
         initializeMap();
-        createCountyList();
+        createCountryList();
     }
 
-    public void createCountyList() {
+    public void createCountryList() {
+
         countryList = new ArrayList<Country>();
+        Random randIndex = new Random();
+        int i = randIndex.nextInt(countryList.size());
+
         for(Country c: northAmericaList){
             countryList.add(c);
         }
@@ -94,6 +97,7 @@ public class Map {
         }
         for(Country c: africaList){
             countryList.add(c);
+
         }
         for(Country c: australiaList){
             countryList.add(c);
@@ -219,7 +223,7 @@ public class Map {
 
         //ASIA
         afghanistan = new Country("Afghanistan", asia);
-        String[] afghanistanAdj = new String[]{"Afghanistan","Ukraine","Ural","Siberia","China","India","Middle East"}
+        String[] afghanistanAdj = new String[]{"Afghanistan","Ukraine","Ural","Siberia","China","India","Middle East"};
         afghanistan.setBorders(afghanistanAdj);
 
 
