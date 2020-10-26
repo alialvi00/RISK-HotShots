@@ -72,7 +72,6 @@ public class Map {
     private Country westernAustralia;
     private Country easternAustralia;
 
-
     ArrayList<Country> countryList;
 
 
@@ -82,7 +81,13 @@ public class Map {
     }
 
     public void createCountryList() {
+      
+      Ali_RISK_Update_Version1 main
+        
         countryList = new ArrayList<Country>();
+        Random randIndex = new Random();
+        int i = randIndex.nextInt(countryList.size());
+
         for(Country c: northAmericaList){
             countryList.add(c);
         }
@@ -94,6 +99,7 @@ public class Map {
         }
         for(Country c: africaList){
             countryList.add(c);
+
         }
         for(Country c: australiaList){
             countryList.add(c);

@@ -9,12 +9,11 @@ public class Player{
 
     /**
      * constructor for the player class
-     * @param playerCountries of type HashMap<Country, Integer> country the player owns and
      * the number of troops they each contain
      * @param name of type String 
      */
-    public Player(HashMap<Country, Integer> playerCountries, String name) {
-        conqueredCountries = playerCountries;
+    public Player(String name) {
+        conqueredCountries = new HashMap<Country,Integer>();
         playerName = name;
         availableEnforcement = 0;
         isDefending = false;
