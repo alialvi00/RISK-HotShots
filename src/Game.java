@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.ArrayList;
 
 public class Game{
 
@@ -6,10 +7,13 @@ public class Game{
     private ProcessInput input;
     private Random randInt;
     private Random forCountryList;
-
+    private Dice rollToBegin;
+    private Player starter;
     int playerCount;
+    int firstPlayer;
     private ArrayList<String> playerNames;
     private ArrayList<Player> playerList;
+    private ArrayList<Integer> rolls;
 
     public Game(){
 
@@ -39,15 +43,6 @@ public class Game{
         "The last man standing is the winner!");
     }
 
-
-    public Country randomCountry(){
-        forCountryList = new Random();
-        int value = forCountryList.nextInt(map.getCountryList().size());
-        Country selectedCountry = map.getCountryList().get(value);
-
-        map.getCountryList().remove(selectedCountry);
-        return selectedCountry;
-    }
 
     public void setCountry(){
 
@@ -128,6 +123,34 @@ public class Game{
         return 20;
     }
 
+    public Player whoStarts(){
+        rolls = new ArrayList<Integer>();
+        for(int i =0; i < playerList.size(); i++) {
+            rolls.add(rollDice());
+        }
+
+        int maxValue = Collections.max(rolls);
+        for (int i = 0; i < rolls.size(); i++){
+            if(rolls.get(i) == maxValue){
+                firstPlayer = i;
+                playerTurn(i);
+            }
+        }
+        starter = playerList.get(firstPlayer);
+        return starter;
+    }
+
+    public int playerTurn(int initialTurn) {
+        int turnIndex = initialTurn;
+        return turnIndex;
+
+    }
+
+
+    public int rollDice(){
+        rollToBegin = new Dice();
+        return rollToBegin.getDiceValue();
+    }
 
     public static void main(String[] args) {
         Game game1 = new Game();
