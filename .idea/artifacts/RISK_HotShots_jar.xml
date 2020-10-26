@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="RISK-HotShots:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/RISK_HotShots_jar</output-path>
+    <root id="archive" name="RISK-HotShots.jar">
+      <element id="module-output" name="RISK-HotShots" />
+      <element id="module-source" name="RISK-HotShots" />
+    </root>
+  </artifact>
+</component>
