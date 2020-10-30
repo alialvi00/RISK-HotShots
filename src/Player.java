@@ -176,7 +176,7 @@ public class Player{
 
     public Country getCountryByName(String countryName){
         for(Country c: getCountries()){
-            if(countryName.equals(c.toString().toLowerCase())){
+            if(countryName.toLowerCase().equals(c.toString().toLowerCase())){
                 return c;  
             }            
         }
