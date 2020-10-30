@@ -12,10 +12,10 @@ public class Player{
      * the number of troops they each contain
      * @param name of type String 
      */
-    public Player(String name) {
+    public Player(String name, int availableEnforcement) {
         conqueredCountries = new HashMap<Country,Integer>();
         playerName = name;
-        availableEnforcement = 0;
+        this.availableEnforcement = availableEnforcement;
         isDefending = false;
     }
 
@@ -50,51 +50,56 @@ public class Player{
      * @param country of type Country
      * @return number of troops in int
      */
-    public int getCountryTroops(Country country) {
-        return conqueredCountries.get(country);
+    public int getCountryTroops(String country) {
+        for(Country c: getCountries()){
+            if(c.toString().toLowerCase().equals(country)){
+                return conqueredCountries.get(c);
+            }
+        }
+        return 0;
     }
     
     /**
-     * returns an array containing the "rolled" dice value
+     * returns an arraylist containing the "rolled" dice value
      * @param troops number of troops used to defend of type int
-     * @return array of int object(s)
+     * @return arraylist of int object(s)
      */
-    public int[] defendCountry(int troops) {
-        int[] diceArray = new int[troops];
+    public ArrayList<Integer> defendCountry(int troops) {
+        ArrayList<Integer> diceArray = new ArrayList<>();
         
         if (troops == 1){
             Dice die = new Dice();
-            diceArray[0] = die.getDiceValue();
+            diceArray.add(die.getDiceValue());
             return diceArray;
         }
         else{
             Dice die1 = new Dice();
             Dice die2 = new Dice();
-            diceArray[0] = die1.getDiceValue();
-            diceArray[1] = die2.getDiceValue();
+            diceArray.add(die1.getDiceValue());
+            diceArray.add(die2.getDiceValue());
             return diceArray;
         }
         
     }
 
     /**
-     * returns an array containing the "rolled" dice value
+     * returns an arraylist containing the "rolled" dice value
      * @param troops number of troops attacking with of type int
-     * @return array int object(s)
+     * @return arraylist int object(s)
      */
-    public int[] attackCountry(int troops) {
-        int[] diceArray = new int[troops];
+    public ArrayList<Integer> attackCountry(int troops) {
+        ArrayList<Integer> diceArray = new ArrayList<>();
         
         if (troops == 1){
             Dice die = new Dice();
-            diceArray[0] = die.getDiceValue();
+            diceArray.add(die.getDiceValue());
             return diceArray;
         }
         if (troops == 2){
             Dice die1 = new Dice();
             Dice die2 = new Dice();
-            diceArray[0] = die1.getDiceValue();
-            diceArray[1] = die2.getDiceValue();
+            diceArray.add(die1.getDiceValue());
+            diceArray.add(die2.getDiceValue());
             return diceArray;
         }
 
@@ -102,9 +107,9 @@ public class Player{
             Dice die1 = new Dice();
             Dice die2 = new Dice();
             Dice die3 = new Dice();
-            diceArray[0] = die1.getDiceValue();
-            diceArray[1] = die2.getDiceValue();
-            diceArray[1] = die3.getDiceValue();
+            diceArray.add(die1.getDiceValue());
+            diceArray.add(die2.getDiceValue());
+            diceArray.add(die3.getDiceValue());
             return diceArray;
         }
     }
@@ -114,7 +119,7 @@ public class Player{
      * @param country of type Country
      * @param troops of type int
      */
-    public void addCountry(Country country, int troops) {
+    public void addCountry(Country country, Integer troops) {
         conqueredCountries.put(country, troops);
     }
 
@@ -152,13 +157,30 @@ public class Player{
         conqueredCountries.put(country, conqueredCountries.get(country) + troops);
     }
 
-    public HashMap getPlayerData(){
-
+    public HashMap<Country, Integer> getPlayerData(){
         return conqueredCountries;
     }
 
     public String getName() {
         return playerName;
+    }
+
+    public Boolean hasCountry(String country){
+        for(Country c: getCountries()){
+            if(country.equals(c.toString().toLowerCase())){
+                return true;  
+            }            
+        }
+        return false;
+    }
+
+    public Country getCountryByName(String countryName){
+        for(Country c: getCountries()){
+            if(countryName.equals(c.toString().toLowerCase())){
+                return c;  
+            }            
+        }
+        return null;
     }
 
 }

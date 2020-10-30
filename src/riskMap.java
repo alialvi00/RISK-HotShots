@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Map {
+public class riskMap {
     private Continent northAmerica;
     private Continent europe;
     private Continent africa;
@@ -74,7 +74,7 @@ public class Map {
     private ArrayList<Continent> continentList;
 
 
-    public Map(){
+    public riskMap(){
 
         countryList = new ArrayList<Country>();
         continentList = new ArrayList<Continent>();
@@ -113,9 +113,6 @@ public class Map {
 
     public void createCountryList() {
 
-        Random randIndex = new Random();
-        int i = randIndex.nextInt(countryList.size());
-
         for(Country c: northAmericaList){
             countryList.add(c);
         }
@@ -127,7 +124,6 @@ public class Map {
         }
         for(Country c: africaList){
             countryList.add(c);
-
         }
         for(Country c: australiaList){
             countryList.add(c);
@@ -393,4 +389,6 @@ public class Map {
     public ArrayList<Country> getCountryList() {
         return countryList;
     }
+
+
 }
