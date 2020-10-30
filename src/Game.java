@@ -37,15 +37,23 @@ public class Game{
             while(!checkCountry(attackingCountry, currentPlayer)){
                 System.out.println("Please enter a country you rule: ");
                 attackingCountry = attackInput.nextLine();
+                attackingCountry.toLowerCase();
             }
             
+
+            System.out.println("You can attack the following countries from " + attackingCountry + ":\n");
+            for(String s: currentPlayer.getCountryByName(attackingCountry).getAdjacentCountries()){
+                System.out.println(s);
+            }
             System.out.println("Which country would you like to attack?");
             String defendingCountry = attackInput.nextLine();
             defendingCountry.toLowerCase();
-            while(checkCountry(defendingCountry, currentPlayer)){
-                System.out.println("Please enter a country you DO NOT rule: ");
+            while(checkCountry(defendingCountry, currentPlayer) && !checkAdjacency(attackingCountry, defendingCountry)){
+                System.out.println("Please enter a country you DO NOT rule and IS bordering your country: ");
                 defendingCountry = attackInput.nextLine();
+                defendingCountry.toLowerCase();
             }
+
 
             System.out.println("How many troops would you like to attack with?");
             int attackingTroops = Integer.parseInt(attackInput.nextLine());
@@ -86,6 +94,8 @@ public class Game{
                 defendingPlayer.deleteCountry(defendingPlayer.getCountryByName(defendingCountry));
                 currentPlayer.addCountry(currentPlayer.getCountryByName(defendingCountry), attackingDice.size());
             }
+
+            stateOfMap();
 
         }
     }
@@ -315,6 +325,15 @@ public class Game{
             }
         }
         return null;       //added this or else error since not returning anything
+    }
+
+    public Boolean checkAdjacency(String attackingCountry, String defendingCountry) {
+        for(String s: currentPlayer.getCountryByName(attackingCountry).getAdjacentCountries()){
+            if(defendingCountry.equals(s.toLowerCase())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void main(String[] args) {

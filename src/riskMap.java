@@ -258,8 +258,8 @@ public class riskMap {
 
 
         china = new Country("China", asia);
-        String[] chinaAdj = new String[]{"Ukraine","Ural","Siberia","China","India","Middle East"};
-        afghanistan.setBorders(chinaAdj);
+        String[] chinaAdj = new String[]{"Ukraine","Ural","Siberia","India","Middle East"};
+        china.setBorders(chinaAdj);
 
 
         india = new Country("India", asia);
@@ -389,6 +389,5 @@ public class riskMap {
     public ArrayList<Country> getCountryList() {
         return countryList;
     }
-
-
+    
 }
