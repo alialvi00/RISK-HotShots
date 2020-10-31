@@ -31,19 +31,11 @@ public class Game{
             Scanner attackInput = new Scanner(System.in);
             System.out.println("Which country to launch an attack from?");
             String attackingCountry = attackInput.nextLine();
-            if(!map.isValidCountry(attackingCountry)) {
-                System.out.println("Please enter a valid country to attack from");
-                attackingCountry = attackInput.nextLine();
-            }
-            attackingCountry.toLowerCase();
+            attackingCountry = attackingCountry.toLowerCase();
             while(!checkPlayerCountry(attackingCountry, currentPlayer)){
-                System.out.println("Please enter a country you rule: ");
+                System.out.println("Please enter a valid country that you rule: ");
                 attackingCountry = attackInput.nextLine();
-                if(!map.isValidCountry(attackingCountry)) {
-                    System.out.println("Please enter a valid country to attack from");
-                    attackingCountry = attackInput.nextLine();
-                }
-                attackingCountry.toLowerCase();
+                attackingCountry = attackingCountry.toLowerCase();
             }
             
 
@@ -53,51 +45,44 @@ public class Game{
             }
             System.out.println("Which country would you like to attack?");
             String defendingCountry = attackInput.nextLine();
-            if(!map.isValidCountry(defendingCountry)) {
-                System.out.println("Please enter a valid country to attack");
+            defendingCountry = defendingCountry.toLowerCase();
+            while(!(!checkPlayerCountry(defendingCountry, currentPlayer) && checkAdjacency(attackingCountry, defendingCountry) && map.isValidCountry(defendingCountry))){
+                System.out.println("Please enter a VALID country you DO NOT rule and IS bordering your country: ");
                 defendingCountry = attackInput.nextLine();
-            }
-            defendingCountry.toLowerCase();
-            while(checkPlayerCountry(defendingCountry, currentPlayer) && !checkAdjacency(attackingCountry, defendingCountry)){
-                System.out.println("Please enter a country you DO NOT rule and IS bordering your country: ");
-                defendingCountry = attackInput.nextLine();
-                if(!map.isValidCountry(defendingCountry)) {
-                    System.out.println("Please enter a valid country to attack");
-                    defendingCountry = attackInput.nextLine();
-                }
-                defendingCountry.toLowerCase();
+                defendingCountry = defendingCountry.toLowerCase();
             }
 
 
             System.out.println("How many troops would you like to attack with?");
             int attackingTroops = 0;
-            String attackTroops = attackInput.nextLine();
-            if(attackInput.hasNextInt()){
-                attackingTroops = Integer.parseInt(attackTroops);
+            String attackTroopsInput = attackInput.nextLine();
+            if(isValidNumber(attackTroopsInput)){
+                attackingTroops = Integer.parseInt(attackTroopsInput);
             }
-            else{
-                System.out.println("Please enter the number of troops");
-                attackingTroops = Integer.parseInt(attackInput.nextLine());
-            }
-
             while(!checkAttackingTroops(attackingCountry, currentPlayer, attackingTroops)){
                 System.out.println("Invalid. You can attack with maximum of 3 troops and must leave at least 1 troop in the country.\n" +
                 "Please enter another amount: ");
-                attackingTroops = Integer.parseInt(attackInput.nextLine());
+                attackTroopsInput = attackInput.nextLine();
+                attackingTroops = getValidNumber(attackTroopsInput, attackInput);
             }
+
 
             Player defendingPlayer = getDefendingPlayer(defendingCountry);
 
             System.out.println(defendingPlayer.getName() + ", " + defendingCountry + " is being attacked!\n" + 
             "How many troops would you like to defend with?");
 
-            int defendingTroops = Integer.parseInt(attackInput.nextLine());
-
+            int defendingTroops = 0;
+            String defendingTroopsInput = attackInput.nextLine();
+            if(isValidNumber(defendingTroopsInput)){
+                defendingTroops = Integer.parseInt(defendingTroopsInput);
+            }
+            
             while(!checkDefendingTroops(defendingCountry, defendingPlayer, defendingTroops)){
                 System.out.println("Invalid, you can only use a maximum of 2 troops to defend and not exceed the amount of troops in your country\n" 
                 + "Please enter another amount: ");
-
-                defendingTroops = Integer.parseInt(attackInput.nextLine());
+                defendingTroopsInput = attackInput.nextLine();
+                defendingTroops = getValidNumber(attackTroopsInput, attackInput);
             }
 
             int defendingTroopsLost = 0;
@@ -124,14 +109,14 @@ public class Game{
                 }
             }
             System.out.println();
-            System.out.println("Defending Country lost " + defendingTroopsLost + " troops");
-            System.out.println("Attacking Country lost " + attackingTroopsLost + " troops");
+            System.out.println(defendingCountry + " lost " + defendingTroopsLost + " troops");
+            System.out.println(attackingCountry + " lost " + attackingTroopsLost + " troops");
 
             if(defendingPlayer.getCountryTroops(defendingCountry) == 0){
                 currentPlayer.addCountry(defendingPlayer.getCountryByName(defendingCountry), attackSize);
                 defendingPlayer.deleteCountry(defendingPlayer.getCountryByName(defendingCountry));
                 System.out.println();
-                System.out.println("Defending country has lost all troops and is now conquered by the attackingPlayer");
+                System.out.println(defendingCountry + " has lost all troops and is now conquered by " + currentPlayer.getName());
             }
             checkGameOver();
             startPlayerTurn();
@@ -357,7 +342,7 @@ public class Game{
     }
 
     public Boolean checkAttackingTroops(String country, Player player, int troops) {
-        if(troops == 0 || troops > 3){
+        if(troops <= 0 || troops > 3){
             return false;
         }        
         else if(troops < player.getCountryTroops(country)){
@@ -367,7 +352,7 @@ public class Game{
     }
 
     public Boolean checkDefendingTroops(String country, Player player, int troops) {
-        if(troops == 0 || troops > 2){
+        if(troops <= 0 || troops > 2){
             return false;
         } 
         else return troops <= player.getCountryTroops(country);
@@ -394,5 +379,29 @@ public class Game{
     public void checkGameOver(){
 
         for(Player p: playerList) gameEnded = p.checkCountries();
+    }
+
+    public int getValidNumber(String troops, Scanner input) {
+        String troopNum = troops;
+        while(!isValidNumber(troopNum)){
+            System.out.println("Please enter a number: ");
+            troopNum = input.nextLine();
+        }
+        return Integer.parseInt(troopNum);
+    }
+
+    public Boolean isValidNumber(String num){
+        try
+        {
+            Integer.parseInt(num);
+            return true;
+        } catch (NumberFormatException e)
+        {
+            return false;
+        }
+    }
+
+    public static void main(String[] args) {
+        Game game1 = new Game();
     }
 }
