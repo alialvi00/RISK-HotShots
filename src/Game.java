@@ -25,7 +25,7 @@ public class Game{
 
     public void attack() {
         if(userCommand.ifSecondCommand()){
-            System.out.println("attack what?");
+            System.out.println("Attack what?");
         }
         else{
             Scanner attackInput = new Scanner(System.in);
@@ -326,6 +326,22 @@ public class Game{
         }
     }
 
+    public void goBack(){
+        if(!userCommand.ifSecondCommand()){
+            System.out.println("Where would you like to go? (go back)? \n");
+        }
+        else {
+            boolean check = userCommand.getSecondCommand().equals("back");
+            if(check) {
+                System.out.println("Changing your mind? You are being redirected...");
+                startPlayerTurn();
+            }
+            else{
+                System.out.println("Do you mean go back to your options? \n");
+            }
+        }
+    }
+
     public boolean processCommand(){
 
         boolean quitGame = false;
@@ -348,6 +364,10 @@ public class Game{
             case MAP:
                 stateOfMap();
                 break;
+            case RETURN:
+                goBack();
+                break;
+
         }
         return quitGame;
     }
