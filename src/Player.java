@@ -13,7 +13,7 @@ public class Player{
      * @param name of type String 
      */
     public Player(String name, int availableEnforcement) {
-        conqueredCountries = new HashMap<Country,Integer>();
+        conqueredCountries = new HashMap<>();
         playerName = name;
         this.availableEnforcement = availableEnforcement;
         isDefending = false;
@@ -33,7 +33,7 @@ public class Player{
      */
     public ArrayList<Country> getCountries() {
         Set<Country> countrySet = conqueredCountries.keySet();
-        ArrayList<Country> countryList = new ArrayList<Country>(countrySet);
+        ArrayList<Country> countryList = new ArrayList<>(countrySet);
         return countryList;
     }
 
@@ -165,6 +165,7 @@ public class Player{
         return playerName;
     }
 
+
     public Boolean hasCountry(String country){
         for(Country c: getCountries()){
             if(country.equals(c.toString().toLowerCase())){
@@ -181,6 +182,15 @@ public class Player{
             }            
         }
         return null;
+    }
+
+    public boolean checkCountries(){
+
+        if(conqueredCountries.keySet().isEmpty()){
+
+            return true;
+        }
+        return false;
     }
 
 }

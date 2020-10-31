@@ -101,16 +101,6 @@ public class riskMap {
         continentList.add(southAmerica);
     }
 
-
-    public Continent getContinent(String continentName){
-
-        for(int i = 0; i< continentList.size(); i++){
-            if(continentName.equals(continentList.get(i).getName()))
-                return continentList.get(i);
-        }
-        return null;
-    }
-
     public void createCountryList() {
 
         for(Country c: northAmericaList){
@@ -133,12 +123,10 @@ public class riskMap {
         }
     }
 
-    public boolean checkCountry(String countryName){
+    public boolean isValidCountry(String countryName){
 
-        for(int i = 0; i< countryList.size(); i++){
-            if(countryName.equals(countryList.get(i).toString()))
-                return true;
-        }
+        for(Country c: countryList)
+            return countryName.equals(c.toString());
         return false;
     }
 

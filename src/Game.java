@@ -1,10 +1,8 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Game{
 
     private riskMap map;
-    private ProcessInput input;
     private Dice rollToBegin;
     private Command userCommand;
     private int playerCount;
@@ -13,14 +11,14 @@ public class Game{
     private ArrayList<String> playerNames;
     private ArrayList<Player> playerList;
     private ArrayList<Integer> rolls;
-    private Boolean isGameOver;
+    private Boolean gameEnded;
 
     public Game(){
 
         readInput = new ProcessInput();
         playerNames = new ArrayList<>();
         playerList = new ArrayList<>();
-        isGameOver = false;
+        gameEnded = false;
         map = new riskMap();
         play();
     }
@@ -31,12 +29,20 @@ public class Game{
         }
         else{
             Scanner attackInput = new Scanner(System.in);
-            System.out.println("Which country to launch an attack from?");      
+            System.out.println("Which country to launch an attack from?");
             String attackingCountry = attackInput.nextLine();
+            if(!map.isValidCountry(attackingCountry)) {
+                System.out.println("Please enter a valid country to attack from");
+                attackingCountry = attackInput.nextLine();
+            }
             attackingCountry.toLowerCase();
-            while(!checkCountry(attackingCountry, currentPlayer)){
+            while(!checkPlayerCountry(attackingCountry, currentPlayer)){
                 System.out.println("Please enter a country you rule: ");
                 attackingCountry = attackInput.nextLine();
+                if(!map.isValidCountry(attackingCountry)) {
+                    System.out.println("Please enter a valid country to attack from");
+                    attackingCountry = attackInput.nextLine();
+                }
                 attackingCountry.toLowerCase();
             }
             
@@ -47,18 +53,35 @@ public class Game{
             }
             System.out.println("Which country would you like to attack?");
             String defendingCountry = attackInput.nextLine();
+            if(!map.isValidCountry(defendingCountry)) {
+                System.out.println("Please enter a valid country to attack");
+                defendingCountry = attackInput.nextLine();
+            }
             defendingCountry.toLowerCase();
-            while(checkCountry(defendingCountry, currentPlayer) && !checkAdjacency(attackingCountry, defendingCountry)){
+            while(checkPlayerCountry(defendingCountry, currentPlayer) && !checkAdjacency(attackingCountry, defendingCountry)){
                 System.out.println("Please enter a country you DO NOT rule and IS bordering your country: ");
                 defendingCountry = attackInput.nextLine();
+                if(!map.isValidCountry(defendingCountry)) {
+                    System.out.println("Please enter a valid country to attack");
+                    defendingCountry = attackInput.nextLine();
+                }
                 defendingCountry.toLowerCase();
             }
 
 
             System.out.println("How many troops would you like to attack with?");
-            int attackingTroops = Integer.parseInt(attackInput.nextLine());
+            int attackingTroops = 0;
+            String attackTroops = attackInput.nextLine();
+            if(attackInput.hasNextInt()){
+                attackingTroops = Integer.parseInt(attackTroops);
+            }
+            else{
+                System.out.println("Please enter the number of troops");
+                attackingTroops = Integer.parseInt(attackInput.nextLine());
+            }
+
             while(!checkAttackingTroops(attackingCountry, currentPlayer, attackingTroops)){
-                System.out.println("Invalid. You can attack with maximum of 3 troops and must leave atleast 1 troop in the country.\n" + 
+                System.out.println("Invalid. You can attack with maximum of 3 troops and must leave at least 1 troop in the country.\n" +
                 "Please enter another amount: ");
                 attackingTroops = Integer.parseInt(attackInput.nextLine());
             }
@@ -67,38 +90,55 @@ public class Game{
 
             System.out.println(defendingPlayer.getName() + ", " + defendingCountry + " is being attacked!\n" + 
             "How many troops would you like to defend with?");
+
             int defendingTroops = Integer.parseInt(attackInput.nextLine());
+
             while(!checkDefendingTroops(defendingCountry, defendingPlayer, defendingTroops)){
                 System.out.println("Invalid, you can only use a maximum of 2 troops to defend and not exceed the amount of troops in your country\n" 
                 + "Please enter another amount: ");
+
                 defendingTroops = Integer.parseInt(attackInput.nextLine());
             }
+
+            int defendingTroopsLost = 0;
+            int attackingTroopsLost = 0;
+            int attackSize = 0;
 
             ArrayList<Integer> attackingDice = currentPlayer.attackCountry(attackingTroops);
             ArrayList<Integer> defendingDice = defendingPlayer.attackCountry(defendingTroops);
 
-            while (!(attackingDice.isEmpty() && defendingDice.isEmpty())){
+            while (!(attackingDice.isEmpty() || defendingDice.isEmpty())){
                 if(Collections.max(attackingDice) > Collections.max(defendingDice)){
                     attackingDice.remove(attackingDice.indexOf(Collections.max(attackingDice)));
                     defendingDice.remove(defendingDice.indexOf(Collections.max(defendingDice)));
                     defendingPlayer.updateCountry(defendingPlayer.getCountryByName(defendingCountry), -1);
+                    currentPlayer.updateCountry(currentPlayer.getCountryByName(attackingCountry), -1);
+                    attackSize++;
+                    defendingTroopsLost++;
                 }
                 else if(Collections.max(attackingDice) <= Collections.max(defendingDice)){
                     attackingDice.remove(attackingDice.indexOf(Collections.max(attackingDice)));
                     defendingDice.remove(defendingDice.indexOf(Collections.max(defendingDice)));
                     currentPlayer.updateCountry(currentPlayer.getCountryByName(attackingCountry), -1);
+                    attackingTroopsLost++;
                 }
             }
+            System.out.println();
+            System.out.println("Defending Country lost " + defendingTroopsLost + " troops");
+            System.out.println("Attacking Country lost " + attackingTroopsLost + " troops");
 
             if(defendingPlayer.getCountryTroops(defendingCountry) == 0){
+                currentPlayer.addCountry(defendingPlayer.getCountryByName(defendingCountry), attackSize);
                 defendingPlayer.deleteCountry(defendingPlayer.getCountryByName(defendingCountry));
-                currentPlayer.addCountry(currentPlayer.getCountryByName(defendingCountry), attackingDice.size());
+                System.out.println();
+                System.out.println("Defending country has lost all troops and is now conquered by the attackingPlayer");
             }
-
+            checkGameOver();
+            startPlayerTurn();
             stateOfMap();
-
         }
     }
+
 
     public void play(){
         welcome();
@@ -106,18 +146,24 @@ public class Game{
         setPlayerNames();
         setPlayers();
         setCountry();
+        System.out.println();
         System.out.println("The game will now start");
+        System.out.println();
         System.out.println("The current state of map is: ");
         stateOfMap();
         System.out.println("Dice is now being rolled for all " + playerCount + " players.");
         whoStarts();
         System.out.println(currentPlayer.getName() + " has the highest number rolled so they will start");
+        startPlayerTurn();
+    }
+
+    public void startPlayerTurn(){
+
         System.out.println(currentPlayer.getName() + " has the choice to pass or attack");
         System.out.println("If attacking, refer to the map given and choose an enemy country");
-        boolean gameEnded = false;
         while(!gameEnded){
-            Command command = readInput.getCommand();
-            userCommand = command;
+
+            userCommand = readInput.getCommand();
             gameEnded = processCommand();
         }
         System.out.println("Game over");
@@ -127,11 +173,14 @@ public class Game{
     public void welcome(){
 
         System.out.println("Welcome to RISK: Global Domination!");
+        System.out.println();
         System.out.println("RISK is a classic strategy game filled with conquest and intrigue.\n"
         + "This game can be played with 2-6 players." +
         "To win, you must strive to capture all of the continents and countries in the game, while eliminating other players.\n" +
         "The last man standing is the winner!");
+        System.out.println();
         System.out.println("Your commands are: play, attack, quit, pass turn");
+        System.out.println();
     }
 
 
@@ -228,6 +277,7 @@ public class Game{
         else{
             currentPlayer = playerList.get(0);
         }
+        startPlayerTurn();
     }
 
 
@@ -238,23 +288,32 @@ public class Game{
 
     public void passTurn(){
         if(!userCommand.ifSecondCommand()){
-            System.out.println("Pass what?");
+            System.out.println("Do you mean pass turn? \n");
         }
         else {
-            System.out.println(currentPlayer.getName() + " has skipped its turn");
-            nextTurn();
+            String skipTurn = userCommand.getSecondCommand();
+            if(skipTurn.equals("turn")) {
+                System.out.println(currentPlayer.getName() + " has skipped its turn");
+                System.out.println("Next player turn");
+                nextTurn();
+            }
+            else{
+                System.out.println("Do you mean pass turn? \n");
+            }
         }
     }
 
 
     public void stateOfMap(){
         for(Player p: playerList){
+            System.out.println();
             System.out.println(p.getName() + "'s Countries: ");
+            System.out.println();
             for(Country c: p.getPlayerData().keySet()){
                 System.out.println(c + ": " + p.getPlayerData().get(c));
             }
-            System.out.println("\n");
         }
+        System.out.println("Enter a command");
     }
 
     public boolean quit(){
@@ -279,7 +338,6 @@ public class Game{
                 break;
             case PASS:
                 passTurn();
-                System.out.println("Next player turn");
                 break;
             case ATTACK:
                 attack();
@@ -294,7 +352,7 @@ public class Game{
         return quitGame;
     }
 
-    public Boolean checkCountry(String country, Player player) {
+    public Boolean checkPlayerCountry(String country, Player player) {
         return player.hasCountry(country);
     }
 
@@ -312,10 +370,7 @@ public class Game{
         if(troops == 0 || troops > 2){
             return false;
         } 
-        else if(troops <= player.getCountryTroops(country)){
-            return true;
-        }
-        return false;
+        else return troops <= player.getCountryTroops(country);
     }
 
     public Player getDefendingPlayer(String country) {
@@ -336,10 +391,8 @@ public class Game{
         return false;
     }
 
-    public static void main(String[] args) {
-        Game game1 = new Game();
+    public void checkGameOver(){
+
+        for(Player p: playerList) gameEnded = p.checkCountries();
     }
-
-
-
 }
