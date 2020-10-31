@@ -76,7 +76,6 @@ public class riskMap {
 
     public riskMap(){
 
-        countryList = new ArrayList<Country>();
         continentList = new ArrayList<Continent>();
 
         northAmerica = new Continent("North America", 9, 5);
@@ -87,8 +86,8 @@ public class riskMap {
         southAmerica = new Continent("South America", 4, 2);
 
         initializeMap();
-        createCountryList();
         createContinentList();
+        countryList = createCountryList();        
     }
 
     public void createContinentList() {
@@ -101,32 +100,39 @@ public class riskMap {
         continentList.add(southAmerica);
     }
 
-    public void createCountryList() {
+    public ArrayList<Country> createCountryList() {
+
+        ArrayList<Country> list = new ArrayList<Country>();
 
         for(Country c: northAmericaList){
-            countryList.add(c);
+            list.add(c);
         }
         for(Country c: europeList){
-            countryList.add(c);
+            list.add(c);
         }
         for(Country c: asiaList){
-            countryList.add(c);
+            list.add(c);
         }
         for(Country c: africaList){
-            countryList.add(c);
+            list.add(c);
         }
         for(Country c: australiaList){
-            countryList.add(c);
+            list.add(c);
         }
         for(Country c: southAmericaList){
-            countryList.add(c);
+            list.add(c);
         }
+
+        return list;
     }
 
     public boolean isValidCountry(String countryName){
-
-        for(Country c: countryList)
-            return countryName.equals(c.toString());
+        ArrayList<Country> list = createCountryList();
+        for(Country c: list){
+            if(c.toString().toLowerCase().equals(countryName)){
+                return true;
+            }
+        }
         return false;
     }
 
@@ -377,5 +383,5 @@ public class riskMap {
     public ArrayList<Country> getCountryList() {
         return countryList;
     }
-    
+
 }

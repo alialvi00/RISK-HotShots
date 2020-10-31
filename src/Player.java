@@ -168,7 +168,7 @@ public class Player{
 
     public Boolean hasCountry(String country){
         for(Country c: getCountries()){
-            if(country.equals(c.toString().toLowerCase())){
+            if(country.toLowerCase().equals(c.toString().toLowerCase())){
                 return true;  
             }            
         }
