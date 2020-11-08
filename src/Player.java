@@ -121,9 +121,6 @@ public class Player{
      */
     public void addCountry(Country country, Integer troops) {
         conqueredCountries.put(country, troops);
-        PlayerEvent a = new PlayerEvent(this);
-        updateChanges.updateCountries(a);
-        updateChanges.updateAdjacentCountries(a,country.toString());
     }
 
     /**
@@ -132,9 +129,6 @@ public class Player{
      */
     public void deleteCountry(Country country) {
         conqueredCountries.remove(country);
-        PlayerEvent a2 = new PlayerEvent(this);
-        updateChanges.updateCountries(a2);
-        updateChanges.updateAdjacentCountries(a2, country.toString());
     }
 
     /**
@@ -161,9 +155,6 @@ public class Player{
      */
     public void updateCountry(Country country, int troops){
         conqueredCountries.put(country, conqueredCountries.get(country) + troops);
-        PlayerEvent a3 = new PlayerEvent(this);
-        updateChanges.updateCountries(a3);
-        updateChanges.updateAdjacentCountries(a3, country.toString());
     }
 
     public HashMap<Country, Integer> getPlayerData(){

@@ -81,9 +81,18 @@ public class RiskView extends JFrame implements RiskListener{
 
     private ImageIcon mapImage;
 
+
     public RiskView(){
 
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        //initializing the controller and the model
+        RiskModel rm = new RiskModel();
+        RiskController rController = new RiskController(rm, this);
+
+        PlayerController pController = new PlayerController(this);
+
+        rm.addView(this;
 
         b1 = new BorderLayout();
         c1 = new CardLayout(5,5);
@@ -105,6 +114,9 @@ public class RiskView extends JFrame implements RiskListener{
 
         startGame = new JButton("Start the fun!");
         startGame.setEnabled(true);
+
+        //start button listener        
+        startGame.addActionListener(rController);
 
         mapImage = new ImageIcon("src/mapRisk.png");
 
@@ -182,6 +194,7 @@ public class RiskView extends JFrame implements RiskListener{
         playerNames = new ArrayList<>();
         askName = new JLabel("Enter the player names");
         playerCountList = new JComboBox(playerNum);
+        playerCountList.addItemListener(pController);;
         askForCountPlayers = new JLabel("How many players? ");
 
         newGameScene.setBackground(Color.BLACK);
@@ -271,10 +284,6 @@ public class RiskView extends JFrame implements RiskListener{
         catch(Exception e){
             System.out.println("Music file not found, no music to be played :(");
         }
-    }
-
-    public void setPlayerCount(ItemListener itemE){
-        playerCountList.addItemListener(itemE);
     }
 
     public int getPlayerCount(){
@@ -381,13 +390,41 @@ public class RiskView extends JFrame implements RiskListener{
     }
 
     public void setPlayerNames(){
+        switch (getPlayerCount()) {
+            case 3:
+            playerNames.add(p1.getText());
+            playerNames.add(p2.getText());
+            playerNames.add(p3.getText());
 
-        playerNames.add(p1.getText());
-        playerNames.add(p2.getText());
-        playerNames.add(p3.getText());
-        playerNames.add(p4.getText());
-        playerNames.add(p5.getText());
-        playerNames.add(p6.getText());
+            case 4:
+            playerNames.add(p1.getText());
+            playerNames.add(p2.getText());
+            playerNames.add(p3.getText());
+            playerNames.add(p4.getText());
+
+            case 5:
+            playerNames.add(p1.getText());
+            playerNames.add(p2.getText());
+            playerNames.add(p3.getText());
+            playerNames.add(p4.getText());
+            playerNames.add(p5.getText());
+
+            case 6:
+            playerNames.add(p1.getText());
+            playerNames.add(p2.getText());
+            playerNames.add(p3.getText());
+            playerNames.add(p4.getText());
+            playerNames.add(p5.getText());
+            playerNames.add(p6.getText());
+            
+            default:
+            playerNames.add(p1.getText());
+            playerNames.add(p2.getText());
+        }
+    }
+
+    public ArrayList<String> getPlayerNames(){
+        return playerNames;
     }
 
     public void setStartGame(ActionListener e){
@@ -555,13 +592,7 @@ public class RiskView extends JFrame implements RiskListener{
         northAmericaPanel.setPreferredSize(new Dimension(320,100));
         northAmericaPanel.setLayout(new GridLayout(5,2,5,5));
 
-        /**
-         * @Hassan
-        for (i = 0; i < map.getCountries("North America").size(); i++) {
-            Go through each country in the continent and create a jLabel for each country
-         then add that label to the each continent JPanel. Repeat this for all continent Panels in this class
-        }
-        **/
+
 
         GridBagConstraints a5 = new GridBagConstraints();
 
@@ -663,12 +694,8 @@ public class RiskView extends JFrame implements RiskListener{
     }
 
     @Override
-    public void updateCountries(PlayerEvent c) {
-        ownCountries.addAll(c.getPlayerCountries());
+    public void handleInitialMap(MapEvent m) {
+        
     }
 
-    @Override
-    public void updateAdjacentCountries(PlayerEvent a, String countryName) {
-        adjacentCountries.addAll(a.getAdjacentCountries(countryName));
-    }
 }

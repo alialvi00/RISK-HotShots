@@ -12,16 +12,16 @@ public class RiskModel extends DefaultListModel {
     private ArrayList<String> playerNames;
     private ArrayList<Player> playerList;
     private ArrayList<Integer> rolls;
+    private List<RiskView> viewList;
     private Boolean gameEnded;
 
     public RiskModel() {
-
-        readInput = new ProcessInput();
+        welcome();
         playerNames = new ArrayList<>();
         playerList = new ArrayList<>();
         gameEnded = false;
         map = new RiskMap();
-        play();
+        viewList = new ArrayList<>();
     }
 
     public void attack() {
@@ -89,7 +89,7 @@ public class RiskModel extends DefaultListModel {
             int attackSize = 0;
 
             ArrayList<Integer> attackingDice = currentPlayer.attackCountry(attackingTroops);
-            ArrayList<Integer> defendingDice = defendingPlayer.attackCountry(defendingTroops);
+            ArrayList<Integer> defendingDice = defendingPlayer.defendCountry(defendingTroops);
 
             while (!(attackingDice.isEmpty() || defendingDice.isEmpty())) {
                 if (Collections.max(attackingDice) > Collections.max(defendingDice)) {
@@ -126,8 +126,6 @@ public class RiskModel extends DefaultListModel {
 
     public void play() {
         welcome();
-        setPlayerCount();
-        setPlayerNames();
         setPlayers();
         setCountry();
         System.out.println();
@@ -162,9 +160,6 @@ public class RiskModel extends DefaultListModel {
                 + "This game can be played with 2-6 players." +
                 "To win, you must strive to capture all of the continents and countries in the game, while eliminating other players.\n" +
                 "The last man standing is the winner!");
-        System.out.println();
-        System.out.println("Your commands are: play, attack, quit, pass turn");
-        System.out.println();
     }
 
 
@@ -179,22 +174,13 @@ public class RiskModel extends DefaultListModel {
 
     }
 
-    public void setPlayerCount() {
-        Scanner input = new Scanner(System.in);
-        System.out.println("Please enter the amount of player: ");
-        playerCount = Integer.parseInt(input.nextLine());
-        while (playerCount > 6 || playerCount < 2) {
-            System.out.println("Invalid player count, only 2-6 players are allowed \n" + "please enter the amount of players again: ");
-            playerCount = Integer.parseInt(input.nextLine());
-        }
-
+    public void setPlayerCount(int playerCount) {
+        this.playerCount = playerCount;
     }
 
-    public void setPlayerNames() {
-        Scanner input = new Scanner(System.in);
-        for (int i = 0; i < playerCount; i++) {
-            System.out.println("Please enter the name for Player" + (i + 1));
-            playerNames.add(input.nextLine());
+    public void setPlayerNames(ArrayList<String> players) {
+        for (String p: players){
+            playerNames.add(p);
         }
     }
 
@@ -414,16 +400,6 @@ public class RiskModel extends DefaultListModel {
         return Integer.parseInt(troopNum);
     }
 
-    /**
-    public void checkBack(String newInput){
-
-        newInput = newInput.toLowerCase();
-        ProcessCommand returnStep = new ProcessCommand();
-        CommandWords inputReceived = returnStep.getCommandWords(newInput);
-        Command checkInput = new Command(inputReceived,newInput);
-    }
-     **/
-
     public Boolean isValidNumber(String num){
         try
         {
@@ -433,5 +409,17 @@ public class RiskModel extends DefaultListModel {
         {
             return false;
         }
+    }
+
+    public void addView(RiskView view) {
+        viewList.add(view);
+    }
+
+    public void setUpPlayers(ArrayList<String> playerNames, int playerCount) {
+        setPlayerCount(playerCount);
+        setPlayerNames(playerNames);
+        setPlayers();
+        setCountry();
+
     }
 }
