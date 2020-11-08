@@ -9,20 +9,16 @@ public class ChangeOutputStream extends OutputStream {
     private String text;
 
     public ChangeOutputStream(JTextArea consoleUpdate){
+        a = new StringBuilder();
         this.consoleUpdate = consoleUpdate;
     }
     @Override
-    public void write(int b) throws IOException {
+    public void write(int b) {
 
         if(b == '\n'){
             text = a.toString();
 
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run()
-                {
-                    consoleUpdate.append(text);
-                }
-            });
+            SwingUtilities.invokeLater(() -> consoleUpdate.append(text));
 
             a.setLength(0);
         }

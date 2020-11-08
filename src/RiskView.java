@@ -57,10 +57,6 @@ public class RiskView extends JFrame implements RiskListener{
     private JList selectedCountries;
     private JList connectedCountries;
 
-    private RiskModel ownCountries;
-    private RiskModel adjacentCountries;
-
-
     private JTextField p1;
     private JTextField p2;
     private JTextField p3;
@@ -81,6 +77,8 @@ public class RiskView extends JFrame implements RiskListener{
 
     private ImageIcon mapImage;
 
+    private DefaultCaret style = new DefaultCaret();
+
 
     public RiskView(){
 
@@ -92,7 +90,7 @@ public class RiskView extends JFrame implements RiskListener{
 
         PlayerController pController = new PlayerController(this);
 
-        rm.addView(this;
+        rm.addView(this);
 
         b1 = new BorderLayout();
         c1 = new CardLayout(5,5);
@@ -127,7 +125,6 @@ public class RiskView extends JFrame implements RiskListener{
         asiaPanel = new JPanel();
         australiaPanel = new JPanel();
 
-        consoleMove = new JScrollPane();
         mapScroll = new JScrollPane(new JLabel(mapImage));
 
         selectedCountries = new JList();
@@ -474,17 +471,16 @@ public class RiskView extends JFrame implements RiskListener{
 
     public JPanel addConsole(){
 
-        DefaultCaret style;
-
         consolePanel.setPreferredSize(new Dimension(300,980));
         GridBagConstraints a3 = new GridBagConstraints();
 
         System.setOut(new PrintStream(new ChangeOutputStream(consoleUpdate)));
         consoleUpdate.setFocusable(false);
         consoleUpdate.setLineWrap(true);
+        consoleUpdate.setWrapStyleWord(true);
         style = (DefaultCaret)consoleUpdate.getCaret();
         style.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-        consoleMove.add(consoleUpdate);
+        consoleMove = new JScrollPane(consoleUpdate);
 
         a3.fill = GridBagConstraints.BOTH;
         a3.insets = new Insets(5, 5, 5, 5);
