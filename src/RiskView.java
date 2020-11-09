@@ -97,7 +97,7 @@ public class RiskView extends JFrame implements RiskListener{
         rController = new RiskController(rm, this);
 
         PlayerController pController = new PlayerController(this);
-        AttackController attackController = new AttackController(rm, this);
+        
 
         rm.addView(this);
 
@@ -127,7 +127,6 @@ public class RiskView extends JFrame implements RiskListener{
         mapImage = new ImageIcon("src/mapRisk.png");
 
         attackButton = new JButton("Attack");
-        attackButton.addActionListener(attackController);
 
         northAmericaPanel = new JPanel();
         southAmericaPanel = new JPanel();
@@ -528,9 +527,14 @@ public class RiskView extends JFrame implements RiskListener{
         attackButton = new JButton("Attack!!!");
         passTurn = new JButton("Meh, Pass");
 
+        //adding controller to attack button
+        AttackController attackController = new AttackController(rm, this);
+        attackButton.addActionListener(attackController);
+
         //adding the controller to the pass button
         PassController passController = new PassController(this, rm);
         passTurn.addActionListener(passController);
+
 
         ownedCountriesModel = new DefaultListModel<>();
         adjacentCountriesModel = new DefaultListModel<>();

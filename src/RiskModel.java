@@ -49,7 +49,7 @@ public class RiskModel{
             System.out.println(defendingCountry + " lost " + defendingTroopsLost + " troops");
             System.out.println(attackingCountry + " lost " + attackingTroopsLost + " troops");
 
-            if (defendingPlayer.getCountryTroops(defendingCountry.toString()) == 0) {
+            if (defendingPlayer.getPlayerData().get(defendingCountry) == 0) {
                 currentPlayer.addCountry(defendingCountry, winningTroops);
                 defendingPlayer.deleteCountry(defendingCountry);
 
@@ -280,11 +280,18 @@ public class RiskModel{
     }
 
     public int getMaxAttackingTroops(Country country){
-        return currentPlayer.getCountryTroops(country.toString()) - 1;
+        int troops = currentPlayer.getPlayerData().get(country) - 1;
+        if(troops > 3){
+            return 3;
+        } else{return troops;}
     }
 
-    public int getMaxDefendingTroops(String country){
-        return getDefendingPlayer(country).getCountryTroops(country);
+    public int getMaxDefendingTroops(Country country, Player player){
+        int troops = player.getPlayerData().get(country);
+        if(troops > 2){
+            return 2;
+        }
+        else{return troops;}
     }
 
     public void setUpPlayers(ArrayList<String> playerNames, int playerCount) {
@@ -298,9 +305,9 @@ public class RiskModel{
         }
     }
 
-    public void initiateAttack(Country attackingCountry, String defendingCountry, int attackingTroops, int defendingTroops, Player defendingPlayer){
+    public void initiateAttack(Country attackingCountry, Country defendingCountry, int attackingTroops, int defendingTroops, Player defendingPlayer){
         //attack actually occurs, map gets updated
-        attack(attackingCountry, defendingPlayer.getCountryByName(defendingCountry), attackingTroops, defendingTroops, defendingPlayer);
+        attack(attackingCountry, defendingCountry, attackingTroops, defendingTroops, defendingPlayer);
 
         for (RiskView rV : viewList) {
             rV.handleAttack(new MapEvent(this, playerList));
