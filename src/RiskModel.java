@@ -51,6 +51,7 @@ public class RiskModel{
 
             if (defendingPlayer.getPlayerData().get(defendingCountry) == 0) {
                 currentPlayer.addCountry(defendingCountry, winningTroops);
+                currentPlayer.updateCountry(attackingCountry, -winningTroops);
                 defendingPlayer.deleteCountry(defendingCountry);
 
                 System.out.println();

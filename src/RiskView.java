@@ -810,7 +810,7 @@ public class RiskView extends JFrame implements RiskListener{
         return choice + 1;
 
     }
-
+    
 
     @Override
     public void handleInitialMap(MapEvent m) {
@@ -845,6 +845,36 @@ public class RiskView extends JFrame implements RiskListener{
         //Ali, update the info panel somehow using m.getPlayerList like i do above
         RiskModel model = (RiskModel) m.getSource();
         updateCountriesJlist(model.getCurrentPlayer());
+        
+        //updating the map (infopanel)
+        northAmericaPanel.removeAll();
+        asiaPanel.removeAll();
+        southAmericaPanel.removeAll();
+        africaPanel.removeAll();
+        australiaPanel.removeAll();
+        europePanel.removeAll();
+
+        for (Player p : m.getPlayerList()) {
+            for (Country c : p.getCountries()) {
+                JLabel countryLabel = new JLabel(c + ", " + p.getName() + ", " + p.getPlayerData().get(c));
+                if(c.getContinent().getName().equals("North America")){
+                    northAmericaPanel.add(countryLabel);
+                } else if(c.getContinent().getName().equals("Europe")){
+                    europePanel.add(countryLabel);
+                } else if(c.getContinent().getName().equals("Africa")){
+                    africaPanel.add(countryLabel);
+                } else if(c.getContinent().getName().equals("Australia")){
+                    australiaPanel.add(countryLabel);
+                } else if(c.getContinent().getName().equals("Asia")){
+                    asiaPanel.add(countryLabel);
+                }else{
+                    southAmericaPanel.add(countryLabel);
+                }
+            }
+        }
+
+        revalidate();
+        repaint();
     }
 
     public void disableAttack(){
