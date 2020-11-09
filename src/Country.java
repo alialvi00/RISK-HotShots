@@ -29,10 +29,6 @@ public class Country {
         return adjacentCountries;
     }
 
-    public String getContinentName(String continentName){
-        return continentName;
-    }
-
     public boolean equals(String country) {
         if (country.equals(countryName)) {
             return true;
@@ -43,6 +39,10 @@ public class Country {
     public String toString(){
 
         return countryName;
+    }
+    
+    public Continent getContinent(){
+        return continent;
     }
     
 }
