@@ -760,6 +760,11 @@ public class RiskView extends JFrame implements RiskListener{
         return connectedCountries.getSelectedValue();
     }
 
+    public void clearSelection(){
+        selectedCountries.clearSelection();
+        connectedCountries.clearSelection();
+    }
+
     /**
      * this funtion will take in the maximum number of troops a country can attack with
      * then will allow the user to choose the number of troops
@@ -794,11 +799,13 @@ public class RiskView extends JFrame implements RiskListener{
             options[i] = i + 1;
         }
 
-        String message = player.getName() + " you are being attacked! Choose the number of troops you would like to attack with";
+        String message = player.getName() + ", " + getDestinationCountry() + " is being attacked! Choose the number of troops you would like to attack with";
 
         int choice = JOptionPane.showOptionDialog(this, message,
         "Defend!",
         JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+        clearSelection();
 
         return choice + 1;
 

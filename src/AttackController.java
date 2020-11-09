@@ -17,7 +17,6 @@ public class AttackController implements ActionListener{
         Country destinationCountry = defendingPlayer.getCountryByName(mainView.getDestinationCountry());
 
         int maxAttackingTroops = mainModel.getMaxAttackingTroops(originCountry);
-        System.out.println("" + maxAttackingTroops);
         int attackingTroops = mainView.getAttackingTroops(maxAttackingTroops);
 
         int maxDefendingTroops = mainModel.getMaxDefendingTroops(destinationCountry, defendingPlayer);
