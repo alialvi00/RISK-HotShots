@@ -1,6 +1,6 @@
 import java.awt.event.*;
 
-import javax.swing.JList;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -17,6 +17,7 @@ public class ListController implements ListSelectionListener{
 
     @Override
     public void valueChanged(ListSelectionEvent e){
+
         //hopefully this gets the the country the player selects from the jlist, i am unable to test
         Country selectedCountry = view.getOriginCountry();
 

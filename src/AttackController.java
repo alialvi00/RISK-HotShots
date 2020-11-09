@@ -11,6 +11,7 @@ public class AttackController implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e){
+
         Country originCountry = mainView.getOriginCountry();
         String destinationCountry = mainView.getDestinationCountry();
         Player defendingPlayer = mainModel.getDefendingPlayer(destinationCountry);

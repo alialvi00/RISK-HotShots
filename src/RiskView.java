@@ -4,6 +4,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -110,10 +111,6 @@ public class RiskView extends JFrame implements RiskListener{
         actionLayout = new GridBagLayout();
         infoLayout = new GridBagLayout();
 
-        attackButton = new JButton("Attack");
-        attackButton.addActionListener(attackController);
-
-
         passTurn = new JButton("Pass Turn");
 
         a1 = new GridBagConstraints();
@@ -128,6 +125,9 @@ public class RiskView extends JFrame implements RiskListener{
         startGame.addActionListener(rController);
 
         mapImage = new ImageIcon("src/mapRisk.png");
+
+        attackButton = new JButton("Attack");
+        attackButton.addActionListener(attackController);
 
         northAmericaPanel = new JPanel();
         southAmericaPanel = new JPanel();
@@ -183,9 +183,6 @@ public class RiskView extends JFrame implements RiskListener{
         p4.setEditable(false);
         p5.setEditable(false);
         p6.setEditable(false);
-
-        selectedCountryScrollPane = new JScrollPane();
-        connectedCountryScrollPane = new JScrollPane();
 
         newGameScene.setBorder(new EmptyBorder(6,6,6,6));
         mainGameScene.setBorder(new EmptyBorder(6,6,6,6));
@@ -518,6 +515,8 @@ public class RiskView extends JFrame implements RiskListener{
         return mapPanel;
     }
 
+    public void addSelectedCountryListener(ListSelectionListener selected){}
+
     public JPanel addAction(){
 
         actionPanel.setPreferredSize(new Dimension(200,980));
@@ -533,30 +532,26 @@ public class RiskView extends JFrame implements RiskListener{
         PassController passController = new PassController(this, rm);
         passTurn.addActionListener(passController);
 
-        attackButton.setActionCommand("Attack");
-        passTurn.setActionCommand("Pass");
-
-        //initilazing the owned countries Jlist
         ownedCountriesModel = new DefaultListModel<>();
-        selectedCountries = new JList(ownedCountriesModel);
+        adjacentCountriesModel = new DefaultListModel<>();
 
-        ListController listController = new ListController(rm, this);
-        selectedCountries.addListSelectionListener(listController);
+        selectedCountries = new JList(ownedCountriesModel);
 
         selectedCountries.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         selectedCountries.setLayoutOrientation(JList.VERTICAL_WRAP);
-        selectedCountries.setVisibleRowCount(42);
+        selectedCountries.setVisibleRowCount(21);
 
-        //initializing the adjacent countries jlist
-        adjacentCountriesModel = new DefaultListModel<>();
         connectedCountries = new JList(adjacentCountriesModel);
-
         connectedCountries.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         connectedCountries.setLayoutOrientation(JList.VERTICAL_WRAP);
-        connectedCountries.setVisibleRowCount(10);
+        connectedCountries.setVisibleRowCount(6);
 
-        selectedCountryScrollPane.add(selectedCountries);
-        connectedCountryScrollPane.add(connectedCountries);
+        selectedCountryScrollPane = new JScrollPane(selectedCountries);
+        connectedCountryScrollPane = new JScrollPane(connectedCountries);
+
+
+        ListController listController = new ListController(rm, this);
+        selectedCountries.addListSelectionListener(listController);
 
         GridBagConstraints a4 = new GridBagConstraints();
 
@@ -839,6 +834,10 @@ public class RiskView extends JFrame implements RiskListener{
         //Ali, update the info panel somehow using m.getPlayerList like i do above
         RiskModel model = (RiskModel) m.getSource();
         updateCountriesJlist(model.getCurrentPlayer());
+    }
+
+    public void disableAttack(){
+        attackButton.setEnabled(false);
     }
 
     public static void main(String[] args) {
