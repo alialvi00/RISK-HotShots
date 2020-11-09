@@ -197,7 +197,7 @@ public class RiskView extends JFrame implements RiskListener{
         newGameScene.setBackground(Color.BLACK);
         askCount.setBackground(Color.ORANGE);
 
-        startBackgroundMusic("src/BackgroundMusic.wav");
+        //startBackgroundMusic("src/BackgroundMusic.wav");
         initializeStart();
         c1.show(mainCont, "startScene");
 
@@ -467,6 +467,15 @@ public class RiskView extends JFrame implements RiskListener{
         a2.gridy = 0;
         mainGameScene.add(addAction(),a2);
 
+        a2.fill = GridBagConstraints.BOTH;
+        a2.anchor = GridBagConstraints.LINE_END;
+        a2.insets = new Insets(5, 5, 5, 5);
+        a2.weightx = 0.5;
+        a2.weighty = 0.5;
+        a2.gridx = 3;
+        a2.gridy = 0;
+        mainGameScene.add(setInfoPanel(),a2);
+
     }
 
     public JPanel addConsole(){
@@ -580,7 +589,7 @@ public class RiskView extends JFrame implements RiskListener{
         return actionPanel;
     }
 
-    public void setInfoPanel(){
+    public JPanel setInfoPanel(){
 
         infoPanel.setPreferredSize(new Dimension(320,980));
 
@@ -588,7 +597,20 @@ public class RiskView extends JFrame implements RiskListener{
         northAmericaPanel.setPreferredSize(new Dimension(320,100));
         northAmericaPanel.setLayout(new GridLayout(5,2,5,5));
 
+        asiaPanel.setPreferredSize(new Dimension(320,100));
+        asiaPanel.setLayout(new GridLayout(5,2,5,5));
 
+        africaPanel.setPreferredSize(new Dimension(320,100));
+        africaPanel.setLayout(new GridLayout(5,2,5,5));
+
+        europePanel.setPreferredSize(new Dimension(320,100));
+        europePanel.setLayout(new GridLayout(5,2,5,5));
+
+        southAmericaPanel.setPreferredSize(new Dimension(320,100));
+        southAmericaPanel.setLayout(new GridLayout(5,2,5,5));
+
+        australiaPanel.setPreferredSize(new Dimension(320,100));
+        australiaPanel.setLayout(new GridLayout(5,2,5,5));
 
         GridBagConstraints a5 = new GridBagConstraints();
 
@@ -687,11 +709,38 @@ public class RiskView extends JFrame implements RiskListener{
         a5.gridx = 0;
         a5.gridy = 11;
         infoPanel.add(australiaPanel, a5);
+
+        return infoPanel;
     }
 
     @Override
     public void handleInitialMap(MapEvent m) {
+
+        startNewGame();
+
+        RiskModel model = (RiskModel) m.getSource();
         
+        for (Player p : m.getPlayerList()) {
+            for (Country c : p.getCountries()) {
+                JLabel countryLabel = new JLabel(c + ", " + p.getName() + ", " + p.getPlayerData().get(c));
+                if(c.getContinent().getName().equals("North America")){
+                    northAmericaPanel.add(countryLabel);
+                } else if(c.getContinent().getName().equals("Europe")){
+                    europePanel.add(countryLabel);
+                } else if(c.getContinent().getName().equals("Africa")){
+                    africaPanel.add(countryLabel);
+                } else if(c.getContinent().getName().equals("Australia")){
+                    australiaPanel.add(countryLabel);
+                } else if(c.getContinent().getName().equals("Asia")){
+                    asiaPanel.add(countryLabel);
+                }else{
+                    southAmericaPanel.add(countryLabel);
+                }
+            }
+        }
+
+        System.out.println(model.getCurrentPlayer().getName());
+
     }
 
 }

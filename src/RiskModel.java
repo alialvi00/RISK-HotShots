@@ -413,12 +413,18 @@ public class RiskModel extends DefaultListModel {
         viewList.add(view);
     }
 
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
     public void setUpPlayers(ArrayList<String> playerNames, int playerCount) {
-        welcome();
         setPlayerCount(playerCount);
         setPlayerNames(playerNames);
         setPlayers();
         setCountry();
-        stateOfMap();
+        whoStarts();
+        for (RiskView rV : viewList) {
+            rV.handleInitialMap(new MapEvent(this, playerList));
+        }
     }
 }
