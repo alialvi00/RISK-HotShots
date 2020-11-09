@@ -22,6 +22,12 @@ public class ListController implements ListSelectionListener{
         Country selectedCountry = view.getOriginCountry();
 
         //this should update the adjacent countries when someone clicks on their country
+        if(selectedCountry == null){
+            view.clearSelection();
+        }
+        else
+        {
         view.updateAdjacentJList(selectedCountry.getAdjacentCountries());
+        }
     }
 }

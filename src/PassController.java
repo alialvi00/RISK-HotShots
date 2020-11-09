@@ -12,6 +12,7 @@ public class PassController implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e){
+        view.clearSelection();
         model.nextTurn();
         view.updateCountriesJlist(model.getCurrentPlayer());
         System.out.println("It is " + model.getCurrentPlayer().getName() + "'s turn \n");
