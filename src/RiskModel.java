@@ -16,7 +16,6 @@ public class RiskModel extends DefaultListModel {
     private Boolean gameEnded;
 
     public RiskModel() {
-        welcome();
         playerNames = new ArrayList<>();
         playerList = new ArrayList<>();
         gameEnded = false;
@@ -284,7 +283,6 @@ public class RiskModel extends DefaultListModel {
                 System.out.println(c + ": " + p.getPlayerData().get(c));
             }
         }
-        System.out.println("Enter a command");
     }
 
     public boolean quit() {
@@ -416,10 +414,11 @@ public class RiskModel extends DefaultListModel {
     }
 
     public void setUpPlayers(ArrayList<String> playerNames, int playerCount) {
+        welcome();
         setPlayerCount(playerCount);
         setPlayerNames(playerNames);
         setPlayers();
         setCountry();
-
+        stateOfMap();
     }
 }

@@ -14,7 +14,7 @@ public class RiskController implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e){
         mainView.setPlayerNames();
-        mainView.switchView();
+        mainView.switchView();       
         mainView.startNewGame();
         mainModel.setUpPlayers(mainView.getPlayerNames(), mainView.getPlayerCount());
     }
