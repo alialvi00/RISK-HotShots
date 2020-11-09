@@ -7,7 +7,9 @@ public class Player{
 
 
     private HashMap<Country, Integer> conqueredCountries;
-
+    private Boolean isDefending;
+    private Dice die;
+    private RiskListener updateChanges;
     /**
      * constructor for the player class
      * the number of troops they each contain
@@ -82,7 +84,6 @@ public class Player{
             diceArray.add(die2.getDiceValue());
             return diceArray;
         }
-        
     }
 
     /**

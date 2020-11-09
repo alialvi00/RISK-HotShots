@@ -10,7 +10,7 @@ import java.util.HashMap;
 public enum CommandWords
 {
 
-     ATTACK("attack"), PASS("pass"), MAP("map"), INCORRECT("incorrect"), QUIT("quit"), RETURN("return");
+     ATTACK("attack"), PASS("pass"), MAP("map"), INCORRECT("incorrect"), QUIT("quit"), RETURN("go");
 
     private String userCommand;
 
