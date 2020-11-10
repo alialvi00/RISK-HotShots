@@ -449,6 +449,8 @@ public class RiskView extends JFrame implements RiskListener{
 
         quitOption = new JMenuItem("Awh, ur quitting the game :( ");
         quitOption.setEnabled(true);
+        quitOption.setActionCommand("quit");;
+        quitOption.addActionListener(rController);
 
         menu.add(quitOption);
         this.setJMenuBar(menuBar);

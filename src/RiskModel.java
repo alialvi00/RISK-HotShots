@@ -102,6 +102,9 @@ public class RiskModel{
             for (Player p : playerList) {
                 p.addCountry(randomCountry(), 1);
                 p.updateEnforcements(-1);
+                if(map.getCountryList().isEmpty()){
+                    break;
+                }
             }
         }
         distributeTroops();

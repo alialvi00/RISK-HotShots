@@ -13,6 +13,9 @@ public class RiskController implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e){
+        if(e.getActionCommand().equals("quit")){
+            System.exit(0);
+        }
         mainView.setPlayerNames();
         mainView.switchView();       
         mainView.startNewGame();
