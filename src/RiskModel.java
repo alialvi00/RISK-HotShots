@@ -11,6 +11,7 @@ public class RiskModel{
     private ArrayList<Integer> rolls;
     private List<RiskView> viewList;
     private Boolean gameEnded;
+    private int checkAttack;
 
     public RiskModel() {
         playerNames = new ArrayList<>();
@@ -18,6 +19,11 @@ public class RiskModel{
         gameEnded = false;
         map = new RiskMap();
         viewList = new ArrayList<>();
+        checkAttack = 0;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     public void attack(Country attackingCountry, Country defendingCountry, int attackingTroops, int defendingTroops, Player defendingPlayer) {
@@ -35,11 +41,16 @@ public class RiskModel{
                     defendingPlayer.updateCountry(defendingCountry, -1);
                     defendingTroopsLost++;
                     winningTroops++;
+                    checkAttack++;
+
                 } else if (Collections.max(attackingDice) <= Collections.max(defendingDice)) {
                     attackingDice.remove(attackingDice.indexOf(Collections.max(attackingDice)));
                     defendingDice.remove(defendingDice.indexOf(Collections.max(defendingDice)));
                     currentPlayer.updateCountry(attackingCountry, -1);
+
                     attackingTroopsLost++;
+                    checkAttack++;
+
                 }
             }
             System.out.println();
@@ -50,28 +61,38 @@ public class RiskModel{
                 currentPlayer.addCountry(defendingCountry, winningTroops);
                 currentPlayer.updateCountry(attackingCountry, -winningTroops);
                 defendingPlayer.deleteCountry(defendingCountry);
-
+                checkAttack++;
                 System.out.println();
                 System.out.println(defendingCountry + " has lost all troops and is now conquered by " + currentPlayer.getName());
+
             }
+
+
         }
 
+    public boolean getCheckAttack() {
+        if (checkAttack > 0) {
+            return true;
+        }
+        return false;
+    }
 
 
-    /**public void play() {
-        welcome();
-        setPlayers();
-        setCountry();
-        System.out.println();
-        System.out.println("The game will now start");
-        System.out.println();
-        System.out.println("The current state of map is: ");
-        stateOfMap();
-        System.out.println("Dice is now being rolled for all " + playerCount + " players.");
-        whoStarts();
-        System.out.println(currentPlayer.getName() + " has the highest number rolled so they will start");
-        startPlayerTurn();
-    }*/
+
+    public boolean gameWon(boolean gameStatus){
+        return gameStatus;
+
+    }
+
+
+    public boolean ifWon() {
+        if (playerList.size() == 1) { //Checks if a Player has all countries
+                System.out.println("won the game!");
+                return true;
+            }
+
+        return false;
+    }
 
     public void welcome() {
 
@@ -109,6 +130,10 @@ public class RiskModel{
         for (int i = 0; i < playerCount; i++) {
             playerList.add(new Player(playerNames.get(i), getInitialTroops(playerCount)));
         }
+    }
+
+    public ArrayList<Player> showPlayerList(){
+        return playerList;
     }
 
     public void distributeTroops() {
@@ -173,7 +198,6 @@ public class RiskModel{
         }
     }
 
-
     public int rollDice() {
         rollToBegin = new Dice();
         return rollToBegin.getDiceValue();
@@ -199,7 +223,6 @@ public class RiskModel{
 
         }
     }
-
 
     public Boolean isValidNumber(String num){
         try
