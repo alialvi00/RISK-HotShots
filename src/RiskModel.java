@@ -1,14 +1,11 @@
-import javax.swing.*;
 import java.util.*;
 
 public class RiskModel{
 
     private RiskMap map;
     private Dice rollToBegin;
-    private Command userCommand;
     private int playerCount;
     private Player currentPlayer;
-    private ProcessInput readInput;
     private ArrayList<String> playerNames;
     private ArrayList<Player> playerList;
     private ArrayList<Integer> rolls;

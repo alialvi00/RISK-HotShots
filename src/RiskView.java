@@ -1,19 +1,12 @@
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
-import java.io.File;
-import java.io.PrintStream;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.event.*;
+import java.io.*;
+import java.util.*;
 
 public class RiskView extends JFrame implements RiskListener{
 
@@ -77,6 +70,10 @@ public class RiskView extends JFrame implements RiskListener{
     private GridBagLayout actionLayout;
     private GridBagLayout infoLayout;
 
+    private JMenuBar menuBar;
+    private JMenu menu;
+    private JMenuItem quitOption;
+
     private GridBagConstraints a1;
     private GridBagConstraints a2;
 
@@ -97,7 +94,6 @@ public class RiskView extends JFrame implements RiskListener{
         rController = new RiskController(rm, this);
 
         PlayerController pController = new PlayerController(this);
-        
 
         rm.addView(this);
 
@@ -203,6 +199,8 @@ public class RiskView extends JFrame implements RiskListener{
         //startBackgroundMusic("src/BackgroundMusic.wav");
         initializeStart();
         c1.show(mainCont, "startScene");
+
+        mainGameScene.setBackground(Color.black);
 
         this.add(mainCont);
         this.setLocationRelativeTo(null);
@@ -443,6 +441,18 @@ public class RiskView extends JFrame implements RiskListener{
 
         this.setSize(new Dimension(1980,1020));
 
+        menuBar = new JMenuBar();
+        this.setJMenuBar(menuBar);
+
+        menu = new JMenu("Options");
+        menuBar.add(menu);
+
+        quitOption = new JMenuItem("Awh, ur quitting the game :( ");
+        quitOption.setEnabled(true);
+
+        menu.add(quitOption);
+        this.setJMenuBar(menuBar);
+
         a2.fill = GridBagConstraints.BOTH;
         a2.anchor = GridBagConstraints.LINE_START;
         a2.insets = new Insets(5,5,5,5);
@@ -520,12 +530,16 @@ public class RiskView extends JFrame implements RiskListener{
 
         actionPanel.setPreferredSize(new Dimension(200,980));
         actionPanel.setLayout(actionLayout);
+        actionPanel.setBackground(Color.red);
 
         chooseCountry = new JLabel("Choose a country");
         adjacentCountry = new JLabel("Adjacent Countries");
 
         attackButton = new JButton("Attack!!!");
+        attackButton.setBackground(Color.pink);
+
         passTurn = new JButton("Meh, Pass");
+        passTurn.setBackground(Color.ORANGE);
 
         //adding controller to attack button
         AttackController attackController = new AttackController(rm, this);
@@ -541,12 +555,15 @@ public class RiskView extends JFrame implements RiskListener{
         adjacentCountriesModel = new DefaultListModel<>();
 
         selectedCountries = new JList(ownedCountriesModel);
+        selectedCountries.setBackground(Color.gray);
 
         selectedCountries.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         selectedCountries.setLayoutOrientation(JList.VERTICAL_WRAP);
         selectedCountries.setVisibleRowCount(21);
 
         connectedCountries = new JList(adjacentCountriesModel);
+        connectedCountries.setBackground(Color.gray);
+
         connectedCountries.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         connectedCountries.setLayoutOrientation(JList.VERTICAL_WRAP);
         connectedCountries.setVisibleRowCount(6);
@@ -617,6 +634,15 @@ public class RiskView extends JFrame implements RiskListener{
     public JPanel setInfoPanel(){
 
         infoPanel.setPreferredSize(new Dimension(320,980));
+
+        infoPanel.setBackground(Color.gray);
+
+        northAmericaPanel.setBackground(Color.white);
+        southAmericaPanel.setBackground(Color.white);
+        asiaPanel.setBackground(Color.white);
+        africaPanel.setBackground(Color.white);
+        australiaPanel.setBackground(Color.white);
+        europePanel.setBackground(Color.white);
 
         //repeat the code below for all continent panels : @Hassan
         northAmericaPanel.setPreferredSize(new Dimension(320,100));
@@ -797,6 +823,7 @@ public class RiskView extends JFrame implements RiskListener{
 
         String message = player.getName() + ", " + getDestinationCountry() + " is being attacked! Choose the number of troops you would like to attack with";
 
+
         int choice = JOptionPane.showOptionDialog(this, message,
         "Defend!",
         JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
@@ -832,6 +859,7 @@ public class RiskView extends JFrame implements RiskListener{
             }
         }
 
+        System.out.println("");
         System.out.println("It is " + model.getCurrentPlayer().getName() + "'s turn");
         updateCountriesJlist(model.getCurrentPlayer());
     }
