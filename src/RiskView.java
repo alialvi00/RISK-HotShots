@@ -449,6 +449,8 @@ public class RiskView extends JFrame implements RiskListener{
 
         quitOption = new JMenuItem("Awh, ur quitting the game :( ");
         quitOption.setEnabled(true);
+        quitOption.setActionCommand("quit");;
+        quitOption.addActionListener(rController);
 
         menu.add(quitOption);
         this.setJMenuBar(menuBar);
@@ -833,6 +835,16 @@ public class RiskView extends JFrame implements RiskListener{
         return choice + 1;
 
     }
+
+    //enables the attack button
+    public void enableAttack(){
+        attackButton.setEnabled(true);
+    }
+    
+    //disables the attack button
+    public void disableAttack(){
+        attackButton.setEnabled(false);
+    }
     
 
     @Override
@@ -913,14 +925,13 @@ public class RiskView extends JFrame implements RiskListener{
         }
     }
 
-    //enables the attack button
-    public void enableAttack(){
-        attackButton.setEnabled(true);
-    }
-
-    //disables the attack button
-    public void disableAttack(){
-        attackButton.setEnabled(false);
+    /**
+     * ends the game once only one player remains
+     */
+    @Override
+    public void handleEndGame(MapEvent m){
+        JOptionPane.showMessageDialog(this,  m.getPlayerList().get(0).getName() + " has won!");
+        System.exit(0);
     }
 
     public static void main(String[] args) {

@@ -65,6 +65,12 @@ public class RiskModel{
                 System.out.println();
                 System.out.println(defendingCountry + " has lost all troops and is now conquered by " + currentPlayer.getName());
 
+                if(checkPlayerLost(defendingPlayer)){
+                    playerList.remove(defendingPlayer);
+                    if(checkGameOver()){
+                        endGame();
+                    }
+                }
             }
 
 
@@ -77,23 +83,18 @@ public class RiskModel{
         return false;
     }
 
-
-
-    public boolean gameWon(boolean gameStatus){
-        return gameStatus;
-
-    }
-
-
-    public boolean ifWon() {
-        if (playerList.size() == 1) { //Checks if a Player has all countries
-                System.out.println("won the game!");
+        /**
+         * checks if a player lost all his countries
+         * @param defendingPlayer
+         * @return
+         */
+        private boolean checkPlayerLost(Player defendingPlayer) {
+            if(defendingPlayer.getCountries().size() == 0){
                 return true;
-            }
-
-        return false;
-    }
-
+            } 
+            return false;
+        }
+  
     public void welcome() {
 
         System.out.println("Welcome to RISK: Global Domination!");
@@ -110,6 +111,9 @@ public class RiskModel{
             for (Player p : playerList) {
                 p.addCountry(randomCountry(), 1);
                 p.updateEnforcements(-1);
+                if(map.getCountryList().isEmpty()){
+                    break;
+                }
             }
         }
         distributeTroops();
@@ -213,15 +217,11 @@ public class RiskModel{
         return null;       //added this or else error since not returning anything
     }
 
-    public void checkGameOver() {
-
-        for (Player p : playerList) {
-            if (p.getCountries().size() == 42) { //Checks if a Player has all countries.
-                gameEnded = true;
-                System.out.println("Game Over. The winner is: " + p.getName());
-            }
-
+    public boolean checkGameOver() {
+        if(playerList.size() == 1){
+            return true;
         }
+        return false;
     }
 
     public Boolean isValidNumber(String num){
@@ -289,6 +289,12 @@ public class RiskModel{
         }
         for (RiskView v : viewList) {
             v.handleAdjacentList(new ListEvent(this, enemyCountries));
+        }
+    }
+
+    public void endGame(){
+        for (RiskView v : viewList) {
+            v.handleEndGame(new MapEvent(this, playerList));
         }
     }
 }
