@@ -182,45 +182,6 @@ public class RiskModel{
         return rollToBegin.getDiceValue();
     }
 
-    public void passTurn() {
-        if (!userCommand.ifSecondCommand()) {
-            System.out.println("Do you mean pass turn? \n");
-        } else {
-            String skipTurn = userCommand.getSecondCommand();
-            if (skipTurn.equals("turn")) {
-                System.out.println(currentPlayer.getName() + " has skipped its turn");
-                System.out.println("Next player turn");
-                nextTurn();
-            } else {
-                System.out.println("Do you mean pass turn? \n");
-            }
-        }
-    }
-
-
-    public void stateOfMap() {
-        for (Player p : playerList) {
-            System.out.println();
-            System.out.println(p.getName() + "'s Countries: ");
-            System.out.println();
-            for (Country c : p.getPlayerData().keySet()) {
-                System.out.println(c + ": " + p.getPlayerData().get(c));
-            }
-        }
-    }
-
-    public boolean quit() {
-        if (userCommand.ifSecondCommand()) {
-            System.out.println("Quit what?");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public Boolean checkPlayerCountry(String country, Player player) {
-        return player.hasCountry(country);
-    }
 
     public Player getDefendingPlayer(String country) {
         for (Player p : playerList) {
@@ -230,16 +191,6 @@ public class RiskModel{
         }
         return null;       //added this or else error since not returning anything
     }
-
-    public Boolean checkAdjacency(String attackingCountry, String defendingCountry) {
-        for (String s : currentPlayer.getCountryByName(attackingCountry).getAdjacentCountries()) {
-            if (defendingCountry.equals(s.toLowerCase())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     public void checkGameOver() {
 
@@ -252,14 +203,6 @@ public class RiskModel{
         }
     }
 
-    public int getValidNumber(String troops, Scanner input) {
-        String troopNum = troops;
-        while(!isValidNumber(troopNum)){
-            System.out.println("Please enter a number: ");
-            troopNum = input.nextLine();
-        }
-        return Integer.parseInt(troopNum);
-    }
 
     public Boolean isValidNumber(String num){
         try
