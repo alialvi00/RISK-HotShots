@@ -17,8 +17,9 @@ public class ListController implements ListSelectionListener{
 
     @Override
     public void valueChanged(ListSelectionEvent e){
-
-        //hopefully this gets the the country the player selects from the jlist, i am unable to test
+        //disables the attack button
+        view.disableAttack();
+        //this gets the the country the player selects from the jlist
         Country selectedCountry = view.getOriginCountry();
 
         //this should update the adjacent countries when someone clicks on their country
@@ -27,7 +28,7 @@ public class ListController implements ListSelectionListener{
         }
         else
         {
-        view.updateAdjacentJList(selectedCountry.getAdjacentCountries());
+        model.updateAdjacentCountries(selectedCountry);
         }
     }
 }
