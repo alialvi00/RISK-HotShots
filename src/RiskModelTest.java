@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
@@ -10,27 +11,9 @@ public class RiskModelTest {
     ArrayList<String> playerNames;
     Country alaska;
     Country alberta;
+    private HashMap<Country, Integer> conqueredCountries = new HashMap<Country, Integer>();
+    private HashMap<Country, Integer> conqueredCountries2 = new HashMap<Country, Integer>();
 
-
-    @org.junit.Test
-    public void testAttack(){
-        RiskModel risk = new RiskModel();
-        Player player = new Player("Areeb", 3);
-        risk.attack(alaska, alberta, 2, 3, player);
-        boolean check = risk.getCheckAttack();
-        assertEquals(true, check);
-
-    }
-
-    @org.junit.Test
-    public void testGetDefendingPlayer() {
-        Player player = new Player("AREEB", 5);
-        RiskModel risk = new RiskModel();
-        ArrayList<Player> playerList = new ArrayList<>();
-        playerList.add(player);
-
-        assertEquals(null, risk.getDefendingPlayer("alaska") ); // this is the case because there is no countries assigned.
-    }
 
 
     @org.junit.Test
@@ -56,6 +39,34 @@ public class RiskModelTest {
     }
 
 
+    @org.junit.Test
+    public void testGetDefendingPlayer() {
+        Player player = new Player("AREEB", 5);
+        RiskModel risk = new RiskModel();
+        ArrayList<Player> playerList = new ArrayList<>();
+        playerList.add(player);
+
+        assertEquals(null, risk.getDefendingPlayer("alaska") ); // this is the case because there is no countries assigned.
+    }
+
+
+    @org.junit.Test
+    public void testAttack(){
+        RiskModel risk = new RiskModel();
+        Player player = new Player("Areeb", 3);
+        Player player2 = new Player("Hassan", 2);
+        conqueredCountries.put(alaska, 3);
+        conqueredCountries2.put(alberta, 2);
+        player.setConqueredCountries(conqueredCountries);
+        risk.setCurrentPlayer(player);
+        player2.setConqueredCountries(conqueredCountries2);
+        player.updateCountry(alaska, 3);
+        player2.updateCountry(alberta, 2);
+
+        risk.attack(alberta, alaska, 3, 2, player2);
+        assertEquals(true, risk.getCheckAttack());
+
+    }
 
     @org.junit.Test
     public void testCorrectInitialTroops() {
@@ -63,6 +74,7 @@ public class RiskModelTest {
         int check = risk.getInitialTroops(3);
         assertEquals(check, 35);
     }
+
 
     @org.junit.Test
     public void testIfWon() {
