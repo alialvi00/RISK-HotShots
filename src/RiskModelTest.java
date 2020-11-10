@@ -76,24 +76,6 @@ public class RiskModelTest {
     }
 
 
-    @org.junit.Test
-    public void testIfWon() {
-        Player player = new Player("Areeb", 5);
-        ArrayList<String> playerNames = new ArrayList<>();
-
-        RiskModel risk = new RiskModel();
-        playerNames.add("Areeb");
-        playerNames.add("Hassan");
-        risk.setPlayerNames(playerNames);
-        risk.setPlayerCount(2);
-        risk.setPlayers();
-
-        assertEquals(false, risk.ifWon());
-
-//s
-        //hypothetical case as when a player loses they are removed from the playerList
-
-    }
 
 
 

@@ -933,7 +933,7 @@ public class RiskView extends JFrame implements RiskListener{
         JOptionPane.showMessageDialog(this,  m.getPlayerList().get(0).getName() + " has won!");
         System.exit(0);
     }
-
+//s
     public static void main(String[] args) {
         new RiskView();
     }
