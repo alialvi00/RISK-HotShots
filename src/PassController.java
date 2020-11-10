@@ -15,7 +15,7 @@ public class PassController implements ActionListener{
         view.clearSelection();
         model.nextTurn();
         view.updateCountriesJlist(model.getCurrentPlayer());
-        System.out.println("It is " + model.getCurrentPlayer().getName() + "'s turn \n");
+        System.out.println("\nIt is " + model.getCurrentPlayer().getName() + "'s turn \n");
     }
     
 }

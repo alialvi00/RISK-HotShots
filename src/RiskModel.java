@@ -20,6 +20,14 @@ public class RiskModel{
         viewList = new ArrayList<>();
     }
 
+    /**
+     * does everything needed to attack. rolls the dice, updates countries, removes players if needed
+     * @param attackingCountry  country attacking
+     * @param defendingCountry  country defending
+     * @param attackingTroops   number of troops attacking
+     * @param defendingTroops   number of troops defending
+     * @param defendingPlayer   player being attacked
+     */
     public void attack(Country attackingCountry, Country defendingCountry, int attackingTroops, int defendingTroops, Player defendingPlayer) {
             int defendingTroopsLost = 0;
             int attackingTroopsLost = 0;
@@ -77,15 +85,8 @@ public class RiskModel{
         }
 
         /**
-         * public void play() { welcome(); setPlayers(); setCountry();
-         * System.out.println(); System.out.println("The game will now start");
-         * System.out.println(); System.out.println("The current state of map is: ");
-         * stateOfMap(); System.out.println("Dice is now being rolled for all " +
-         * playerCount + " players."); whoStarts();
-         * System.out.println(currentPlayer.getName() + " has the highest number rolled
-         * so they will start"); startPlayerTurn(); }
+         * prints out a welcome message
          */
-
     public void welcome() {
 
         System.out.println("Welcome to RISK: Global Domination!");
@@ -93,10 +94,12 @@ public class RiskModel{
         System.out.println("RISK is a classic strategy game filled with conquest and intrigue.\n"
                 + "This game can be played with 2-6 players." +
                 "To win, you must strive to capture all of the continents and countries in the game, while eliminating other players.\n" +
-                "The last man standing is the winner!");
+                "The last man standing is the winner!\n");
     }
 
-
+    /**
+     * distributes countries to players
+     */
     public void setCountry() {
         while (!(map.getCountryList().isEmpty())) {
             for (Player p : playerList) {
@@ -108,25 +111,38 @@ public class RiskModel{
             }
         }
         distributeTroops();
-
     }
 
+    /**
+     * sets the number of players
+     * @param playerCount int
+     */
     public void setPlayerCount(int playerCount) {
         this.playerCount = playerCount;
     }
 
+    /**
+     * adds player names to a list 
+     * @param players String
+     */
     public void setPlayerNames(ArrayList<String> players) {
         for (String p: players){
             playerNames.add(p);
         }
     }
 
+    /**
+     * initiates player objects using the list of names
+     */
     public void setPlayers() {
         for (int i = 0; i < playerCount; i++) {
             playerList.add(new Player(playerNames.get(i), getInitialTroops(playerCount)));
         }
     }
 
+    /**
+     * distributes the troops to each country of each player
+     */
     public void distributeTroops() {
 
         Random randInt = new Random();
@@ -144,6 +160,10 @@ public class RiskModel{
         }
     }
 
+    /**
+     * picks a random country from the list of countries
+     * @return Country
+     */
     public Country randomCountry() {
         Random inCountryList = new Random();
         int value = inCountryList.nextInt(map.getCountryList().size());
@@ -153,6 +173,12 @@ public class RiskModel{
         return temp;
     }
 
+
+    /**
+     * depending how many players picks the starting amount of troops
+     * @param playerCount int
+     * @return int
+     */
     public int getInitialTroops(int playerCount) {
         switch (playerCount) {
             case 2:
@@ -224,6 +250,10 @@ public class RiskModel{
         }
     }
 
+    /**
+     * adds observers
+     * @param view
+     */
     public void addView(RiskView view) {
         viewList.add(view);
     }
@@ -232,6 +262,11 @@ public class RiskModel{
         return currentPlayer;
     }
 
+    /**
+     * returns the maximum amount of troops for an attacking country
+     * @param country of type Country
+     * @return int
+     */
     public int getMaxAttackingTroops(Country country){
         int troops = currentPlayer.getPlayerData().get(country) - 1;
         if(troops > 3){
@@ -239,6 +274,12 @@ public class RiskModel{
         } else{return troops;}
     }
 
+    /**
+     * returns the maximum amount of troops for a defending country 
+     * @param country Country
+     * @param player
+     * @return int
+     */
     public int getMaxDefendingTroops(Country country, Player player){
         int troops = player.getPlayerData().get(country);
         if(troops > 2){
@@ -247,6 +288,11 @@ public class RiskModel{
         else{return troops;}
     }
 
+    /**
+     * sets up the players given by the observer and updates the observers
+     * @param playerNames ArrayList<String>
+     * @param playerCount int
+     */
     public void setUpPlayers(ArrayList<String> playerNames, int playerCount) {
         setPlayerCount(playerCount);
         setPlayerNames(playerNames);
@@ -258,6 +304,14 @@ public class RiskModel{
         }
     }
 
+    /**
+     * initiates the attack from the information given by the controller
+     * @param attackingCountry  Country
+     * @param defendingCountry  Country
+     * @param attackingTroops   int
+     * @param defendingTroops   int
+     * @param defendingPlayer   Player
+     */
     public void initiateAttack(Country attackingCountry, Country defendingCountry, int attackingTroops, int defendingTroops, Player defendingPlayer){
         //attack actually occurs, map gets updated
         attack(attackingCountry, defendingCountry, attackingTroops, defendingTroops, defendingPlayer);
@@ -267,6 +321,10 @@ public class RiskModel{
         }
     }
 
+    /**
+     * updates the adjacent list for a country, only displayes the enemies countries
+     * @param country Country
+     */
     public void updateAdjacentCountries(Country country){
         String[] allAdj = country.getAdjacentCountries();
         ArrayList<String> enemyCountries = new ArrayList<>();
@@ -281,6 +339,9 @@ public class RiskModel{
         }
     }
 
+    /**
+     * ends the game once there is only one player left
+     */
     public void endGame(){
         for (RiskView v : viewList) {
             v.handleEndGame(new MapEvent(this, playerList));
