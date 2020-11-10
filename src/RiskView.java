@@ -201,6 +201,7 @@ public class RiskView extends JFrame implements RiskListener{
         c1.show(mainCont, "startScene");
 
         mainGameScene.setBackground(Color.black);
+        startBackgroundMusic("src/BackgroundMusic.wav");
 
         this.add(mainCont);
         this.setLocationRelativeTo(null);
