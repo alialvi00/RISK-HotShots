@@ -4,6 +4,8 @@ public class Player{
 
     private String playerName;
     private int availableEnforcement;
+
+
     private HashMap<Country, Integer> conqueredCountries;
     private Boolean isDefending;
     private Dice die;
@@ -17,7 +19,7 @@ public class Player{
         conqueredCountries = new HashMap<>();
         playerName = name;
         this.availableEnforcement = availableEnforcement;
-        isDefending = false;
+
     }
 
     /**
@@ -36,6 +38,8 @@ public class Player{
         Set<Country> countrySet = conqueredCountries.keySet();
         ArrayList<Country> countryList = new ArrayList<>(countrySet);
         return countryList;
+
+
     }
 
     /**
@@ -138,15 +142,15 @@ public class Player{
      * @param troops number of troops moving of type int
      * @return returns true if it is successful or false if not
      */
-    public Boolean maneuverTroops(Country origin, Country destination, int troops){
-        if(troops < conqueredCountries.get(origin)){
-            conqueredCountries.put(origin, conqueredCountries.get(origin) - troops);
-            conqueredCountries.put(destination, conqueredCountries.get(destination) + troops);
-            return true;
-        }
-        
-        return false;
-    }
+   // public Boolean maneuverTroops(Country origin, Country destination, int troops){
+     //   if(troops < conqueredCountries.get(origin)){
+     //       conqueredCountries.put(origin, conqueredCountries.get(origin) - troops);
+     //       conqueredCountries.put(destination, conqueredCountries.get(destination) + troops);
+      //      return true;
+    //    }
+     //
+    //    return false;
+    //}
 
     /**
      * updates the number of troops in a country after an attack
@@ -184,13 +188,10 @@ public class Player{
         return null;
     }
 
-    public boolean checkCountries(){
-
-        if(conqueredCountries.keySet().isEmpty()){
-
-            return true;
-        }
-        return false;
+    public void setConqueredCountries(HashMap<Country, Integer> conqueredCountries) {
+        this.conqueredCountries = conqueredCountries;
     }
+
+
 
 }
