@@ -530,6 +530,7 @@ public class RiskView extends JFrame implements RiskListener{
         //adding controller to attack button
         AttackController attackController = new AttackController(rm, this);
         attackButton.addActionListener(attackController);
+        attackButton.setEnabled(false);
 
         //adding the controller to the pass button
         PassController passController = new PassController(this, rm);
@@ -556,6 +557,9 @@ public class RiskView extends JFrame implements RiskListener{
 
         ListController listController = new ListController(rm, this);
         selectedCountries.addListSelectionListener(listController);
+
+        AdjListController adjListController = new AdjListController(this);
+        connectedCountries.addListSelectionListener(adjListController);
 
         GridBagConstraints a4 = new GridBagConstraints();
 
@@ -743,20 +747,12 @@ public class RiskView extends JFrame implements RiskListener{
         }
     }
 
-   /** public void updateAdjacentJList(String[] countryList){
-        if(!adjacentCountriesModel.isEmpty()){
-            adjacentCountriesModel.removeAllElements();
-        }
-        for (String c : countryList) {
-            adjacentCountriesModel.addElement(c);
-        }
-    }*/
-
     public Country getOriginCountry(){
         return selectedCountries.getSelectedValue();
     }
 
     public String getDestinationCountry(){
+        attackButton.setEnabled(true);
         return connectedCountries.getSelectedValue();
     }
 
@@ -880,7 +876,7 @@ public class RiskView extends JFrame implements RiskListener{
     @Override
     public void handleAdjacentList(ListEvent l){
         ArrayList<String> countryList = l.getAdjacentList();    
-        
+
         if(!adjacentCountriesModel.isEmpty()){
             adjacentCountriesModel.removeAllElements();
         }
@@ -889,6 +885,12 @@ public class RiskView extends JFrame implements RiskListener{
         }
     }
 
+    //enables the attack button
+    public void enableAttack(){
+        attackButton.setEnabled(true);
+    }
+
+    //disables the attack button
     public void disableAttack(){
         attackButton.setEnabled(false);
     }
