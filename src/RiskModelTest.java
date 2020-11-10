@@ -78,21 +78,21 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void testIfWon() {
-        Player player = new Player("Areeb", 5);
-        ArrayList<String> playerNames = new ArrayList<>();
 
-        RiskModel risk = new RiskModel();
-        playerNames.add("Areeb");
-        playerNames.add("Hassan");
-        risk.setPlayerNames(playerNames);
-        risk.setPlayerCount(2);
-        risk.setPlayers();
+        RiskModel newRisk = new RiskModel();
+        ArrayList<Player> players = new ArrayList<>();
+        Player p1 = new Player("Ali",1);
+        newRisk.setCurrentPlayer(new Player("Hassan",1));
 
-        assertEquals(false, risk.ifWon());
+        players.add(p1);
+        players.add(newRisk.getCurrentPlayer());
 
-//s
-        //hypothetical case as when a player loses they are removed from the playerList
+        Continent c1 = new Continent("North America", 9, 5);
 
+        Country attacking = new Country("ontario", c1);
+        Country defending = new Country("quebec",c1);
+        newRisk.attack(attacking,defending,1,1,p1);
+        assertEquals(true, newRisk.checkGameOver(players));
     }
 
 

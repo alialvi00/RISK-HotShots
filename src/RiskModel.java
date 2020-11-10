@@ -67,7 +67,7 @@ public class RiskModel{
 
                 if(checkPlayerLost(defendingPlayer)){
                     playerList.remove(defendingPlayer);
-                    if(checkGameOver()){
+                    if(checkGameOver(playerList)){
                         endGame();
                     }
                 }
@@ -217,8 +217,8 @@ public class RiskModel{
         return null;       //added this or else error since not returning anything
     }
 
-    public boolean checkGameOver() {
-        if(playerList.size() == 1){
+    public boolean checkGameOver(ArrayList players) {
+        if(players.size() == 1){
             return true;
         }
         return false;
@@ -242,6 +242,7 @@ public class RiskModel{
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
+
 
     public int getMaxAttackingTroops(Country country){
         int troops = currentPlayer.getPlayerData().get(country) - 1;
@@ -297,4 +298,5 @@ public class RiskModel{
             v.handleEndGame(new MapEvent(this, playerList));
         }
     }
+
 }
