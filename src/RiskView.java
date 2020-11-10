@@ -743,14 +743,14 @@ public class RiskView extends JFrame implements RiskListener{
         }
     }
 
-    public void updateAdjacentJList(String[] countryList){
+   /** public void updateAdjacentJList(String[] countryList){
         if(!adjacentCountriesModel.isEmpty()){
             adjacentCountriesModel.removeAllElements();
         }
         for (String c : countryList) {
             adjacentCountriesModel.addElement(c);
         }
-    }
+    }*/
 
     public Country getOriginCountry(){
         return selectedCountries.getSelectedValue();
@@ -875,6 +875,18 @@ public class RiskView extends JFrame implements RiskListener{
 
         revalidate();
         repaint();
+    }
+
+    @Override
+    public void handleAdjacentList(ListEvent l){
+        ArrayList<String> countryList = l.getAdjacentList();    
+        
+        if(!adjacentCountriesModel.isEmpty()){
+            adjacentCountriesModel.removeAllElements();
+        }
+        for (String c : countryList) {
+            adjacentCountriesModel.addElement(c);
+        }
     }
 
     public void disableAttack(){

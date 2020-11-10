@@ -314,4 +314,18 @@ public class RiskModel{
             rV.handleAttack(new MapEvent(this, playerList));
         }
     }
+
+    public void updateAdjacentCountries(Country country){
+        String[] allAdj = country.getAdjacentCountries();
+        ArrayList<String> enemyCountries = new ArrayList<>();
+        //here we will remove the countries that the player already owns
+        for (String s : allAdj) {
+            if(!currentPlayer.hasCountry(s)){
+                enemyCountries.add(s);
+            }
+        }
+        for (RiskView v : viewList) {
+            v.handleAdjacentList(new ListEvent(this, enemyCountries));
+        }
+    }
 }

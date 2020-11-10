@@ -27,7 +27,7 @@ public class ListController implements ListSelectionListener{
         }
         else
         {
-        view.updateAdjacentJList(selectedCountry.getAdjacentCountries());
+        model.updateAdjacentCountries(selectedCountry);;
         }
     }
 }
