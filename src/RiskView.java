@@ -848,6 +848,9 @@ public class RiskView extends JFrame implements RiskListener{
     }
     
 
+    /**
+     * adds the initial map to the info panel, displays country, owner, troops
+     */
     @Override
     public void handleInitialMap(MapEvent m) {
 
@@ -877,6 +880,9 @@ public class RiskView extends JFrame implements RiskListener{
         updateCountriesJlist(model.getCurrentPlayer());
     }
 
+    /**
+     * updates the infoPanel after each attack
+     */
     @Override
     public void handleAttack(MapEvent m){
         //Ali, update the info panel somehow using m.getPlayerList like i do above
@@ -914,6 +920,9 @@ public class RiskView extends JFrame implements RiskListener{
         repaint();
     }
 
+    /**
+     * updates the Jlist of adjacent countries of the selected country, only enemy countries appear
+     */
     @Override
     public void handleAdjacentList(ListEvent l){
         ArrayList<String> countryList = l.getAdjacentList();    
