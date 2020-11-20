@@ -12,6 +12,8 @@ public class PassController implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e){
+
+        view.playSoundEffect("library/PassButtonSound.wav");
         view.clearSelection();
         model.nextTurn();
         view.updateCountriesJlist(model.getCurrentPlayer());
