@@ -15,6 +15,7 @@ public class RiskView extends JFrame implements RiskListener{
     private JButton startGame;
     private JButton attackButton;
     private JButton passTurn;
+    private JButton maneuverButton;
 
     private JTextArea consoleUpdate;
 
@@ -22,6 +23,7 @@ public class RiskView extends JFrame implements RiskListener{
     private JLabel askName;
     private JLabel chooseCountry;
     private JLabel adjacentCountry;
+    private JLabel currentPlayer;
 
     private String[] playerNum= {"2","3","4","5","6"};
     private ArrayList<String> playerNames;
@@ -120,7 +122,7 @@ public class RiskView extends JFrame implements RiskListener{
         //start button listener        
         startGame.addActionListener(rController);
 
-        mapImage = new ImageIcon("src/mapRisk.png");
+        mapImage = new ImageIcon("library/mapRisk.png");
 
         attackButton = new JButton("Attack");
 
@@ -147,7 +149,6 @@ public class RiskView extends JFrame implements RiskListener{
         consoleUpdate = new JTextArea();
 
         askCount = new JPanel(new GridBagLayout());
-
 
         p1 = new JTextField("Napoleon",3);
         p2 = new JTextField("Columbus",3);
@@ -194,14 +195,13 @@ public class RiskView extends JFrame implements RiskListener{
         askForCountPlayers = new JLabel("How many players? ");
 
         newGameScene.setBackground(Color.BLACK);
-        askCount.setBackground(Color.ORANGE);
+        askCount.setBackground(new Color(144,238,144));
 
-        //startBackgroundMusic("src/BackgroundMusic.wav");
         initializeStart();
         c1.show(mainCont, "startScene");
 
         mainGameScene.setBackground(Color.black);
-        startBackgroundMusic("src/BackgroundMusic.wav");
+        startBackgroundMusic("library/BackgroundMusic.wav");
 
         this.add(mainCont);
         this.setLocationRelativeTo(null);
@@ -282,6 +282,21 @@ public class RiskView extends JFrame implements RiskListener{
         }
         catch(Exception e){
             System.out.println("Music file not found, no music to be played :(");
+        }
+    }
+
+    public void playSoundEffect(String soundEffect){
+        try
+        {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundEffect).getAbsoluteFile( ));
+            Clip clip = AudioSystem.getClip( );
+            clip.open(audioInputStream);
+            clip.start( );
+        }
+        catch(Exception ex)
+        {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace( );
         }
     }
 
@@ -533,10 +548,16 @@ public class RiskView extends JFrame implements RiskListener{
 
         actionPanel.setPreferredSize(new Dimension(200,980));
         actionPanel.setLayout(actionLayout);
-        actionPanel.setBackground(Color.red);
+        actionPanel.setBackground(new Color(135,206,235));
 
         chooseCountry = new JLabel("Choose a country");
         adjacentCountry = new JLabel("Adjacent Countries");
+
+        currentPlayer = new JLabel("Daddy chill");
+        currentPlayer.setBorder(BorderFactory.createLineBorder(new Color(139,0,139), 5));
+
+        maneuverButton = new JButton("Maneuver Troops");
+        maneuverButton.setBackground(new Color(254,216,177));
 
         attackButton = new JButton("Attack!!!");
         attackButton.setBackground(Color.pink);
@@ -588,6 +609,14 @@ public class RiskView extends JFrame implements RiskListener{
         a4.weightx = 0.5;
         a4.weighty = 0.5;
         a4.gridx = 0;
+        a4.gridy = 0;
+        actionPanel.add(currentPlayer, a4);
+
+        a4.fill = GridBagConstraints.BOTH;
+        a4.insets = new Insets(5, 5, 5, 5);
+        a4.weightx = 0.5;
+        a4.weighty = 0.5;
+        a4.gridx = 0;
         a4.gridy = 4;
         actionPanel.add(chooseCountry, a4);
 
@@ -622,6 +651,14 @@ public class RiskView extends JFrame implements RiskListener{
         a4.gridx = 0;
         a4.gridy = 9;
         actionPanel.add(attackButton, a4);
+
+        a4.fill = GridBagConstraints.BOTH;
+        a4.insets = new Insets(5, 5, 5, 5);
+        a4.weightx = 0.5;
+        a4.weighty = 0.5;
+        a4.gridx = 0;
+        a4.gridy = 10;
+        actionPanel.add(maneuverButton, a4);
 
         a4.fill = GridBagConstraints.BOTH;
         a4.insets = new Insets(5, 5, 5, 5);
@@ -889,7 +926,7 @@ public class RiskView extends JFrame implements RiskListener{
         RiskModel model = (RiskModel) m.getSource();
         updateCountriesJlist(model.getCurrentPlayer());
         
-        //updating the map (infopanel)
+        //updating the map (infoPanel)
         northAmericaPanel.removeAll();
         asiaPanel.removeAll();
         southAmericaPanel.removeAll();
