@@ -92,7 +92,6 @@ public class RiskMap {
     }
 
     public void createContinentList() {
-
         continentList.add(northAmerica);
         continentList.add(europe);
         continentList.add(africa);
@@ -383,6 +382,10 @@ public class RiskMap {
 
     public ArrayList<Country> getCountryList() {
         return countryList;
+    }
+
+    public ArrayList<Continent> getContinentList() {
+        return continentList;
     }
 
 
