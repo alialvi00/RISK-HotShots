@@ -17,10 +17,11 @@ public class RiskController implements ActionListener{
             System.exit(0);
         }
         mainView.setPlayerNames();
+        mainView.setPlayerType();
         mainView.switchView();       
         mainView.startNewGame();
         mainModel.welcome();
-        mainModel.setUpPlayers(mainView.getPlayerNames(), mainView.getPlayerCount());
+        mainModel.setUpPlayers(mainView.getPlayerNames(), mainView.getPlayerCount(),mainView.getPlayerType());
     }
 
 }

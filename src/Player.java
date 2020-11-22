@@ -4,8 +4,7 @@ public class Player{
 
     private String playerName;
     private int availableEnforcement;
-
-
+    private Boolean isAI = false;
     private HashMap<Country, Integer> conqueredCountries;
     private Boolean isDefending;
     private Dice die;
@@ -192,6 +191,12 @@ public class Player{
         this.conqueredCountries = conqueredCountries;
     }
 
+    public void setAsAI(Boolean isAI){
+        this.isAI = isAI;
+    }
 
+    public Boolean getIsAI(){
+        return isAI;
+    }
 
 }

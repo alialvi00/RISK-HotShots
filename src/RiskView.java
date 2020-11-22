@@ -15,6 +15,7 @@ public class RiskView extends JFrame implements RiskListener{
     private JButton startGame;
     private JButton attackButton;
     private JButton passTurn;
+    private JButton fortifyButton;
     private JButton maneuverButton;
 
     private JTextArea consoleUpdate;
@@ -28,6 +29,17 @@ public class RiskView extends JFrame implements RiskListener{
     private String[] playerNum= {"2","3","4","5","6"};
     private ArrayList<String> playerNames;
     private JComboBox playerCountList;
+
+    private JComboBox computerOrPlayer1;
+    private JComboBox computerOrPlayer2;
+    private JComboBox computerOrPlayer3;
+    private JComboBox computerOrPlayer4;
+    private JComboBox computerOrPlayer5;
+    private JComboBox computerOrPlayer6;
+
+    private ArrayList<Boolean> isAI;
+
+    private String[] computerOrPlayer = {"AI","Player"};
 
     private JPanel mainCont;
     private JPanel newGameScene;
@@ -135,6 +147,15 @@ public class RiskView extends JFrame implements RiskListener{
 
         attackButton = new JButton("Attack");
 
+        computerOrPlayer1 = new JComboBox(computerOrPlayer);
+        computerOrPlayer2 = new JComboBox(computerOrPlayer);
+        computerOrPlayer3 = new JComboBox(computerOrPlayer);
+        computerOrPlayer4 = new JComboBox(computerOrPlayer);
+        computerOrPlayer5 = new JComboBox(computerOrPlayer);
+        computerOrPlayer6 = new JComboBox(computerOrPlayer);
+
+        isAI = new ArrayList<>();
+
         northAmericaPanel = new JPanel();
         southAmericaPanel = new JPanel();
         europePanel = new JPanel();
@@ -232,8 +253,6 @@ public class RiskView extends JFrame implements RiskListener{
 
         a1.gridx = 0;
         a1.gridy = 1;
-        a1.ipady = 5;
-        a1.ipadx = 5;
         a1.anchor = GridBagConstraints.NORTHWEST;
         a1.weightx = 1;
         a1.weighty = 1;
@@ -241,8 +260,6 @@ public class RiskView extends JFrame implements RiskListener{
 
         a1.gridx = 1;
         a1.gridy = 0;
-        a1.ipadx = 0;
-        a1.ipady = 0;
         a1.anchor = GridBagConstraints.NORTHWEST;
         a1.weighty = 1;
         a1.weightx = 1;
@@ -253,9 +270,6 @@ public class RiskView extends JFrame implements RiskListener{
         a1.anchor = GridBagConstraints.NORTHWEST;
         a1.weightx = 1;
         a1.weighty = 1;
-        a1.ipady = 5;
-        a1.ipadx = 5;
-
         askCount.add(p1,a1);
         a1.gridy = 2;
         askCount.add(p2,a1);
@@ -269,10 +283,24 @@ public class RiskView extends JFrame implements RiskListener{
         askCount.add(p6,a1);
 
         a1.gridx = 2;
+        a1.gridy = 1;
+        a1.anchor = GridBagConstraints.NORTHWEST;
+        a1.weightx = 1;
+        a1.weighty = 1;
+        askCount.add(computerOrPlayer1,a1);
+        a1.gridy = 2;
+        askCount.add(computerOrPlayer2,a1);
         a1.gridy = 3;
-        a1.ipadx = 0;
-        a1.ipady = 0;
-        a1.anchor = GridBagConstraints.CENTER;
+        askCount.add(computerOrPlayer3,a1);
+        a1.gridy = 4;
+        askCount.add(computerOrPlayer4,a1);
+        a1.gridy = 5;
+        askCount.add(computerOrPlayer5,a1);
+        a1.gridy = 6;
+        askCount.add(computerOrPlayer6,a1);
+
+        a1.gridx = 0;
+        a1.gridy = 2;
         askCount.add(startGame, a1);
     }
 
@@ -282,11 +310,15 @@ public class RiskView extends JFrame implements RiskListener{
             File musicFile = new File(musicPath);
             if(musicFile.exists()){
                 AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicFile);
-                Clip loop = AudioSystem.getClip();
-                loop.open(audioInput);
-                loop.start();
-                FloatControl volume = (FloatControl) loop.getControl(FloatControl.Type.MASTER_GAIN);
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioInput);
+                clip.start();
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
+                FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
                 volume.setValue(-5.0f);
+            }
+            else{
+                System.out.println("Music file not found");
             }
         }
         catch(Exception e){
@@ -450,16 +482,47 @@ public class RiskView extends JFrame implements RiskListener{
         return playerNames;
     }
 
-    public void setStartGame(ActionListener e){
-        startGame.addActionListener(e);
+    public void setPlayerType(){
+
+        switch (getPlayerCount()) {
+            case 3:
+                isAI.add(computerOrPlayer1.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer2.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer3.getSelectedIndex()==0);
+
+            case 4:
+                isAI.add(computerOrPlayer1.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer2.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer3.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer4.getSelectedIndex()==0);
+
+            case 5:
+                isAI.add(computerOrPlayer1.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer2.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer3.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer4.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer5.getSelectedIndex()==0);
+
+            case 6:
+                isAI.add(computerOrPlayer1.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer2.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer3.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer4.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer5.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer6.getSelectedIndex()==0);
+
+            default:
+                isAI.add(computerOrPlayer1.getSelectedIndex()==0);
+                isAI.add(computerOrPlayer2.getSelectedIndex()==0);
+        }
     }
+    public ArrayList<Boolean> getPlayerType(){
+        return isAI;
+    }
+
 
     public void switchView(){
         c1.show(mainCont,"secondScene");
-    }
-
-    public void setCountry(String name){
-
     }
 
     public void startNewGame(){
@@ -562,8 +625,12 @@ public class RiskView extends JFrame implements RiskListener{
         chooseCountry = new JLabel("Choose a country");
         adjacentCountry = new JLabel("Adjacent Countries");
 
+
         currentPlayerInfo = new JLabel(" ");
         currentPlayerInfo.setBorder(BorderFactory.createLineBorder(new Color(139,0,139), 5));
+
+        fortifyButton = new JButton("Deploy Troops");
+        fortifyButton.setBackground(new Color(66, 245, 126));
 
         maneuverButton = new JButton("Maneuver Troops");
         maneuverButton.setBackground(new Color(254,216,177));
@@ -633,6 +700,14 @@ public class RiskView extends JFrame implements RiskListener{
         a4.gridx = 0;
         a4.gridy = 5;
         actionPanel.add(selectedCountryScrollPane, a4);
+
+        a4.fill = GridBagConstraints.BOTH;
+        a4.insets = new Insets(5, 5, 5, 5);
+        a4.weightx = 0.5;
+        a4.weighty = 0.5;
+        a4.gridx = 0;
+        a4.gridy = 6;
+        actionPanel.add(fortifyButton, a4);
 
         a4.fill = GridBagConstraints.BOTH;
         a4.insets = new Insets(5, 5, 5, 5);
