@@ -12,6 +12,9 @@ public class RiskModel{
     private List<RiskView> viewList;
     private Boolean gameEnded;
     private int checkAttack;
+    private Boolean bonusTroops = true;
+    private Boolean attackPhase = false;
+    private Boolean maneuverPhase = false;
 
     public RiskModel() {
         playerNames = new ArrayList<>();
@@ -35,54 +38,74 @@ public class RiskModel{
      * @param defendingPlayer   player being attacked
      */
     public void attack(Country attackingCountry, Country defendingCountry, int attackingTroops, int defendingTroops, Player defendingPlayer) {
-            int defendingTroopsLost = 0;
-            int attackingTroopsLost = 0;
-            int winningTroops = 0;
 
-            ArrayList<Integer> attackingDice = currentPlayer.attackCountry(attackingTroops);
-            ArrayList<Integer> defendingDice = defendingPlayer.defendCountry(defendingTroops);
+        attackPhase = true;
+        int defendingTroopsLost = 0;
+        int attackingTroopsLost = 0;
+        int winningTroops = 0;
 
-            while (!(attackingDice.isEmpty() || defendingDice.isEmpty())) {
-                if (Collections.max(attackingDice) > Collections.max(defendingDice)) {
-                    attackingDice.remove(attackingDice.indexOf(Collections.max(attackingDice)));
-                    defendingDice.remove(defendingDice.indexOf(Collections.max(defendingDice)));
-                    defendingPlayer.updateCountry(defendingCountry, -1);
-                    defendingTroopsLost++;
-                    winningTroops++;
-                    checkAttack++;
+        ArrayList<Integer> attackingDice = currentPlayer.attackCountry(attackingTroops);
+        ArrayList<Integer> defendingDice = defendingPlayer.defendCountry(defendingTroops);
 
-                } else if (Collections.max(attackingDice) <= Collections.max(defendingDice)) {
-                    attackingDice.remove(attackingDice.indexOf(Collections.max(attackingDice)));
-                    defendingDice.remove(defendingDice.indexOf(Collections.max(defendingDice)));
-                    currentPlayer.updateCountry(attackingCountry, -1);
-
-                    attackingTroopsLost++;
-                    checkAttack++;
-
-                }
-            }
-            System.out.println();
-            System.out.println(defendingCountry + " lost " + defendingTroopsLost + " troops");
-            System.out.println(attackingCountry + " lost " + attackingTroopsLost + " troops");
-
-            if (defendingPlayer.getPlayerData().get(defendingCountry) == 0) {
-                currentPlayer.addCountry(defendingCountry, winningTroops);
-                currentPlayer.updateCountry(attackingCountry, -winningTroops);
-                defendingPlayer.deleteCountry(defendingCountry);
+        while (!(attackingDice.isEmpty() || defendingDice.isEmpty())) {
+            if (Collections.max(attackingDice) > Collections.max(defendingDice)) {
+                attackingDice.remove(attackingDice.indexOf(Collections.max(attackingDice)));
+                defendingDice.remove(defendingDice.indexOf(Collections.max(defendingDice)));
+                defendingPlayer.updateCountry(defendingCountry, -1);
+                defendingTroopsLost++;
+                winningTroops++;
                 checkAttack++;
-                System.out.println();
-                System.out.println(defendingCountry + " has lost all troops and is now conquered by " + currentPlayer.getName());
 
-                if(checkPlayerLost(defendingPlayer)){
-                    playerList.remove(defendingPlayer);
-                    if(checkGameOver(playerList)){
-                        endGame();
-                    }
+            } else if (Collections.max(attackingDice) <= Collections.max(defendingDice)) {
+                attackingDice.remove(attackingDice.indexOf(Collections.max(attackingDice)));
+                defendingDice.remove(defendingDice.indexOf(Collections.max(defendingDice)));
+                currentPlayer.updateCountry(attackingCountry, -1);
+
+                attackingTroopsLost++;
+                checkAttack++;
+
+            }
+        }
+        System.out.println();
+        System.out.println(defendingCountry + " lost " + defendingTroopsLost + " troops");
+        System.out.println(attackingCountry + " lost " + attackingTroopsLost + " troops");
+
+        if (defendingPlayer.getPlayerData().get(defendingCountry) == 0) {
+            currentPlayer.addCountry(defendingCountry, winningTroops);
+            currentPlayer.updateCountry(attackingCountry, -winningTroops);
+            defendingPlayer.deleteCountry(defendingCountry);
+            checkAttack++;
+            System.out.println();
+            System.out.println(defendingCountry + " has lost all troops and is now conquered by " + currentPlayer.getName());
+
+            if(checkPlayerLost(defendingPlayer)){
+                playerList.remove(defendingPlayer);
+                if(checkGameOver(playerList)){
+                    endGame();
                 }
             }
+        }
+    }
 
+
+    /**
+     * This method performs the AI actions depending on
+     * on the current state of Board.
+     * This method assumes that the current player
+     * is an AI. Only call this method after checking
+     * if current player is an AI
+     * Maximized expected utility was calculated and
+     * applied to this method to create the best
+     * possible outcome.
+     */
+    public void playAI(){
+
+        //Bonus Troops Placement
+        if(bonusTroops == true){
 
         }
+
+    }
 
     public boolean getCheckAttack() {
         if (checkAttack > 0) {
@@ -153,9 +176,12 @@ public class RiskModel{
     /**
      * initiates player objects using the list of names
      */
-    public void setPlayers() {
+    public void setPlayers(ArrayList<Boolean> playerType) {
         for (int i = 0; i < playerCount; i++) {
             playerList.add(new Player(playerNames.get(i), getInitialTroops(playerCount)));
+        }
+        for(int j = 0; j < playerCount; j++){
+            playerList.get(j).setAsAI(playerType.get(j));
         }
     }
 
@@ -316,10 +342,10 @@ public class RiskModel{
      * @param playerNames ArrayList<String>
      * @param playerCount int
      */
-    public void setUpPlayers(ArrayList<String> playerNames, int playerCount) {
+    public void setUpPlayers(ArrayList<String> playerNames, int playerCount,ArrayList<Boolean> playerType) {
         setPlayerCount(playerCount);
         setPlayerNames(playerNames);
-        setPlayers();
+        setPlayers(playerType);
         setCountry();
         whoStarts();
         for (RiskView rV : viewList) {

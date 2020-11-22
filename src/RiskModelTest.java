@@ -26,6 +26,13 @@ public class RiskModelTest {
     @org.junit.Test
     public void testIfPlayerSet() {
         ArrayList<String> playerNames = new ArrayList<>();
+        ArrayList<Boolean> playerType = new ArrayList<>();
+        playerType.add(true);
+        playerType.add(true);
+        playerType.add(true);
+        playerType.add(true);
+        playerType.add(true);
+        playerType.add(true);
         RiskModel risk = new RiskModel();
         risk.setPlayerCount(2);
         playerNames.add("Areeb");
@@ -33,7 +40,7 @@ public class RiskModelTest {
         risk.setPlayerNames(playerNames);
 
         ArrayList<Player> playerObjects = new ArrayList<>();
-        risk.setPlayers();
+        risk.setPlayers(playerType);
         assertEquals(risk.showPlayerList().size(), 2);
 
     }
