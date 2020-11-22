@@ -238,6 +238,7 @@ public class RiskModel{
         } else {
             currentPlayer = playerList.get(0);
         }
+        bonusTroops();
     }
 
     public int rollDice() {
@@ -322,6 +323,7 @@ public class RiskModel{
         setPlayers();
         setCountry();
         whoStarts();
+        bonusTroops();
         for (RiskView rV : viewList) {
             rV.handleInitialMap(new MapEvent(this, playerList));
         }
@@ -340,7 +342,7 @@ public class RiskModel{
         attack(attackingCountry, defendingCountry, attackingTroops, defendingTroops, defendingPlayer);
 
         for (RiskView rV : viewList) {
-            rV.handleAttack(new MapEvent(this, playerList));
+            rV.handleMapChange(new MapEvent(this, playerList));
         }
     }
 
@@ -369,6 +371,52 @@ public class RiskModel{
         for (RiskView v : viewList) {
             v.handleEndGame(new MapEvent(this, playerList));
         }
+    }
+
+    /**
+     * returns the current player's available enforcements 
+     */
+    public int getAvailableEnforcement(){
+        return currentPlayer.getAvailableEnforcement();
+    }
+
+    /**
+     * fortifies the player's selected country
+     * @param troops of type int
+     * @param country   country bring modified
+     */
+    public void fortify(int troops, Country country){
+        currentPlayer.updateCountry(country, troops);
+        currentPlayer.updateEnforcements(-troops);
+        for (RiskView rV : viewList) {
+            rV.handleMapChange(new MapEvent(this, playerList));
+        }
+    }
+
+    /**
+     * calculates and adds the bonus troops to the current player
+     */
+    public void bonusTroops(){
+        int bonusTroops = 3;
+        ArrayList<Country> countries = currentPlayer.getCountries();
+        if(countries.size() > 11){
+            double tempNum = countries.size()/3;
+            bonusTroops = (int) tempNum;    //this removes the decimel places (rounding down)
+        }
+        //calculating continent bonuses
+        for(Continent continent: map.getContinentList()){
+            int numCountries = 0;   //number of countries in the continent
+            for(Country country: countries){
+                if(country.getContinent() == continent){
+                    numCountries++;
+                }
+            }
+            if(numCountries == continent.getNumCountries()){
+                bonusTroops += continent.getExtraTroops();
+            }
+        }
+
+        currentPlayer.updateEnforcements(bonusTroops);
     }
 
 }
