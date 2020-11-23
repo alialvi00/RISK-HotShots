@@ -468,12 +468,30 @@ public class RiskModel{
      * updates the adjacent list for a country, only displayes the enemies countries
      * @param country Country
      */
-    public void updateAdjacentCountries(Country country){
+    public void updateEnemyAdjacentCountries(Country country){
         String[] allAdj = country.getAdjacentCountries();
         ArrayList<String> enemyCountries = new ArrayList<>();
         //here we will remove the countries that the player already owns
         for (String s : allAdj) {
             if(!currentPlayer.hasCountry(s)){
+                enemyCountries.add(s);
+            }
+        }
+        for (RiskView v : viewList) {
+            v.handleAdjacentList(new ListEvent(this, enemyCountries));
+        }
+    }
+
+    /**
+     * updates the adjacent list for a country, only displayes the owned countries
+     * @param country Country
+     */
+    public void updateOwnedAdjacentCountries(Country country){
+        String[] allAdj = country.getAdjacentCountries();
+        ArrayList<String> enemyCountries = new ArrayList<>();
+        //here we will remove the countries that the player already owns
+        for (String s : allAdj) {
+            if(currentPlayer.hasCountry(s)){
                 enemyCountries.add(s);
             }
         }
@@ -539,6 +557,19 @@ public class RiskModel{
             }
         }
         currentPlayer.updateEnforcements(bonusTroops);
+    }
+
+    /**
+     * Maneuvers troops between countries
+     * @param troops of type int
+     * @param country   country bring modified
+     */
+    public void manuever(int troops, Country originCountry, Country destinationCountry){
+        currentPlayer.updateCountry(originCountry, -troops);
+        currentPlayer.updateCountry(destinationCountry, troops);
+        for (RiskView rV : viewList) {
+            rV.handleMapChange(new MapEvent(this, playerList));
+        }
     }
 
 }

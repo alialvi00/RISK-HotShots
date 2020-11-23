@@ -15,7 +15,11 @@ public class AdjListController implements ListSelectionListener{
     public void valueChanged(ListSelectionEvent e){
         JList adjList = (JList) e.getSource();
         if(!adjList.isSelectionEmpty()){
-            view.enableAttack();
+            if(view.getMode()){
+                view.enableConfirmButton();
+            } else{
+                view.enableAttack();   
+            }           
         }
     }
 }

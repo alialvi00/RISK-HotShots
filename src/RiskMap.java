@@ -337,7 +337,7 @@ public class RiskMap {
         scandinavia.setBorders(scandinaviaAdj);
 
         southernEurope = new Country("Southern Europe", europe);
-        String[] southernEuropeAdj = new String[]{"Western Europe","Northern Europe","Ukraine,Egypt","North Africa"};
+        String[] southernEuropeAdj = new String[]{"Western Europe","Northern Europe","Ukraine","Egypt","North Africa"};
         southernEurope.setBorders(southernEuropeAdj);
 
         ukraine = new Country("Ukraine", europe);
