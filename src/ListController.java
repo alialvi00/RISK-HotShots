@@ -19,6 +19,7 @@ public class ListController implements ListSelectionListener{
     public void valueChanged(ListSelectionEvent e){
         //disables the attack button
         view.disableAttack();
+        view.disableConfirmButton();
         //this gets the the country the player selects from the jlist
         Country selectedCountry = view.getOriginCountry();
 
@@ -28,7 +29,12 @@ public class ListController implements ListSelectionListener{
         }
         else
         {
-        model.updateAdjacentCountries(selectedCountry);
+            if(view.getMode()){
+                model.updateOwnedAdjacentCountries(selectedCountry);   
+            } else{
+                model.updateEnemyAdjacentCountries(selectedCountry);
+            }
+            
         }
     }
 }

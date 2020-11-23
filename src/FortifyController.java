@@ -26,7 +26,7 @@ public class FortifyController implements ListSelectionListener{
         }
         else
         {
-            model.updateAdjacentCountries(selectedCountry);
+            model.updateEnemyAdjacentCountries(selectedCountry);
             int availableTroops = model.getAvailableEnforcement();
             int usedTroops = view.getEnforcementAmount(availableTroops);
             availableTroops = availableTroops - usedTroops;
