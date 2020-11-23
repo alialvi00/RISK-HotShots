@@ -27,10 +27,18 @@ public class RiskModelTest {
     private HashMap<Country, Integer> conqueredCountries2 = new HashMap<Country, Integer>();
 
 
+    protected void setUp(){
+        risk = new RiskModel();
+        player = new Player("Areeb", 3);
+    }
+
+    protected void tearDown(){
+
+    }
 
     @org.junit.Test
-    public void testIsValidNumber() {
-        RiskModel risk = new RiskModel();
+    public void testIsValidNumber() { ;
+        setUp();
         assertEquals(true, risk.isValidNumber("3"));
     }
 
@@ -45,7 +53,7 @@ public class RiskModelTest {
         playerType.add(true);
         playerType.add(true);
         playerType.add(true);
-        RiskModel risk = new RiskModel();
+        setUp();
         risk.setPlayerCount(2);
         playerNames.add("Areeb");
         playerNames.add("Hassan");
@@ -60,8 +68,7 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void testGetDefendingPlayer() {
-        Player player = new Player("AREEB", 5);
-        RiskModel risk = new RiskModel();
+        setUp();
         ArrayList<Player> playerList = new ArrayList<>();
         playerList.add(player);
 
@@ -89,7 +96,7 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void testCorrectInitialTroops() {
-        RiskModel risk = new RiskModel();
+        setUp();
         int check = risk.getInitialTroops(3);
         assertEquals(check, 35);
     }
@@ -97,8 +104,7 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void checkCurrentPlayerDesignation() {
-        RiskModel risk = new RiskModel();
-        Player player = new Player("Areeb", 3);
+        setUp();
         risk.setCurrentPlayer(player);
 
         Player check = risk.getCurrentPlayer();
@@ -109,8 +115,7 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void checkFortify() {
-        RiskModel risk = new RiskModel();
-        Player player = new Player("Areeb", 3);
+        setUp();
         conqueredCountries.put(alaska, 3);
         player.setConqueredCountries(conqueredCountries);
         player.updateCountry(alaska, 3);
@@ -122,8 +127,7 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void checkManeuver() {
-        RiskModel risk = new RiskModel();
-        Player player = new Player("Areeb", 3);
+        setUp();
         conqueredCountries.put(alaska, 3);
         player.setConqueredCountries(conqueredCountries);
         player.updateCountry(alaska, 3);
@@ -136,10 +140,19 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void checkBonusTroopsAllocation() {
-        RiskModel risk = new RiskModel();
-        Player player = new Player("Areeb", 0);
-        Player player1 = new Player("Hassan", 4);
+        setUp();
+        Player player = new Player("Areeb", 2);
+        Player player1 = new Player("Hassan", 6);
         conqueredCountries.put(alaska, 2);
+        conqueredCountries.put(centralAmerica,3);
+        conqueredCountries.put(greenland, 2);
+        conqueredCountries.put(northwestT,3);
+        conqueredCountries.put(ontario, 2);
+        conqueredCountries.put(quebec,3);
+        conqueredCountries.put(westernUS, 2);
+        conqueredCountries.put(argentina,3);
+        conqueredCountries.put(brazil, 2);
+        conqueredCountries.put(peru,3);
         player1.setConqueredCountries(conqueredCountries);
         player.updateEnforcements(1);
         risk.setCurrentPlayer(player);
@@ -147,14 +160,6 @@ public class RiskModelTest {
         assertEquals(risk.getCurrentPlayer().getAvailableEnforcement(), player1.getAvailableEnforcement());
 
     }
-
-
-
-
-
-
-
-
 
 
 }

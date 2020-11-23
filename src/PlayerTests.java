@@ -17,9 +17,12 @@ public class PlayerTests {
     private HashMap <Country, Integer> conqueredCountries = new HashMap<Country, Integer>();
 
 
+    protected void setUp(){
+        player = new Player("Areeb", 5);
+    }
     @org.junit.Test
     public void testUpdateReinforcements() {
-        Player player = new Player("Areeb",5);
+        setUp();
         player.updateEnforcements(3);
         int x = player.getAvailableEnforcement();
         assertEquals(x, 8);
@@ -27,7 +30,7 @@ public class PlayerTests {
 
     @Test
     public void testAttackCountry() {
-        Player player = new Player("Areeb",5);
+        setUp();
         //just check if an arraylist of size 2 is made if the argument given is 2
         int size = player.attackCountry(2).size();
         assertEquals(2, size);
@@ -35,7 +38,7 @@ public class PlayerTests {
 
     @org.junit.Test
     public void testGetCountryByName() {
-        Player player = new Player("Areeb",5);
+        setUp();
         assertEquals(player.getCountryByName("alaska"),alaska);
     }
 
@@ -46,7 +49,7 @@ public class PlayerTests {
         conqueredCountries.put(quebec, 2);
         conqueredCountries.put(alberta,0);
 
-        Player player = new Player("Areeb",5);
+        setUp();
         long x =  player.getCountryTroops("alberta");
         assertEquals(0, x);
     }
@@ -54,7 +57,7 @@ public class PlayerTests {
 
     @Test
     public void testHasCountries() {
-        Player player = new Player("Areeb",5);
+        setUp();
         conqueredCountries.put(alaska, 1);
         conqueredCountries.put(quebec, 2);
 
