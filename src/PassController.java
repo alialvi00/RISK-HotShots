@@ -15,11 +15,8 @@ public class PassController implements ActionListener{
 
         view.playSoundEffect("library/PassButtonSound.wav");
         view.clearSelection();
-        model.nextTurn();
-        view.updateCountriesJlist(model.getCurrentPlayer());
-        view.enableManeuverButton();
         view.setFortifyMode();
-        System.out.println("\nIt is " + model.getCurrentPlayer().getName() + "'s turn \n");
+        model.nextTurn();
     }
     
 }
