@@ -12,9 +12,7 @@ public class RiskModel{
     private List<RiskView> viewList;
     private Boolean gameEnded;
     private int checkAttack;
-    private Boolean bonusTroops = true;
-    private Boolean attackPhase = false;
-    private Boolean maneuverPhase = false;
+    private Boolean firstAITurn;
 
     public RiskModel() {
         playerNames = new ArrayList<>();
@@ -38,9 +36,6 @@ public class RiskModel{
      */
     public void attack(Country attackingCountry, Country defendingCountry, int attackingTroops, int defendingTroops) {
 
-        attackPhase = true;
-        bonusTroops = false;
-        maneuverPhase = false;
         int defendingTroopsLost = 0;
         int attackingTroopsLost = 0;
         int winningTroops = 0;
@@ -101,91 +96,150 @@ public class RiskModel{
      * applied to this method to create the best
      * possible outcome.
      */
-    public void playAI(){
+    public void playAI() {
 
         ArrayList<Country> countries;
         ArrayList<Country> attackCountry = new ArrayList<>();
         ArrayList<Country> defendingCountry = new ArrayList<>();
-        Player defendingPlayer = null;
-        int troops;
-        int attackTroops;
-        int defendTroops;
-        Random generatePick = new Random();
-        Random generateSecondPick = new Random();
-        Random generatePercent = new Random();
+        ArrayList<Country> originCountry = new ArrayList<>();
+        ArrayList<Country> destinationCountry = new ArrayList<>();
+
+        Player defendingPlayer = null; //Initial assignment as dummy
+
+        int troops; //bonusTroops available
+        int attackTroops; //troops to attack with
+        int defendTroops; //troops to defend with
+        int moveTroops; //Troops to maneuver
+        int currentTroops = 0;
+
+        Random generatePick = new Random(); //generate first pick
+        Random generateSecondPick = new Random(); //generate second pick
+        Random generatePercent = new Random(); //generate the chance percent
+        Random generateMoveTroops = new Random();
+
         int pick;
         int secondPick;
         int percent;
+
         boolean attack = false;
+        boolean hasEnemy = false;
+        boolean isOwned = false;
 
         countries = currentPlayer.getCountries();
 
         //Bonus Troops Placement
         pick = generatePick.nextInt(countries.size());
         troops = currentPlayer.getAvailableEnforcement();
-        if(currentPlayer.getCountryTroops(currentPlayer.getCountries().get(pick).toString())<6){
-            fortify(troops,currentPlayer.getCountries().get(pick));
-        }
-        else{
-            fortify(troops,currentPlayer.getCountries().get(generatePick.nextInt(countries.size())));
+        if (currentPlayer.getCountryTroops(currentPlayer.getCountries().get(pick).toString()) < 6) {
+            fortify(troops, currentPlayer.getCountries().get(pick));
+        } else {
+            fortify(troops, currentPlayer.getCountries().get(generatePick.nextInt(countries.size())));
         }
 
         //Generate the correct calculated percent
         percent = generatePercent.nextInt(99);
 
+        //AI now performs attack depending on its chances
         //Attack has 50% of chance to execute, this analysis was done using Bernoulli Equation square root of weighted utility
-        while(percent >= 49){
+        while (percent >= 49) {
 
-            for(int i =0; i< currentPlayer.getCountries().size(); i++){
-                for(int j=0; j<currentPlayer.getCountries().get(i).getAdjacentCountries().length;j++){
+            for (int i = 0; i < currentPlayer.getCountries().size(); i++) {
+                for (int j = 0; j < currentPlayer.getCountries().get(i).getAdjacentCountries().length; j++) {
 
                     boolean hasAdjacentConquered = currentPlayer.hasCountry(currentPlayer.getCountries().get(i).getAdjacentCountries()[j]);
-                    //boolean hasEnoughTroops = currentPlayer.getCountryTroops(currentPlayer.getCountries().get(i).toString())>1;
                     int num = currentPlayer.getPlayerData().get(currentPlayer.getCountries().get(i));
 
-                    if(num>1 && !hasAdjacentConquered){
+                    if (num > 1 && !hasAdjacentConquered) {
                         attack = true;
-                    }
-                    else{
+                    } else {
                         attack = false;
                     }
                 }
-                if(attack){
+                if (attack) {
                     attackCountry.add(currentPlayer.getCountries().get(i));
                 }
             }
 
             //If AI made a choice to attack from a country
-            if(attackCountry.size()>0){
+            if (attackCountry.size() > 0) {
 
                 pick = generatePick.nextInt(attackCountry.size());
 
-                for(int i = 0; i<attackCountry.get(pick).getAdjacentCountries().length;i++){
+                for (int i = 0; i < attackCountry.get(pick).getAdjacentCountries().length; i++) {
 
                     boolean hasAdjacentConquered = currentPlayer.hasCountry(attackCountry.get(pick).getAdjacentCountries()[i]);
 
-                    if(!hasAdjacentConquered){
+                    if (!hasAdjacentConquered) {
 
                         defendingPlayer = getDefendingPlayer(attackCountry.get(pick).getAdjacentCountries()[i]);
                         defendingCountry.add(defendingPlayer.getCountryByName(attackCountry.get(pick).getAdjacentCountries()[i]));
                     }
                 }
                 //When AI has chosen defending countries
-                if(defendingCountry.size()>0){
+                if (defendingCountry.size() > 0) {
 
                     secondPick = generateSecondPick.nextInt(defendingCountry.size());
                     attackTroops = getMaxAttackingTroops(attackCountry.get(pick));
 
-                    if(defendingPlayer.hasCountry(defendingCountry.get(secondPick).toString())) {
+                    if (defendingPlayer.hasCountry(defendingCountry.get(secondPick).toString())) {
                         defendTroops = getMaxDefendingTroops(defendingCountry.get(secondPick), defendingPlayer);
-                        attack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, defendTroops);
+                        initiateAttack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, defendTroops);
                         percent = generatePercent.nextInt(99);
                     }
                 }
             }
         }
 
+        //percent = generatePercent.nextInt(99);
 
+        //75 percent of chance to maneuver troops
+        //while(percent >= 24) {
+        //Now we maneuver troops, make sure we maneuver to country that has enemy at its border so we can strengthen our country
+        for (int i = 0; i < currentPlayer.getCountries().size(); i++) {
+            for (int j = 0; j < currentPlayer.getCountries().get(i).getAdjacentCountries().length; j++) {
+
+                boolean hasAdjacentConquered = currentPlayer.hasCountry(currentPlayer.getCountries().get(i).getAdjacentCountries()[j]);
+
+                //At least one of the destination country is owned by the current AI player
+                if (hasAdjacentConquered)
+                    isOwned = true;
+                    //Destination country definitely has at least one enemy country bordering it
+                else
+                    hasEnemy = true;
+            }
+            if (isOwned && hasEnemy) {
+                destinationCountry.add(currentPlayer.getCountries().get(i));
+            }
+        }
+
+        //AI Algorithm has successfully chosen countries to transfer troops
+        if (!destinationCountry.isEmpty()) {
+
+            pick = generatePick.nextInt(destinationCountry.size());
+
+            for (int i = 0; i < destinationCountry.get(pick).getAdjacentCountries().length; i++) {
+
+                boolean hasAdjacentConquered = currentPlayer.hasCountry(destinationCountry.get(pick).getAdjacentCountries()[i]);
+
+                if (hasAdjacentConquered) {
+
+                    currentTroops = currentPlayer.getPlayerData().get(currentPlayer.getCountryByName(destinationCountry.get(pick).getAdjacentCountries()[i]));
+
+                    if(currentTroops>1)
+                        originCountry.add(currentPlayer.getCountryByName(destinationCountry.get(pick).getAdjacentCountries()[i]));
+                }
+            }
+            //AI Algorithm has successfully chosen countries to transfer troops from
+            if (!originCountry.isEmpty()) {
+
+                secondPick = generateSecondPick.nextInt(originCountry.size());
+                troops = currentPlayer.getPlayerData().get(currentPlayer.getCountryByName(originCountry.get(secondPick).toString()));
+                int troopsToMove = generateMoveTroops.nextInt(troops)+1;
+                maneuver(troopsToMove, originCountry.get(secondPick), destinationCountry.get(pick));
+            }
+        }
+    //}
+        nextTurn();
     }
 
     public boolean getCheckAttack() {
@@ -326,7 +380,7 @@ public class RiskModel{
     }
 
     public void whoStarts() {
-        rolls = new ArrayList<Integer>();
+        rolls = new ArrayList<>();
         for (int i = 0; i < playerList.size(); i++) {
             rolls.add(rollDice());
         }
@@ -338,6 +392,9 @@ public class RiskModel{
             }
         }
         bonusTroops();
+    }
+
+    public void ifAIStarts(){
 
         if(currentPlayer.getIsAI()){
             playAI();
@@ -351,11 +408,7 @@ public class RiskModel{
             currentPlayer = playerList.get(0);
         }
         bonusTroops();
-
-        if(currentPlayer.getIsAI()){
-            playAI();
-            nextTurn();
-        }
+        ifAIStarts();
     }
 
     public int rollDice() {
@@ -519,14 +572,15 @@ public class RiskModel{
     /**
      * fortifies the player's selected country
      * @param troops of type int
-     * @param country   country bring modified
+     * @param country   country being modified
      */
     public void fortify(int troops, Country country){
 
-        System.out.println(currentPlayer.getName() + " is now placing bonus troops ");
-        System.out.println("");
+        System.out.println();
+        System.out.println(currentPlayer.getName() + " is now placing bonus troops \n");
         currentPlayer.updateCountry(country, troops);
         currentPlayer.updateEnforcements(-troops);
+        System.out.println("\n" + currentPlayer.getName() + " has now placed " + troops + " bonus troops in " + country.toString() + "\n");
         for (RiskView rV : viewList) {
             rV.handleMapChange(new MapEvent(this, playerList));
         }
@@ -537,12 +591,11 @@ public class RiskModel{
      */
     public void bonusTroops(){
 
-        bonusTroops = true;
         int bonusTroops = 3;
         ArrayList<Country> countries = currentPlayer.getCountries();
         if(countries.size() > 11){
             double tempNum = countries.size()/3;
-            bonusTroops = (int) tempNum;    //this removes the decimel places (rounding down)
+            bonusTroops = (int) tempNum;    //this removes the decimal places (rounding down)
         }
         //calculating continent bonuses
         for(Continent continent: map.getContinentList()){
@@ -562,9 +615,13 @@ public class RiskModel{
     /**
      * Maneuvers troops between countries
      * @param troops of type int
-     * @param country   country bring modified
+     * @param originCountry   country that troops leave
+     * @param destinationCountry country that troops go to
      */
-    public void manuever(int troops, Country originCountry, Country destinationCountry){
+    public void maneuver(int troops, Country originCountry, Country destinationCountry){
+        System.out.println();
+        System.out.println(currentPlayer.getName() + " has now maneuvered " + troops + " troops from " + originCountry + " to " + destinationCountry + "\n");
+        System.out.println();
         currentPlayer.updateCountry(originCountry, -troops);
         currentPlayer.updateCountry(destinationCountry, troops);
         for (RiskView rV : viewList) {

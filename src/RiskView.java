@@ -4,7 +4,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
@@ -24,7 +23,7 @@ public class RiskView extends JFrame implements RiskListener{
     private JLabel askName;
     private JLabel chooseCountry;
     private JLabel adjacentCountry;
-    private JLabel currentPlayer;
+    private JLabel currentPlayerInfo;
 
     private String[] playerNum= {"2","3","4","5","6"};
     private ArrayList<String> playerNames;
@@ -632,8 +631,8 @@ public class RiskView extends JFrame implements RiskListener{
         chooseCountry = new JLabel("Choose a country");
         adjacentCountry = new JLabel("Adjacent Countries");
 
-        currentPlayer = new JLabel("Current Player");
-        currentPlayer.setBorder(BorderFactory.createLineBorder(new Color(139,0,139), 5));
+        currentPlayerInfo = new JLabel("Current Player");
+        currentPlayerInfo.setBorder(BorderFactory.createLineBorder(new Color(139,0,139), 5));
 
         confirmButton = new JButton("Confirm Maneuver");
         confirmButton.setBackground(new Color(66, 245, 126));
@@ -699,7 +698,7 @@ public class RiskView extends JFrame implements RiskListener{
         a4.weighty = 0.5;
         a4.gridx = 0;
         a4.gridy = 0;
-        actionPanel.add(currentPlayer, a4);
+        actionPanel.add(currentPlayerInfo, a4);
 
         a4.fill = GridBagConstraints.BOTH;
         a4.insets = new Insets(5, 5, 5, 5);
@@ -1073,7 +1072,7 @@ public class RiskView extends JFrame implements RiskListener{
      */
     @Override
     public void handleMapChange(MapEvent m){
-        //Ali, update the info panel somehow using m.getPlayerList like i do above
+
         RiskModel model = (RiskModel) m.getSource();
         updateCountriesJlist(model.getCurrentPlayer());
         

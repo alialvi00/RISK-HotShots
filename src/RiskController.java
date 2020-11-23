@@ -22,6 +22,7 @@ public class RiskController implements ActionListener{
         mainView.startNewGame();
         mainModel.welcome();
         mainModel.setUpPlayers(mainView.getPlayerNames(), mainView.getPlayerCount(),mainView.getPlayerType());
+        mainModel.ifAIStarts();
     }
 
 }
