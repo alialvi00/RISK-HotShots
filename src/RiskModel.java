@@ -35,14 +35,17 @@ public class RiskModel{
      * @param defendingCountry  country defending
      * @param attackingTroops   number of troops attacking
      * @param defendingTroops   number of troops defending
-     * @param defendingPlayer   player being attacked
      */
-    public void attack(Country attackingCountry, Country defendingCountry, int attackingTroops, int defendingTroops, Player defendingPlayer) {
+    public void attack(Country attackingCountry, Country defendingCountry, int attackingTroops, int defendingTroops) {
 
         attackPhase = true;
+        bonusTroops = false;
+        maneuverPhase = false;
         int defendingTroopsLost = 0;
         int attackingTroopsLost = 0;
         int winningTroops = 0;
+        Player defendingPlayer = getDefendingPlayer(defendingCountry.toString());
+
 
         ArrayList<Integer> attackingDice = currentPlayer.attackCountry(attackingTroops);
         ArrayList<Integer> defendingDice = defendingPlayer.defendCountry(defendingTroops);
@@ -100,10 +103,88 @@ public class RiskModel{
      */
     public void playAI(){
 
-        //Bonus Troops Placement
-        if(bonusTroops == true){
+        ArrayList<Country> countries;
+        ArrayList<Country> attackCountry = new ArrayList<>();
+        ArrayList<Country> defendingCountry = new ArrayList<>();
+        Player defendingPlayer = null;
+        int troops;
+        int attackTroops;
+        int defendTroops;
+        Random generatePick = new Random();
+        Random generateSecondPick = new Random();
+        Random generatePercent = new Random();
+        int pick;
+        int secondPick;
+        int percent;
+        boolean attack = false;
 
+        countries = currentPlayer.getCountries();
+
+        //Bonus Troops Placement
+        pick = generatePick.nextInt(countries.size());
+        troops = currentPlayer.getAvailableEnforcement();
+        if(currentPlayer.getCountryTroops(currentPlayer.getCountries().get(pick).toString())<6){
+            fortify(troops,currentPlayer.getCountries().get(pick));
         }
+        else{
+            fortify(troops,currentPlayer.getCountries().get(generatePick.nextInt(countries.size())));
+        }
+
+        //Generate the correct calculated percent
+        percent = generatePercent.nextInt(99);
+
+        //Attack has 50% of chance to execute, this analysis was done using Bernoulli Equation square root of weighted utility
+        while(percent >= 49){
+
+            for(int i =0; i< currentPlayer.getCountries().size(); i++){
+                for(int j=0; j<currentPlayer.getCountries().get(i).getAdjacentCountries().length;j++){
+
+                    boolean hasAdjacentConquered = currentPlayer.hasCountry(currentPlayer.getCountries().get(i).getAdjacentCountries()[j]);
+                    //boolean hasEnoughTroops = currentPlayer.getCountryTroops(currentPlayer.getCountries().get(i).toString())>1;
+                    int num = currentPlayer.getPlayerData().get(currentPlayer.getCountries().get(i));
+
+                    if(num>1 && !hasAdjacentConquered){
+                        attack = true;
+                    }
+                    else{
+                        attack = false;
+                    }
+                }
+                if(attack){
+                    attackCountry.add(currentPlayer.getCountries().get(i));
+                }
+            }
+
+            //If AI made a choice to attack from a country
+            if(attackCountry.size()>0){
+
+                pick = generatePick.nextInt(attackCountry.size());
+
+                for(int i = 0; i<attackCountry.get(pick).getAdjacentCountries().length;i++){
+
+                    boolean hasAdjacentConquered = currentPlayer.hasCountry(attackCountry.get(pick).getAdjacentCountries()[i]);
+
+                    if(!hasAdjacentConquered){
+
+                        defendingPlayer = getDefendingPlayer(attackCountry.get(pick).getAdjacentCountries()[i]);
+                        defendingCountry.add(defendingPlayer.getCountryByName(attackCountry.get(pick).getAdjacentCountries()[i]));
+                    }
+                }
+                //When AI has chosen defending countries
+                if(defendingCountry.size()>0){
+
+                    secondPick = generateSecondPick.nextInt(defendingCountry.size());
+                    attackTroops = getMaxAttackingTroops(attackCountry.get(pick));
+
+                    if(defendingPlayer.hasCountry(defendingCountry.get(secondPick).toString())) {
+                        defendTroops = getMaxDefendingTroops(defendingCountry.get(secondPick), defendingPlayer);
+                        attack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, defendTroops);
+                        percent = generatePercent.nextInt(99);
+                    }
+                }
+            }
+        }
+
 
     }
 
@@ -256,6 +337,11 @@ public class RiskModel{
                 currentPlayer = playerList.get(i);
             }
         }
+        bonusTroops();
+
+        if(currentPlayer.getIsAI()){
+            playAI();
+        }
     }
 
     public void nextTurn() {
@@ -263,6 +349,12 @@ public class RiskModel{
             currentPlayer = playerList.get(playerList.indexOf(currentPlayer) + 1);
         } else {
             currentPlayer = playerList.get(0);
+        }
+        bonusTroops();
+
+        if(currentPlayer.getIsAI()){
+            playAI();
+            nextTurn();
         }
     }
 
@@ -330,6 +422,9 @@ public class RiskModel{
      * @return int
      */
     public int getMaxDefendingTroops(Country country, Player player){
+        if(player==null){
+            System.out.println("Null Country");
+        }
         int troops = player.getPlayerData().get(country);
         if(troops > 2){
             return 2;
@@ -359,14 +454,13 @@ public class RiskModel{
      * @param defendingCountry  Country
      * @param attackingTroops   int
      * @param defendingTroops   int
-     * @param defendingPlayer   Player
      */
-    public void initiateAttack(Country attackingCountry, Country defendingCountry, int attackingTroops, int defendingTroops, Player defendingPlayer){
+    public void initiateAttack(Country attackingCountry, Country defendingCountry, int attackingTroops, int defendingTroops){
         //attack actually occurs, map gets updated
-        attack(attackingCountry, defendingCountry, attackingTroops, defendingTroops, defendingPlayer);
+        attack(attackingCountry, defendingCountry, attackingTroops, defendingTroops);
 
         for (RiskView rV : viewList) {
-            rV.handleAttack(new MapEvent(this, playerList));
+            rV.handleMapChange(new MapEvent(this, playerList));
         }
     }
 
@@ -395,6 +489,56 @@ public class RiskModel{
         for (RiskView v : viewList) {
             v.handleEndGame(new MapEvent(this, playerList));
         }
+    }
+
+    /**
+     * returns the current player's available enforcements 
+     */
+    public int getAvailableEnforcement(){
+        return currentPlayer.getAvailableEnforcement();
+    }
+
+    /**
+     * fortifies the player's selected country
+     * @param troops of type int
+     * @param country   country bring modified
+     */
+    public void fortify(int troops, Country country){
+
+        System.out.println(currentPlayer.getName() + " is now placing bonus troops ");
+        System.out.println("");
+        currentPlayer.updateCountry(country, troops);
+        currentPlayer.updateEnforcements(-troops);
+        for (RiskView rV : viewList) {
+            rV.handleMapChange(new MapEvent(this, playerList));
+        }
+    }
+
+    /**
+     * calculates and adds the bonus troops to the current player
+     */
+    public void bonusTroops(){
+
+        bonusTroops = true;
+        int bonusTroops = 3;
+        ArrayList<Country> countries = currentPlayer.getCountries();
+        if(countries.size() > 11){
+            double tempNum = countries.size()/3;
+            bonusTroops = (int) tempNum;    //this removes the decimel places (rounding down)
+        }
+        //calculating continent bonuses
+        for(Continent continent: map.getContinentList()){
+            int numCountries = 0;   //number of countries in the continent
+            for(Country country: countries){
+                if(country.getContinent() == continent){
+                    numCountries++;
+                }
+            }
+            if(numCountries == continent.getNumCountries()){
+                bonusTroops += continent.getExtraTroops();
+            }
+        }
+        currentPlayer.updateEnforcements(bonusTroops);
     }
 
 }

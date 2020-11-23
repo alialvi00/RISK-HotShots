@@ -385,5 +385,8 @@ public class RiskMap {
         return countryList;
     }
 
+    public ArrayList<Continent> getContinentList() {
+        return continentList;
+    }
 
 }

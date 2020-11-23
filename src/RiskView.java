@@ -222,7 +222,7 @@ public class RiskView extends JFrame implements RiskListener{
         c1.show(mainCont, "startScene");
 
         mainGameScene.setBackground(Color.black);
-        startBackgroundMusic("library/BackgroundMusic.wav");
+       // startBackgroundMusic("library/BackgroundMusic.wav");
 
         this.add(mainCont);
         this.setLocationRelativeTo(null);
@@ -966,7 +966,14 @@ public class RiskView extends JFrame implements RiskListener{
     public void handleInitialMap(MapEvent m) {
 
         RiskModel model = (RiskModel) m.getSource();
-        
+
+        northAmericaPanel.removeAll();
+        asiaPanel.removeAll();
+        southAmericaPanel.removeAll();
+        africaPanel.removeAll();
+        australiaPanel.removeAll();
+        europePanel.removeAll();
+
         for (Player p : m.getPlayerList()) {
             for (Country c : p.getCountries()) {
                 JLabel countryLabel = new JLabel(c + ", " + p.getName() + ", " + p.getPlayerData().get(c));
@@ -995,7 +1002,7 @@ public class RiskView extends JFrame implements RiskListener{
      * updates the infoPanel after each attack
      */
     @Override
-    public void handleAttack(MapEvent m){
+    public void handleMapChange(MapEvent m){
         //Ali, update the info panel somehow using m.getPlayerList like i do above
         RiskModel model = (RiskModel) m.getSource();
         updateCountriesJlist(model.getCurrentPlayer());
