@@ -33,6 +33,10 @@ public class ManeuverController implements ActionListener{
             int maneuveringTroops = view.getManeuverTroops(maxCountryTroops);
             model.manuever(maneuveringTroops, originCountry, destination);
             view.disableConfirmButton();
+            view.changeManeuverMode(false);
+            view.clearSelection();
+            view.setNormalMode();
+            view.disableManeuverButton();
         }
     }
     

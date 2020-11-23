@@ -641,7 +641,7 @@ public class RiskView extends JFrame implements RiskListener{
         confirmButton.setActionCommand("confirm");
         confirmButton.setEnabled(false);
 
-        maneuverButton = new JButton("Maneuver Troops");
+        maneuverButton = new JButton("Maneuver Mode");
         maneuverButton.setBackground(new Color(254,216,177));
 
         maneuverButton.setActionCommand("maneuverEnable");
@@ -1232,7 +1232,7 @@ public class RiskView extends JFrame implements RiskListener{
             maneuverButton.setActionCommand("exitManeuver");
             isManeuverMode = true;
         }  else{
-            maneuverButton.setText("Maneuver Troops");
+            maneuverButton.setText("Maneuver mode");
             maneuverButton.setActionCommand("maneuverEnable");
             isManeuverMode = false;
         }
