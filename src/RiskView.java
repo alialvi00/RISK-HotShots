@@ -24,7 +24,7 @@ public class RiskView extends JFrame implements RiskListener{
     private JLabel askName;
     private JLabel chooseCountry;
     private JLabel adjacentCountry;
-    private JLabel currentPlayerInfo;
+    private JLabel currentPlayer;
 
     private String[] playerNum= {"2","3","4","5","6"};
     private ArrayList<String> playerNames;
@@ -65,6 +65,7 @@ public class RiskView extends JFrame implements RiskListener{
 
     private JList<Country> selectedCountries;
     private JList<String> connectedCountries;
+
 
     AdjListController adjListController;
     ListController listController;
@@ -237,7 +238,7 @@ public class RiskView extends JFrame implements RiskListener{
         c1.show(mainCont, "startScene");
 
         mainGameScene.setBackground(Color.black);
-   //     startBackgroundMusic("library/BackgroundMusic.wav");
+       // startBackgroundMusic("library/BackgroundMusic.wav");
 
         this.add(mainCont);
         this.setLocationRelativeTo(null);
@@ -631,9 +632,8 @@ public class RiskView extends JFrame implements RiskListener{
         chooseCountry = new JLabel("Choose a country");
         adjacentCountry = new JLabel("Adjacent Countries");
 
-
-        currentPlayerInfo = new JLabel(" ");
-        currentPlayerInfo.setBorder(BorderFactory.createLineBorder(new Color(139,0,139), 5));
+        currentPlayer = new JLabel("Current Player");
+        currentPlayer.setBorder(BorderFactory.createLineBorder(new Color(139,0,139), 5));
 
         confirmButton = new JButton("Confirm Maneuver");
         confirmButton.setBackground(new Color(66, 245, 126));
@@ -643,6 +643,7 @@ public class RiskView extends JFrame implements RiskListener{
 
         maneuverButton = new JButton("Maneuver Troops");
         maneuverButton.setBackground(new Color(254,216,177));
+
         maneuverButton.setActionCommand("maneuverEnable");
         maneuverButton.addActionListener(maneuverController);
         maneuverButton.setEnabled(false);
@@ -661,7 +662,7 @@ public class RiskView extends JFrame implements RiskListener{
         //adding the controller to the pass button
         PassController passController = new PassController(this, rm);
         passTurn.addActionListener(passController);
-        disablePassButton();
+
 
         ownedCountriesModel = new DefaultListModel<>();
         adjacentCountriesModel = new DefaultListModel<>();
@@ -683,8 +684,12 @@ public class RiskView extends JFrame implements RiskListener{
         selectedCountryScrollPane = new JScrollPane(selectedCountries);
         connectedCountryScrollPane = new JScrollPane(connectedCountries);
 
-        //adding the action listener to the owned countries JList
-        selectedCountries.addListSelectionListener(fortifyController);
+
+        ListController listController = new ListController(rm, this);
+        selectedCountries.addListSelectionListener(listController);
+
+        AdjListController adjListController = new AdjListController(this);
+        connectedCountries.addListSelectionListener(adjListController);
 
         GridBagConstraints a4 = new GridBagConstraints();
 
@@ -694,7 +699,7 @@ public class RiskView extends JFrame implements RiskListener{
         a4.weighty = 0.5;
         a4.gridx = 0;
         a4.gridy = 0;
-        actionPanel.add(currentPlayerInfo, a4);
+        actionPanel.add(currentPlayer, a4);
 
         a4.fill = GridBagConstraints.BOTH;
         a4.insets = new Insets(5, 5, 5, 5);
@@ -903,7 +908,6 @@ public class RiskView extends JFrame implements RiskListener{
         for (Country c : p.getCountries()) {
             ownedCountriesModel.addElement(c);
         }
-        updatePlayerJLabel(p);
     }
 
     public Country getOriginCountry(){
@@ -942,7 +946,7 @@ public class RiskView extends JFrame implements RiskListener{
 
     }
 
-     /**
+        /**
      * this funtion will take in the maximum number of troops a country can defend with
      * then will allow the user to choose the number of troops
      * @param maxTroops maximum number of troops that can be used
@@ -967,6 +971,7 @@ public class RiskView extends JFrame implements RiskListener{
         return choice + 1;
 
     }
+
 
     /**
      * gets the amount of troops the user would like to fortify with using JOPtionPane
@@ -1031,7 +1036,14 @@ public class RiskView extends JFrame implements RiskListener{
     public void handleInitialMap(MapEvent m) {
 
         RiskModel model = (RiskModel) m.getSource();
-        
+
+        northAmericaPanel.removeAll();
+        asiaPanel.removeAll();
+        southAmericaPanel.removeAll();
+        africaPanel.removeAll();
+        australiaPanel.removeAll();
+        europePanel.removeAll();
+
         for (Player p : m.getPlayerList()) {
             for (Country c : p.getCountries()) {
                 JLabel countryLabel = new JLabel(c + ", " + p.getName() + ", " + p.getPlayerData().get(c));
@@ -1050,7 +1062,6 @@ public class RiskView extends JFrame implements RiskListener{
                 }
             }
         }
-        updatePlayerJLabel(model.getCurrentPlayer());
 
         System.out.println("");
         System.out.println("It is " + model.getCurrentPlayer().getName() + "'s turn");
@@ -1058,7 +1069,7 @@ public class RiskView extends JFrame implements RiskListener{
     }
 
     /**
-     * updates the infoPanel after each update to countries
+     * updates the infoPanel after each attack
      */
     @Override
     public void handleMapChange(MapEvent m){
@@ -1092,7 +1103,6 @@ public class RiskView extends JFrame implements RiskListener{
                 }
             }
         }
-        updatePlayerJLabel(model.getCurrentPlayer());
 
         revalidate();
         repaint();

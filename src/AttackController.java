@@ -18,7 +18,7 @@ public class AttackController implements ActionListener{
 
         //checks if the attacking country has 1 player
         if(mainModel.getCurrentPlayer().getPlayerData().get(originCountry) == 1){
-            System.out.println("\n" + "You must leave atleast 1 troop in your country, please try a different attack \n");
+            System.out.println("\n" + "You must leave at least 1 troop in your country, please try a different attack \n");
             return;
         }
 
@@ -30,6 +30,6 @@ public class AttackController implements ActionListener{
         int maxDefendingTroops = mainModel.getMaxDefendingTroops(destinationCountry, defendingPlayer);
         int defendingTroops = mainView.getDefendingTroops(maxDefendingTroops, defendingPlayer);
 
-        mainModel.initiateAttack(originCountry, destinationCountry, attackingTroops, defendingTroops, defendingPlayer);
+        mainModel.initiateAttack(originCountry, destinationCountry, attackingTroops, defendingTroops);
     }
 }

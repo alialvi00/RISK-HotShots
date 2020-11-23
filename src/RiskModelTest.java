@@ -70,7 +70,7 @@ public class RiskModelTest {
         player.updateCountry(alaska, 3);
         player2.updateCountry(alberta, 2);
 
-        risk.attack(alberta, alaska, 3, 2, player2);
+        risk.attack(alberta, alaska, 3, 2);
         assertEquals(true, risk.getCheckAttack());
 
     }
@@ -98,7 +98,7 @@ public class RiskModelTest {
 
         Country attacking = new Country("ontario", c1);
         Country defending = new Country("quebec",c1);
-        newRisk.attack(attacking,defending,1,1,p1);
+        newRisk.attack(attacking,defending,1,1);
         assertEquals(true, newRisk.checkGameOver(players));
     }
 
