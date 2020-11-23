@@ -189,9 +189,7 @@ public class RiskModel{
     }
 
     public boolean getCheckAttack() {
-        if (checkAttack > 0) {
-            return true;
-        }
+        if (checkAttack > 0) return true;
         return false;
     }
 
