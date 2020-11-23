@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.*;
 
 public class RiskModel{
@@ -239,7 +240,6 @@ public class RiskModel{
             }
         }
     //}
-        nextTurn();
     }
 
     public boolean getCheckAttack() {
@@ -392,12 +392,28 @@ public class RiskModel{
             }
         }
         bonusTroops();
+
+        SwingUtilities.invokeLater(() -> {
+            try {
+                if(currentPlayer.getIsAI()){
+                    playAI();
+                    nextTurn();
+
+                }
+                else{
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void ifAIStarts(){
 
-        if(currentPlayer.getIsAI()){
+        while(currentPlayer.getIsAI()){
             playAI();
+            nextTurn();
         }
     }
 
@@ -408,7 +424,21 @@ public class RiskModel{
             currentPlayer = playerList.get(0);
         }
         bonusTroops();
-        ifAIStarts();
+
+        SwingUtilities.invokeLater(() -> {
+            try {
+                if(currentPlayer.getIsAI()){
+                    playAI();
+                    nextTurn();
+
+                }
+                else{
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public int rollDice() {
