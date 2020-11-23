@@ -15,7 +15,7 @@ public class RiskView extends JFrame implements RiskListener{
     private JButton startGame;
     private JButton attackButton;
     private JButton passTurn;
-    private JButton fortifyButton;
+    private JButton confirmButton;
     private JButton maneuverButton;
 
     private JTextArea consoleUpdate;
@@ -69,6 +69,7 @@ public class RiskView extends JFrame implements RiskListener{
     AdjListController adjListController;
     ListController listController;
     FortifyController fortifyController;
+    ManeuverController maneuverController;
 
     DefaultListModel<Country> ownedCountriesModel;
     DefaultListModel<String> adjacentCountriesModel;
@@ -99,6 +100,8 @@ public class RiskView extends JFrame implements RiskListener{
 
     private DefaultCaret style = new DefaultCaret();
 
+    private boolean isManeuverMode;
+
     RiskModel rm;
     RiskController rController;
 
@@ -110,6 +113,8 @@ public class RiskView extends JFrame implements RiskListener{
         //initializing the controller and the model
         rm = new RiskModel();
         rController = new RiskController(rm, this);
+
+        isManeuverMode = false;
 
         PlayerController pController = new PlayerController(this);
 
@@ -142,6 +147,7 @@ public class RiskView extends JFrame implements RiskListener{
         adjListController = new AdjListController(this);
         listController = new ListController(rm, this);
         fortifyController = new FortifyController(rm, this);
+        maneuverController = new ManeuverController(rm, this);
 
         mapImage = new ImageIcon("library/mapRisk.png");
 
@@ -629,11 +635,16 @@ public class RiskView extends JFrame implements RiskListener{
         currentPlayerInfo = new JLabel(" ");
         currentPlayerInfo.setBorder(BorderFactory.createLineBorder(new Color(139,0,139), 5));
 
-        fortifyButton = new JButton("Deploy Troops");
-        fortifyButton.setBackground(new Color(66, 245, 126));
+        confirmButton = new JButton("Confirm Maneuver");
+        confirmButton.setBackground(new Color(66, 245, 126));
+        confirmButton.addActionListener(maneuverController);
+        confirmButton.setActionCommand("confirm");
+        confirmButton.setEnabled(false);
 
         maneuverButton = new JButton("Maneuver Troops");
         maneuverButton.setBackground(new Color(254,216,177));
+        maneuverButton.setActionCommand("maneuverEnable");
+        maneuverButton.addActionListener(maneuverController);
         maneuverButton.setEnabled(false);
 
         attackButton = new JButton("Attack!!!");
@@ -707,7 +718,7 @@ public class RiskView extends JFrame implements RiskListener{
         a4.weighty = 0.5;
         a4.gridx = 0;
         a4.gridy = 6;
-        actionPanel.add(fortifyButton, a4);
+        actionPanel.add(confirmButton, a4);
 
         a4.fill = GridBagConstraints.BOTH;
         a4.insets = new Insets(5, 5, 5, 5);
@@ -907,6 +918,7 @@ public class RiskView extends JFrame implements RiskListener{
     public void clearSelection(){
         selectedCountries.clearSelection();
         connectedCountries.clearSelection();
+        adjacentCountriesModel.removeAllElements();
     }
 
     /**
@@ -956,6 +968,11 @@ public class RiskView extends JFrame implements RiskListener{
 
     }
 
+    /**
+     * gets the amount of troops the user would like to fortify with using JOPtionPane
+     * @param availableTroops int
+     * @return int
+     */
     public int getEnforcementAmount(int availableTroops){
         Integer[] options = new Integer[availableTroops];
 
@@ -973,6 +990,27 @@ public class RiskView extends JFrame implements RiskListener{
         clearSelection();
 
         return choice + 1;
+    }
+
+    /**
+     * this funtion will take in the maximum number of troops a country can maneuver with
+     * then will allow the user to choose the number of troops
+     * @param maxTroops maximum number of troops that can be used
+     * @return the number of maneuvering troops
+     */
+    public int getManeuverTroops(int maxTroops){
+        Integer[] options = new Integer[maxTroops];
+
+        for(int i = 0; i < maxTroops; i++){
+            options[i] = i + 1;
+        }
+
+        int choice = JOptionPane.showOptionDialog(this, "Choose the number of troops you would like to maneuver",
+        "Maneuver",
+        JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+        return choice + 1;
+
     }
 
     //enables the attack button
@@ -1097,6 +1135,13 @@ public class RiskView extends JFrame implements RiskListener{
     public void removeAdjListener(){
         connectedCountries.removeListSelectionListener(adjListController);
     }
+
+    /**
+     * removes the event listener to the owned countries jlist
+     */
+    public void removeOwnedListListener(){
+        selectedCountries.removeListSelectionListener(listController);
+    }
     
     /**
      * changes the JList of owned countries to be in fortify mode
@@ -1105,6 +1150,7 @@ public class RiskView extends JFrame implements RiskListener{
         selectedCountries.removeListSelectionListener(listController);
         selectedCountries.addListSelectionListener(fortifyController);
         disablePassButton();
+        disableManeuverButton();
     }
 
     /**
@@ -1113,7 +1159,9 @@ public class RiskView extends JFrame implements RiskListener{
     public void setNormalMode(){
         selectedCountries.removeListSelectionListener(fortifyController);
         selectedCountries.addListSelectionListener(listController);
+        addAdjListener();
         enablePassButton();
+        enableManeuverButton();
     }
 
     /**
@@ -1135,6 +1183,56 @@ public class RiskView extends JFrame implements RiskListener{
      */
     public void updatePlayerJLabel(Player currentPlayer){
         currentPlayerInfo.setText(currentPlayer.getName() + ": " + currentPlayer.getAvailableEnforcement() + " available enforcement(s)");
+    } 
+
+    /**
+     * disables the maneuver button
+     */
+    public void disableManeuverButton(){
+        maneuverButton.setEnabled(false);
+    }
+
+    /**
+     * enables the maneuver button
+     */
+    public void enableManeuverButton(){
+        maneuverButton.setEnabled(true);
+    }
+
+    /**
+     * disables the confirm maneuver button
+     */
+    public void disableConfirmButton(){
+        confirmButton.setEnabled(false);
+    }
+
+    /**
+     * enables the confirm maneuver button
+     */
+    public void enableConfirmButton(){
+        confirmButton.setEnabled(true);
+    }
+
+    /**
+     * changes the buttons and behaviour of lists based on the mode
+     */
+    public void changeManeuverMode(boolean mode){
+        if(mode){
+            maneuverButton.setText("Exit maneuver mode");
+            maneuverButton.setActionCommand("exitManeuver");
+            isManeuverMode = true;
+        }  else{
+            maneuverButton.setText("Maneuver Troops");
+            maneuverButton.setActionCommand("maneuverEnable");
+            isManeuverMode = false;
+        }
+    }
+
+    /**
+     * return true if the game is in maneuver mode, false otherwise
+     */
+    public boolean getMode(){
+        return isManeuverMode;
     }
 
     public static void main(String[] args) {
