@@ -77,24 +77,6 @@ public class RiskModelTest {
 
 
     @org.junit.Test
-    public void testAttack(){
-        RiskModel risk = new RiskModel();
-        Player player = new Player("Areeb", 3);
-        Player player2 = new Player("Hassan", 2);
-        conqueredCountries.put(alaska, 3);
-        conqueredCountries2.put(alberta, 2);
-        player.setConqueredCountries(conqueredCountries);
-        risk.setCurrentPlayer(player);
-        player2.setConqueredCountries(conqueredCountries2);
-        player.updateCountry(alaska, 3);
-        player2.updateCountry(alberta, 2);
-
-        risk.attack(alberta, alaska, 3, 2);
-        assertEquals(true, risk.getCheckAttack());
-
-    }
-
-    @org.junit.Test
     public void testCorrectInitialTroops() {
         setUp();
         int check = risk.getInitialTroops(3);
