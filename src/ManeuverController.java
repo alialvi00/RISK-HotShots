@@ -26,12 +26,12 @@ public class ManeuverController implements ActionListener{
             Country originCountry = view.getOriginCountry();
             int maxCountryTroops = model.getCurrentPlayer().getPlayerData().get(originCountry) - 1;
             if(maxCountryTroops == 0){
-                System.out.println("You must leave atleast one troop in any of your countries.");
+                System.out.println("You must leave at least one troop in any of your countries.");
                 return;
             }
             Country destination = model.getCurrentPlayer().getCountryByName(view.getDestinationCountry());
             int maneuveringTroops = view.getManeuverTroops(maxCountryTroops);
-            model.manuever(maneuveringTroops, originCountry, destination);
+            model.maneuver(maneuveringTroops, originCountry, destination);
             view.disableConfirmButton();
             view.changeManeuverMode(false);
             view.clearSelection();

@@ -24,4 +24,6 @@ public class RiskController implements ActionListener{
         mainModel.setUpPlayers(mainView.getPlayerNames(), mainView.getPlayerCount(),mainView.getPlayerType());
     }
 
+
+
 }
