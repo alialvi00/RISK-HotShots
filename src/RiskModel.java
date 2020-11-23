@@ -542,7 +542,7 @@ public class RiskModel{
         ArrayList<Country> countries = currentPlayer.getCountries();
         if(countries.size() > 11){
             double tempNum = countries.size()/3;
-            bonusTroops = (int) tempNum;    //this removes the decimel places (rounding down)
+            bonusTroops = (int) tempNum;    //this removes the decimal places (rounding down)
         }
         //calculating continent bonuses
         for(Continent continent: map.getContinentList()){
@@ -562,7 +562,8 @@ public class RiskModel{
     /**
      * Maneuvers troops between countries
      * @param troops of type int
-     * @param country   country bring modified
+     * @param originCountry   beginning country
+     * @param destinationCountry final country to move to.
      */
     public void manuever(int troops, Country originCountry, Country destinationCountry){
         currentPlayer.updateCountry(originCountry, -troops);

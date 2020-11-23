@@ -191,6 +191,10 @@ public class Player{
         this.conqueredCountries = conqueredCountries;
     }
 
+    public HashMap<Country, Integer> getConqueredCountries(){
+        return conqueredCountries;
+    }
+
     public void setAsAI(Boolean isAI){
         this.isAI = isAI;
     }
