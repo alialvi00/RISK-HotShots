@@ -115,7 +115,7 @@ public class RiskModelTest {
         player.updateCountry(alaska, 3);
         player.updateEnforcements(-3);
         risk.setCurrentPlayer(player);
-        risk.manuever(3, alaska, alberta);
+        risk.maneuver(3, alaska, alberta);
         //if the country origin lost troops and country final gained troops then the manuever was succesful.
         assertEquals(risk.getCurrentPlayer().getConqueredCountries(), player.getConqueredCountries());
     }

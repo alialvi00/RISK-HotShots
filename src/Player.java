@@ -6,9 +6,6 @@ public class Player{
     private int availableEnforcement;
     private Boolean isAI = false;
     private HashMap<Country, Integer> conqueredCountries;
-    private Boolean isDefending;
-    private Dice die;
-    private RiskListener updateChanges;
     /**
      * constructor for the player class
      * the number of troops they each contain
@@ -134,22 +131,6 @@ public class Player{
         conqueredCountries.remove(country);
     }
 
-    /**
-     * moves troops from the origin country to a destination country
-     * @param origin country that troops are being moved from of type Country
-     * @param destination country troops are moving to of type Country
-     * @param troops number of troops moving of type int
-     * @return returns true if it is successful or false if not
-     */
-   // public Boolean maneuverTroops(Country origin, Country destination, int troops){
-     //   if(troops < conqueredCountries.get(origin)){
-     //       conqueredCountries.put(origin, conqueredCountries.get(origin) - troops);
-     //       conqueredCountries.put(destination, conqueredCountries.get(destination) + troops);
-      //      return true;
-    //    }
-     //
-    //    return false;
-    //}
 
     /**
      * updates the number of troops in a country after an attack
