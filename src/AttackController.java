@@ -27,8 +27,15 @@ public class AttackController implements ActionListener{
         int maxAttackingTroops = mainModel.getMaxAttackingTroops(originCountry);
         int attackingTroops = mainView.getAttackingTroops(maxAttackingTroops);
 
+        int defendingTroops = 0;
         int maxDefendingTroops = mainModel.getMaxDefendingTroops(destinationCountry, defendingPlayer);
-        int defendingTroops = mainView.getDefendingTroops(maxDefendingTroops, defendingPlayer);
+
+        if(defendingPlayer.getIsAI()){
+            defendingTroops = mainModel.defendAI(maxDefendingTroops);
+        }
+        else {
+            defendingTroops = mainView.getDefendingTroops(maxDefendingTroops, defendingPlayer);
+        }
 
         mainModel.initiateAttack(originCountry, destinationCountry, attackingTroops, defendingTroops);
     }
