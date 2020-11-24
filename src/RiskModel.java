@@ -243,9 +243,7 @@ public class RiskModel{
     }
 
     public boolean getCheckAttack() {
-        if (checkAttack > 0) {
-            return true;
-        }
+        if (checkAttack > 0) return true;
         return false;
     }
 
@@ -645,8 +643,9 @@ public class RiskModel{
     /**
      * Maneuvers troops between countries
      * @param troops of type int
-     * @param originCountry   country that troops leave
-     * @param destinationCountry country that troops go to
+     * @param originCountry   beginning country
+     * @param destinationCountry final country to move to.
+
      */
     public void maneuver(int troops, Country originCountry, Country destinationCountry){
         System.out.println();

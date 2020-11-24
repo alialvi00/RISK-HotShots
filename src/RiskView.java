@@ -1181,9 +1181,11 @@ public class RiskView extends JFrame implements RiskListener{
      * updates the JLabel showing the current player and available enforcements
      * @param currentPlayer type Player
      */
+
     public void updatePlayerJLabel(Player currentPlayer){
         currentPlayerInfo.setText(currentPlayer.getName() + ": " + currentPlayer.getAvailableEnforcement() + " available enforcement(s)");
     }
+
 
     /**
      * disables the maneuver button
