@@ -97,7 +97,7 @@ public class RiskModel{
      * applied to this method to create the best
      * possible outcome.
      */
-    public void playAI() {
+    public void playAI() throws InterruptedException {
 
         ArrayList<Country> countries;
         ArrayList<Country> attackCountry = new ArrayList<>();
@@ -183,21 +183,27 @@ public class RiskModel{
                     secondPick = generateSecondPick.nextInt(defendingCountry.size());
                     attackTroops = getMaxAttackingTroops(attackCountry.get(pick));
 
+                    if(attackTroops <= 0){
+                        break;
+                    }
+
                     if (defendingPlayer.hasCountry(defendingCountry.get(secondPick).toString())) {
 
                         defendTroops = getMaxDefendingTroops(defendingCountry.get(secondPick), defendingPlayer);
 
-                        if(!defendingPlayer.getIsAI()){
-                            for(RiskView rv : viewList){
-                                defendTroops = rv.getDefendingTroops(defendTroops,defendingPlayer);
-                                initiateAttack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, defendTroops);
-                            }
-                        }
-                        else {
+                        if(defendTroops>0) {
 
-                            troopsDefending = defendAI(defendTroops);
-                            initiateAttack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, troopsDefending);
-                            percent = generatePercent.nextInt(99);
+                            if (!defendingPlayer.getIsAI()) {
+                                for (RiskView rv : viewList) {
+                                    defendTroops = rv.getDefendingTroops(defendTroops, defendingPlayer);
+                                    initiateAttack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, defendTroops);
+                                }
+                            } else {
+
+                                troopsDefending = defendAI(defendTroops);
+                                initiateAttack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, troopsDefending);
+                                percent = generatePercent.nextInt(99);
+                            }
                         }
                     }
                 }
@@ -249,9 +255,13 @@ public class RiskModel{
                 secondPick = generateSecondPick.nextInt(originCountry.size());
                 troops = currentPlayer.getPlayerData().get(currentPlayer.getCountryByName(originCountry.get(secondPick).toString()));
                 int troopsToMove = generateMoveTroops.nextInt(troops)+1;
-                maneuver(troopsToMove, originCountry.get(secondPick), destinationCountry.get(pick));
+
+                if(troops-troopsToMove>0){
+                    maneuver(troopsToMove, originCountry.get(secondPick), destinationCountry.get(pick));
+                }
             }
         }
+        Thread.sleep(200);
     //}
     }
 
@@ -430,7 +440,7 @@ public class RiskModel{
         });
     }
 
-    public void ifAIStarts(){
+    public void ifAIStarts() throws InterruptedException {
 
         while(currentPlayer.getIsAI()){
             playAI();
@@ -519,7 +529,10 @@ public class RiskModel{
         int troops = currentPlayer.getPlayerData().get(country) - 1;
         if(troops > 3){
             return 3;
-        } else{return troops;}
+        }
+        else {
+            return troops;
+        }
     }
 
     /**
