@@ -37,6 +37,7 @@ public class ManeuverController implements ActionListener{
             view.clearSelection();
             view.setNormalMode();
             view.disableManeuverButton();
+            model.nextTurn();
         }
     }
     

@@ -1237,6 +1237,19 @@ public class RiskView extends JFrame implements RiskListener{
         return isManeuverMode;
     }
 
+    /**
+     * handles a new turn
+     */
+    public void handleNewTurn(MapEvent m){
+        RiskModel model = (RiskModel) m.getSource();
+        if(!model.getCurrentPlayer().getIsAI()){
+            setFortifyMode();
+        }
+        handleMapChange(m);
+        enableManeuverButton();
+        System.out.println("\nIt is " + model.getCurrentPlayer().getName() + "'s turn \n");
+    }
+
     public static void main(String[] args) {
         new RiskView();
     }

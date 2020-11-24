@@ -4,4 +4,5 @@ public interface RiskListener {
     void handleMapChange(MapEvent m);
     void handleAdjacentList(ListEvent l);
     void handleEndGame(MapEvent m);
+    void handleNewTurn(MapEvent m);
 }

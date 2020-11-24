@@ -422,6 +422,9 @@ public class RiskModel{
             currentPlayer = playerList.get(0);
         }
         bonusTroops();
+        for (RiskView rV : viewList) {
+            rV.handleNewTurn(new MapEvent(this, playerList));
+        }
 
         SwingUtilities.invokeLater(() -> {
             try {
