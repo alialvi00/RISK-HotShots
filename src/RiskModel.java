@@ -378,6 +378,9 @@ public class RiskModel{
         return temp;
     }
 
+    public void addPlayer(Player player){
+        playerList.add(player);
+    }
 
     /**
      * depending how many players picks the starting amount of troops
@@ -567,6 +570,8 @@ public class RiskModel{
             rV.handleMapChange(new MapEvent(this, playerList));
         }
     }
+
+
 
     /**
      * updates the adjacent list for a country, only displayes the enemies countries
