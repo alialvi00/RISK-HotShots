@@ -8,11 +8,11 @@ public class RiskModelTest {
     RiskModel risk;
     private ArrayList<Player> playerList;
     Player player;
+    Player player1;
     ArrayList<String> playerNames;
     Country alaska;
     Country alberta;
     Country centralAmerica;
-    Country easternUS;
     Country greenland;
     Country northwestT;
     Country ontario;
@@ -30,6 +30,12 @@ public class RiskModelTest {
     protected void setUp(){
         risk = new RiskModel();
         player = new Player("Areeb", 3);
+        conqueredCountries = new HashMap<Country, Integer>();
+        conqueredCountries2 = new HashMap<Country, Integer>();
+        alaska = new Country("alaska", new Continent("North America", 9, 5));
+        alberta = new Country("alberta", new Continent("North America", 9, 5));
+
+
     }
 
     protected void tearDown(){
@@ -95,14 +101,18 @@ public class RiskModelTest {
 
     }
 
+
     @org.junit.Test
     public void checkFortify() {
         setUp();
+
         conqueredCountries.put(alaska, 3);
         player.setConqueredCountries(conqueredCountries);
         player.updateCountry(alaska, 3);
         player.updateEnforcements(-3);
         risk.setCurrentPlayer(player);
+
+
         risk.fortify(3, alaska);
         assertEquals(risk.getCurrentPlayer().getConqueredCountries(), player.getConqueredCountries());
     }
@@ -111,11 +121,12 @@ public class RiskModelTest {
     public void checkManeuver() {
         setUp();
         conqueredCountries.put(alaska, 3);
+        conqueredCountries.put(alberta, 3);
         player.setConqueredCountries(conqueredCountries);
-        player.updateCountry(alaska, 3);
-        player.updateEnforcements(-3);
+        player.updateCountry(alberta, 3);
+        player.updateCountry(alaska,-3);
         risk.setCurrentPlayer(player);
-        risk.manuever(3, alaska, alberta);
+        risk.maneuver(3, alaska, alberta);
         //if the country origin lost troops and country final gained troops then the manuever was succesful.
         assertEquals(risk.getCurrentPlayer().getConqueredCountries(), player.getConqueredCountries());
     }
@@ -141,6 +152,21 @@ public class RiskModelTest {
         risk.bonusTroops();
         assertEquals(risk.getCurrentPlayer().getAvailableEnforcement(), player1.getAvailableEnforcement());
 
+    }
+
+    @org.junit.Test
+    public void testAttack() {
+        setUp();
+        player1 = new Player("Hassan", 2);
+        risk.addPlayer(player1);
+        conqueredCountries.put(alaska, 3);
+        conqueredCountries2.put(alberta, 3);
+        player.setConqueredCountries(conqueredCountries);
+        player1.setConqueredCountries(conqueredCountries2);
+        risk.setCurrentPlayer(player);
+        risk.attack(alaska, alberta, 3,3);
+
+        assertEquals(true, risk.getCheckAttack());
     }
 
 
