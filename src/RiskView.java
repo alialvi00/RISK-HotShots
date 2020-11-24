@@ -955,7 +955,7 @@ public class RiskView extends JFrame implements RiskListener{
             options[i] = i + 1;
         }
 
-        String message = player.getName() + ", " + getDestinationCountry() + " is being attacked! Choose the number of troops you would like to attack with";
+        String message = player.getName() + ", " + getDestinationCountry() + " is being attacked! Choose the number of troops you would like to defend with";
 
 
         int choice = JOptionPane.showOptionDialog(this, message,

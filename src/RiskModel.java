@@ -112,6 +112,7 @@ public class RiskModel{
         int defendTroops; //troops to defend with
         int moveTroops; //Troops to maneuver
         int currentTroops = 0;
+        int troopsDefending = 0;
 
         Random generatePick = new Random(); //generate first pick
         Random generateSecondPick = new Random(); //generate second pick
@@ -183,9 +184,21 @@ public class RiskModel{
                     attackTroops = getMaxAttackingTroops(attackCountry.get(pick));
 
                     if (defendingPlayer.hasCountry(defendingCountry.get(secondPick).toString())) {
+
                         defendTroops = getMaxDefendingTroops(defendingCountry.get(secondPick), defendingPlayer);
-                        initiateAttack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, defendTroops);
-                        percent = generatePercent.nextInt(99);
+
+                        if(!defendingPlayer.getIsAI()){
+                            for(RiskView rv : viewList){
+                                defendTroops = rv.getDefendingTroops(defendTroops,defendingPlayer);
+                                initiateAttack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, defendTroops);
+                            }
+                        }
+                        else {
+
+                            troopsDefending = defendAI(defendTroops);
+                            initiateAttack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, troopsDefending);
+                            percent = generatePercent.nextInt(99);
+                        }
                     }
                 }
             }
@@ -240,6 +253,14 @@ public class RiskModel{
             }
         }
     //}
+    }
+
+    public int defendAI(int maxTroops){
+
+        Random generateTroops = new Random();
+        int troops = generateTroops.nextInt(maxTroops)+1;
+
+        return troops;
     }
 
     public boolean getCheckAttack() {
@@ -398,7 +419,6 @@ public class RiskModel{
                 if(currentPlayer.getIsAI()){
                     playAI();
                     nextTurn();
-
                 }
                 else{
                     return;
