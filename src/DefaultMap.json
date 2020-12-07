@@ -1,0 +1,31 @@
+{
+    "North America": {
+        "numberOfCountries": 9,
+        "extraTroops": 5,
+        "countries": {
+            "Alaska": {
+                "continent": "North America",
+                "adjacentCountries": ["Kamchatka", "Alberta", "Northwest Territory"]
+            },
+            "Alberta": {
+                "continent":"North America",
+                "adjacentCountries":["Alaska", "Northwest Territory", "Ontario", "Western United States"]
+            }
+        }
+    },
+    "South America": {
+        "numberOfCountries": 4,
+        "extraTroops": 2,
+        "countries":{
+            "Argentina": {
+                "continent": "South America",
+                "adjacentCountries": ["Venezuela", "Brazil", "Peru"]
+            },
+            "Brazil": {
+                "continent": "South America",
+                "adjacentCountries":["Venezuela", "Argentina", "Peru", "North Africa"]
+            }
+        }
+
+    }
+} 
