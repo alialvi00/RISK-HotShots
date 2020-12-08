@@ -47,7 +47,7 @@
         "countries":{
             "Argentina": {
                 "continent": "South America",
-                "adjacentCountries": ["Venezuela", "Brazil", "Peru"]
+                "adjacentCountries": ["Brazil", "Peru"]
             },
             "Brazil": {
                 "continent": "South America",
@@ -55,7 +55,7 @@
             },
             "Venezuela": {
                 "continent": "South America",
-                "adjacentCountries": ["Brazil", "Peru"]
+                "adjacentCountries": ["Brazil", "Peru", "Central America"]
             },
             "Peru": {
                 "continent": "South America",
@@ -104,7 +104,7 @@
             },
             "China": {
                 "continent": "Asia",
-                "adjacentCountries":["Ukraine","Ural","Siberia","India","Middle East"]
+                "adjacentCountries":["Siberia","India", "Afghanistan", "Mongolia", "Siam", "Ural"]
             },
             "India": {
                 "continent": "Asia",
@@ -124,13 +124,13 @@
             },
             "Middle East": {
                 "continent": "Asia",
-                "adjacentCountries":["Ukraine","Afghanistan","India","Egypt"]
+                "adjacentCountries":["Ukraine","Afghanistan","India","Egypt", "East Africa"]
             },
             "Mongolia": {
                 "continent": "Asia",
                 "adjacentCountries":["Siberia","Irkutsk","Kamchatka","Japan","China"]
             },
-            "siam": {
+            "Siam": {
                 "continent": "Asia",
                 "adjacentCountries":["India","China","Indonesia"]
             },
@@ -140,7 +140,7 @@
             },
             "Ural": {
                 "continent": "Asia",
-                "adjacentCountries":["Ukraine","Siberia","Afghanistan"]
+                "adjacentCountries":["Ukraine","Siberia","Afghanistan", "China"]
             },
             "Yakutsk": {
                 "continent": "Asia",
@@ -193,7 +193,7 @@
             },
             "Indonesia": {
                 "continent": "Australia",
-                "adjacentCountries": ["New Guinea","Western Australia"]
+                "adjacentCountries": ["New Guinea","Western Australia", "Siam"]
             },
             "New Guinea": {
                 "continent": "Australia",

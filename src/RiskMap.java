@@ -42,8 +42,10 @@ public class RiskMap {
                     for(int i = 0; i < adjCountries.length(); i++){
                         adjCountriesList.add(adjCountries.get(i).toString());
                     }
-                    createCountry(countryName, continentObject, adjCountriesList);
+                    Country newCountry = createCountry(countryName, continentObject, adjCountriesList);
+                    continentObject.addCountry(newCountry);
                 }
+                continentList.add(continentObject);
             }
               } catch (Exception e) {
                   e.printStackTrace();
@@ -52,14 +54,14 @@ public class RiskMap {
 
     public Continent createContinent(String name, int numCountries, int extraTroops) {
         Continent continent = new Continent(name, numCountries, extraTroops);
-        continentList.add(continent);
         return continent;
     }
 
-    public void createCountry(String name, Continent continent, ArrayList<String> border) {
+    public Country createCountry(String name, Continent continent, ArrayList<String> border) {
         Country country = new Country(name, continent);
         country.setBorders(border);
         countryList.add(country);
+        return country;
     }
 
     public boolean isValidCountry(String countryName){
@@ -79,6 +81,66 @@ public class RiskMap {
 
     public ArrayList<Continent> getContinentList() {
         return continentList;
+    }
+
+    public Country getCountryByName(String name){
+        for(Country c: countryList){
+            if(name.toLowerCase().equals(c.toString().toLowerCase())){
+                return c;  
+            }            
+        }
+        return null;
+    }
+
+    public boolean validateMap(){
+        for(Continent continent: continentList){
+            if(!validateContinents(continent)){
+                return false;
+            }
+        }
+        for(Country country: countryList){
+            if(!validateCountryLink(country)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * this function checks if all areas (continents) are accessible 
+     * @return boolean true if accessible false if not
+     */
+    public boolean validateContinents(Continent continent){
+        for(Country country: continent.getCountryList()){
+            for(String adj: country.getAdjacentCountries()){
+                Country adjCountry = getCountryByName(adj);
+                if(adjCountry.getContinent() != country.getContinent()){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * validates the links between countries, i.e a country
+     * should appear in the list of adjacent countries of its bordering countries
+     * @param country
+     * @return
+     */
+    public boolean validateCountryLink(Country country){
+        for(String adj: country.getAdjacentCountries()){
+            Country adjCountry = getCountryByName(adj);
+            if(!adjCountry.getAdjacentCountries().contains(country.toString())){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        RiskMap map = new RiskMap();
+        System.out.println(map.validateMap());
     }
 
 }
