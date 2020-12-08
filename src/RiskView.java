@@ -149,7 +149,7 @@ public class RiskView extends JFrame implements RiskListener{
         fortifyController = new FortifyController(rm, this);
         maneuverController = new ManeuverController(rm, this);
 
-        mapImage = new ImageIcon("library/mapRisk.png");
+        mapImage = new ImageIcon(getClass().getClassLoader().getResource("mapRisk.png"));
 
         attackButton = new JButton("Attack");
 
@@ -237,7 +237,7 @@ public class RiskView extends JFrame implements RiskListener{
         c1.show(mainCont, "startScene");
 
         mainGameScene.setBackground(Color.black);
-        //     startBackgroundMusic("library/BackgroundMusic.wav");
+        startBackgroundMusic(getClass().getResource("BackgroundMusic.wav"));
 
         this.add(mainCont);
         this.setLocationRelativeTo(null);
@@ -310,32 +310,26 @@ public class RiskView extends JFrame implements RiskListener{
         askCount.add(startGame, a1);
     }
 
-    public void startBackgroundMusic(String musicPath){
+    public void startBackgroundMusic(URL musicPath){
 
         try{
-            File musicFile = new File(musicPath);
-            if(musicFile.exists()){
-                AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicFile);
-                Clip clip = AudioSystem.getClip();
-                clip.open(audioInput);
-                clip.start();
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
-                FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                volume.setValue(-5.0f);
-            }
-            else{
-                System.out.println("Music file not found");
-            }
+            AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInput);
+            clip.start();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+            FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            volume.setValue(-5.0f);
         }
         catch(Exception e){
             System.out.println("Music file not found, no music to be played :(");
         }
     }
 
-    public void playSoundEffect(String soundEffect){
+    public void playSoundEffect(URL soundEffect){
         try
         {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundEffect).getAbsoluteFile( ));
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundEffect);
             Clip clip = AudioSystem.getClip( );
             clip.open(audioInputStream);
             clip.start( );
