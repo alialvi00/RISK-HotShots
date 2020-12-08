@@ -13,6 +13,7 @@ public class ManeuverController implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e){
         if(e.getActionCommand().equals("maneuverEnable")){
+            view.playSoundEffect(getClass().getResource("ManueverTroop.wav"));
             view.removeAdjListener();
             view.disableAttack();
             view.disablePassButton();
