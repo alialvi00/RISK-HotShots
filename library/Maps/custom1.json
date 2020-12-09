@@ -1,0 +1,208 @@
+{
+    "Atlantis": {
+        "numberOfCountries": 9,
+        "extraTroops": 5,
+        "countries": {
+            "Bridabold": {
+                "continent": "Atlantis",
+                "adjacentCountries": ["Hillsbane", "Sittershurst", "Scot"]
+            },
+            "Sittershurst": {
+                "continent":"Atlantis",
+                "adjacentCountries":["Bridabold", "Scot", "Suforia", "Saintsland"]
+            },
+            "Bexveton": {
+                "continent":"Atlantis",
+                "adjacentCountries":["Saintsland", "Poonth", "Gone Island"]
+            },
+            "Poonth": {
+                "continent":"Atlantis",
+                "adjacentCountries":["Saintsland", "Bexveton", "Suforia", "Penpy Falls"]
+            },
+            "Royal Port": {
+                "continent":"Atlantis",
+                "adjacentCountries":["Penpy Falls", "Suforia", "Scot", "South Anglia"]
+            },
+            "Scot": {
+                "continent":"Atlantis",
+                "adjacentCountries":["Bridabold", "Sittershurst", "Royal Port", "Suforia"]
+            },
+            "Suforia": {
+                "continent":"Atlantis",
+                "adjacentCountries":["Royal Port", "Sittershurst", "Scot", "Penpy Falls", "Saintsland", "Poonth"]
+            },
+            "Penpy Falls": {
+                "continent":"Atlantis",
+                "adjacentCountries":["Suforia", "Royal Port", "Poonth"]
+            },
+            "Saintsland": {
+                "continent":"Atlantis",
+                "adjacentCountries":["Sittershurst", "Suforia", "Poonth", "Bexveton"]
+            }
+        }
+    },
+    "Avalon": {
+        "numberOfCountries": 4,
+        "extraTroops": 2,
+        "countries":{
+            "New Mal": {
+                "continent": "Avalon",
+                "adjacentCountries": ["Celfe City", "Roame"]
+            },
+            "Celfe City": {
+                "continent": "Avalon",
+                "adjacentCountries":["Gone Island", "New Mal", "Roame", "Kopi"]
+            },
+            "Gone Island": {
+                "continent": "Avalon",
+                "adjacentCountries": ["Celfe City", "Roame", "Bexveton"]
+            },
+            "Roame": {
+                "continent": "Avalon",
+                "adjacentCountries": ["Celfe City", "New Mal", "Gone Island"]
+            }
+        }
+    },
+    "El Dorado": {
+        "numberOfCountries": 6,
+        "extraTroops": 3,
+        "countries":{
+            "Mounds": {
+                "continent": "El Dorado",
+                "adjacentCountries": ["Kopi", "Lopi", "Popi"]
+            },
+            "Lopi": {
+                "continent": "El Dorado",
+                "adjacentCountries":["Tombland", "Kopi", "Mounds", "Popi", "Castrune", "Parkrow"]
+            },
+            "Tombland": {
+                "continent": "El Dorado",
+                "adjacentCountries":["Parkrow", "Lopi", "Kopi", "North Anglia"]
+            },
+            "Castrune": {
+                "continent": "El Dorado",
+                "adjacentCountries":["Lopi", "Popi"]
+            },
+            "Kopi": {
+                "continent": "El Dorado",
+                "adjacentCountries":["Tombland", "Lopi", "Mounds", "Celfe City", "North Anglia", "West Anglia"]
+            },
+            "Popi": {
+                "continent": "El Dorado",
+                "adjacentCountries":["Castrune", "Mounds", "Lopi"]
+            }
+        }
+
+    },
+    "The Shire": {
+        "numberOfCountries": 12,
+        "extraTroops": 7,
+        "countries":{
+            "Varrock": {
+                "continent": "The Shire",
+                "adjacentCountries": ["Ulfield","Priff","Taverly","Busskast","Harbour Land","Parkrow"]
+            },
+            "Busskast": {
+                "continent": "The Shire",
+                "adjacentCountries":["Taverly","Harbour Land", "Varrock", "Falador", "Lumbridge", "Priff"]
+            },
+            "Harbour Land": {
+                "continent": "The Shire",
+                "adjacentCountries":["Parkrow" ,"Varrock","Busskast","Lumbridge"]
+            },
+            "Wich": {
+                "continent": "The Shire",
+                "adjacentCountries":["Taverly","Konton","Hillsbane","Falador"]
+            },
+            "Easton": {
+                "continent": "The Shire",
+                "adjacentCountries":["Hillsbane","Falador"]
+            },
+            "Hillsbane": {
+                "continent": "The Shire",
+                "adjacentCountries":["Konton","Bridabold","Easton","Falador","Wich"]
+            },
+            "Parkrow": {
+                "continent": "The Shire",
+                "adjacentCountries":["Ulfield","Varrock","Harbour Land","Tombland", "Lopi"]
+            },
+            "Falador": {
+                "continent": "The Shire",
+                "adjacentCountries":["Taverly","Wich","Hillsbane","Easton","Busskast"]
+            },
+            "Lumbridge": {
+                "continent": "The Shire",
+                "adjacentCountries":["Harbour Land","Busskast","Islamabad"]
+            },
+            "Taverly": {
+                "continent": "The Shire",
+                "adjacentCountries":["Priff","Konton","Wich","Falador","Busskast","Varrock"]
+            },
+            "Priff": {
+                "continent": "The Shire",
+                "adjacentCountries":["Ulfield","Taverly","Varrock", "Busskast"]
+            },
+            "Konton": {
+                "continent": "The Shire",
+                "adjacentCountries":["Taverly","Hillsbane","Wich"]
+            }
+        }
+
+    },
+    "Anglia": {
+        "numberOfCountries": 7,
+        "extraTroops": 5,
+        "countries":{
+            "West Wells": {
+                "continent": "Anglia",
+                "adjacentCountries": ["South Anglia","Land Of Ice","Venton","West Anglia"]
+            },
+            "South Anglia": {
+                "continent": "Anglia",
+                "adjacentCountries": ["Royal Port","West Wells"]
+            },
+            "Venton": {
+                "continent": "Anglia",
+                "adjacentCountries": ["West Wells","Ulfield","North Anglia", "West Anglia"]
+            },
+            "Land Of Ice": {
+                "continent": "Anglia",
+                "adjacentCountries": ["West Wells", "Ulfield"]
+            },
+            "North Anglia": {
+                "continent": "Anglia",
+                "adjacentCountries": ["West Anglia","Venton","Ulfield","Tombland","Kopi"]
+            },
+            "Ulfield": {
+                "continent": "Anglia",
+                "adjacentCountries": ["Land Of Ice","Priff","Varrock","Parkrow","North Anglia","Venton"]
+            },
+            "West Anglia": {
+                "continent": "Anglia",
+                "adjacentCountries": ["West Wells","Venton","North Anglia","Kopi"]
+            }
+        }
+    },
+    "Pakistan": {
+        "numberOfCountries": 4,
+        "extraTroops": 2,
+        "countries":{
+            "Karachi": {
+                "continent": "Pakistan",
+                "adjacentCountries": ["Lahore","Azad Kashmir"]
+            },
+            "Islamabad": {
+                "continent": "Pakistan",
+                "adjacentCountries": ["Lahore","Azad Kashmir", "Lumbridge"]
+            },
+            "Lahore": {
+                "continent": "Pakistan",
+                "adjacentCountries": ["Islamabad","Karachi","Azad Kashmir"]
+            },
+            "Azad Kashmir": {
+                "continent": "Pakistan",
+                "adjacentCountries": ["Islamabad","Lahore","Karachi"]
+            }
+        }
+    }
+}
