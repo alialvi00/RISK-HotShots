@@ -5,8 +5,8 @@ import javax.swing.event.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 
 public class RiskView extends JFrame implements RiskListener{
@@ -14,6 +14,7 @@ public class RiskView extends JFrame implements RiskListener{
     private RiskMap m;
 
     private JButton startGame;
+    private JButton loadGame;
     private JButton loadCustomMap;
     private JButton attackButton;
     private JButton passTurn;
@@ -72,8 +73,8 @@ public class RiskView extends JFrame implements RiskListener{
     ListController listController;
     FortifyController fortifyController;
     ManeuverController maneuverController;
+    SaveLoadController saveLoadController;
     FilePickController filePickController;
-
 
     DefaultListModel<Country> ownedCountriesModel;
     DefaultListModel<String> adjacentCountriesModel;
@@ -95,6 +96,7 @@ public class RiskView extends JFrame implements RiskListener{
 
     private JMenuBar menuBar;
     private JMenu menu;
+    private JMenuItem saveOption;
     private JMenuItem quitOption;
 
     private GridBagConstraints a1;
@@ -107,16 +109,16 @@ public class RiskView extends JFrame implements RiskListener{
     private boolean isManeuverMode;
     private boolean isCustomMap;
 
-    RiskModel rm;
     RiskController rController;
+    RiskModel rm;
 
 
     public RiskView(){
 
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        //initializing the controller and the model
         rm = new RiskModel();
+        //initializing the controller and the model
         rController = new RiskController(rm, this);
 
         isManeuverMode = false;
@@ -152,13 +154,17 @@ public class RiskView extends JFrame implements RiskListener{
         listController = new ListController(rm, this);
         fortifyController = new FortifyController(rm, this);
         maneuverController = new ManeuverController(rm, this);
+        saveLoadController = new SaveLoadController(rm,this);
+
+        loadGame = new JButton("Load the saved game");
+        loadGame.setActionCommand("load");
+        loadGame.addActionListener(saveLoadController);
         filePickController = new FilePickController(rm, this);
 
         //button for loading map
         loadCustomMap = new JButton("Load Custom Map");
         loadCustomMap.setEnabled(true);
         loadCustomMap.addActionListener(filePickController);
-
         mapImage = new ImageIcon(getClass().getClassLoader().getResource("mapRisk.png"));
 
         attackButton = new JButton("Attack");
@@ -318,6 +324,10 @@ public class RiskView extends JFrame implements RiskListener{
         a1.gridx = 0;
         a1.gridy = 2;
         askCount.add(startGame, a1);
+
+        a1.gridx = 0;
+        a1.gridy = 3;
+        askCount.add(loadGame, a1);
     }
 
     public void startBackgroundMusic(URL musicPath){
@@ -545,11 +555,16 @@ public class RiskView extends JFrame implements RiskListener{
         menu = new JMenu("Options");
         menuBar.add(menu);
 
+        saveOption = new JMenuItem("Save the current game");
+        saveOption.setActionCommand("save");
+        saveOption.addActionListener(saveLoadController);
+
         quitOption = new JMenuItem("Awh, ur quitting the game :( ");
         quitOption.setEnabled(true);
         quitOption.setActionCommand("quit");;
         quitOption.addActionListener(rController);
 
+        menu.add(saveOption);
         menu.add(quitOption);
         this.setJMenuBar(menuBar);
 
@@ -1066,7 +1081,7 @@ public class RiskView extends JFrame implements RiskListener{
      */
     @Override
     public void handleMapChange(MapEvent m){
-        //Ali, update the info panel somehow using m.getPlayerList like i do above
+
         RiskModel model = (RiskModel) m.getSource();
         updateCountriesJlist(model.getCurrentPlayer());
 
@@ -1100,6 +1115,15 @@ public class RiskView extends JFrame implements RiskListener{
 
         revalidate();
         repaint();
+    }
+
+    public void changeModel(RiskModel rm){
+
+        this.rm = rm;
+        listController.changeModel(rm);
+        fortifyController.changeModel(rm);
+        maneuverController.changeModel(rm);
+        saveLoadController.changeModel(rm);
     }
 
     /**

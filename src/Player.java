@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.*;
 
-public class Player{
+public class Player implements Serializable {
 
     private String playerName;
     private int availableEnforcement;

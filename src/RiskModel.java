@@ -1,7 +1,8 @@
 import javax.swing.*;
+import java.io.Serializable;
 import java.util.*;
 
-public class RiskModel{
+public class RiskModel implements Serializable {
 
     private RiskMap map;
     private Dice rollToBegin;

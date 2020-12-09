@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -7,7 +8,7 @@ import java.util.*;
  * @version 1.0
  */
 
-public class Country {
+public class Country implements Serializable{
 
     private String countryName;
     private ArrayList<String> adjacentCountries;

@@ -1,6 +1,7 @@
 import java.awt.event.*;
+import java.io.Serializable;
 
-public class PassController implements ActionListener{
+public class PassController implements ActionListener, Serializable {
 
     RiskView view;
     RiskModel model;

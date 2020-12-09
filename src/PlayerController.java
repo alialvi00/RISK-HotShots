@@ -1,6 +1,7 @@
 import java.awt.event.*;
+import java.io.Serializable;
 
-class PlayerController implements ItemListener {
+class PlayerController implements ItemListener, Serializable {
 
     RiskView mainView;
     public PlayerController(RiskView view){

@@ -2,8 +2,9 @@
 import javax.swing.*;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 
-public class ChangeOutputStream extends OutputStream {
+public class ChangeOutputStream extends OutputStream implements Serializable {
 
     private JTextArea consoleUpdate;
     private StringBuilder a;

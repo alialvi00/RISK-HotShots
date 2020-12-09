@@ -1,11 +1,11 @@
 import org.json.*;
-
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.io.IOException;
 
-public class RiskMap {
+
     ArrayList<Country> countryList;
     private ArrayList<Continent> continentList;
 
