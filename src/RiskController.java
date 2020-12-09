@@ -1,5 +1,7 @@
 import java.awt.event.*;
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 
 public class RiskController implements ActionListener, Serializable {
@@ -21,8 +23,15 @@ public class RiskController implements ActionListener, Serializable {
         if(e.getActionCommand().equals("quit")){
             System.exit(0);
         }
+
+
         mainView.setPlayerNames();
         mainView.setPlayerType();
+        if(!mainView.checkStartGame()){
+            mainView.startGameError();
+            return;
+        }
+        mainView.checkStartGame();
         mainView.switchView();       
         mainView.startNewGame();
         mainModel.welcome();

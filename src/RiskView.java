@@ -512,9 +512,11 @@ public class RiskView extends JFrame implements RiskListener{
 
         switch (getPlayerCount()) {
             case 3:
+
                 isAI.add(computerOrPlayer1.getSelectedIndex()==0);
                 isAI.add(computerOrPlayer2.getSelectedIndex()==0);
                 isAI.add(computerOrPlayer3.getSelectedIndex()==0);
+
 
             case 4:
                 isAI.add(computerOrPlayer1.getSelectedIndex()==0);
@@ -544,6 +546,17 @@ public class RiskView extends JFrame implements RiskListener{
     }
     public ArrayList<Boolean> getPlayerType(){
         return isAI;
+    }
+
+    public Boolean checkStartGame(){
+
+        for(Boolean b : isAI){
+
+            if(!b){
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -645,7 +658,6 @@ public class RiskView extends JFrame implements RiskListener{
         return mapPanel;
     }
 
-    public void addSelectedCountryListener(ListSelectionListener selected){}
 
     public JPanel addAction(){
 
@@ -1131,6 +1143,7 @@ public class RiskView extends JFrame implements RiskListener{
     public void changeModel(RiskModel rm){
 
         this.rm = rm;
+        rController.changeModel(rm);
         listController.changeModel(rm);
         fortifyController.changeModel(rm);
         maneuverController.changeModel(rm);
@@ -1181,6 +1194,10 @@ public class RiskView extends JFrame implements RiskListener{
      */
     public void removeOwnedListListener(){
         selectedCountries.removeListSelectionListener(listController);
+    }
+
+    public ArrayList<Boolean> getAiType(){
+        return isAI;
     }
 
     /**
@@ -1316,6 +1333,15 @@ public class RiskView extends JFrame implements RiskListener{
         "Please insure that all areas are accessible and that there are no missing links";
         JOptionPane.showMessageDialog(this, warning, "Warning",
             JOptionPane.WARNING_MESSAGE);
+    }
+
+    public void startGameError(){
+
+        playerNames.clear();
+        isAI.clear();
+        String warning = "All players cannot be AI";
+        JOptionPane.showMessageDialog(this, warning, "Warning",
+                JOptionPane.WARNING_MESSAGE);
     }
 
     /**

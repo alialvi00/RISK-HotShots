@@ -46,6 +46,9 @@ public class SaveLoad implements Serializable {
         model.updateCurrentPlayer(currentPlayer);
         view.switchView();
         view.startNewGame();
+        System.out.println("Saved game has been loaded");
+        System.out.println();
+        System.out.println();
         view.handleInitialMap(new MapEvent(model, model.showPlayerList()));
         if(!model.ifFortify()){
             view.setNormalMode();
