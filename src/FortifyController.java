@@ -1,16 +1,21 @@
 import java.awt.event.*;
+import java.io.Serializable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class FortifyController implements ListSelectionListener{
+public class FortifyController implements ListSelectionListener, Serializable {
     private RiskModel model;
     private RiskView view;
 
     public FortifyController(RiskModel model, RiskView view){
         this.model = model;
         this.view = view;
+    }
+
+    public void changeModel(RiskModel model){
+        this.model = model;
     }
 
     @Override

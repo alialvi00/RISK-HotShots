@@ -1,6 +1,7 @@
 import java.awt.event.*;
+import java.io.Serializable;
 
-public class AttackController implements ActionListener{
+public class AttackController implements ActionListener, Serializable {
     private RiskModel mainModel;
     private RiskView mainView;
 

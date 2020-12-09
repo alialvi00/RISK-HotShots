@@ -1,11 +1,12 @@
 import java.awt.event.*;
+import java.io.Serializable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 
-public class ListController implements ListSelectionListener{
+public class ListController implements ListSelectionListener, Serializable {
     
     private RiskModel model;
     private RiskView view;
@@ -13,6 +14,10 @@ public class ListController implements ListSelectionListener{
     public ListController(RiskModel model, RiskView view){
         this.model = model;
         this.view = view;
+    }
+
+    public void changeModel(RiskModel model){
+        this.model = model;
     }
 
     @Override

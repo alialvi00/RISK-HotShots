@@ -1,3 +1,5 @@
+import org.junit.Before;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,7 +29,8 @@ public class RiskModelTest {
     private HashMap<Country, Integer> conqueredCountries2 = new HashMap<Country, Integer>();
 
 
-    protected void setUp(){
+    @Before
+    public void setUp(){
         risk = new RiskModel();
         player = new Player("Areeb", 3);
         conqueredCountries = new HashMap<Country, Integer>();
@@ -44,7 +47,6 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void testIsValidNumber() { ;
-        setUp();
         assertEquals(true, risk.isValidNumber("3"));
     }
 
@@ -59,7 +61,6 @@ public class RiskModelTest {
         playerType.add(true);
         playerType.add(true);
         playerType.add(true);
-        setUp();
         risk.setPlayerCount(2);
         playerNames.add("Areeb");
         playerNames.add("Hassan");
@@ -74,17 +75,14 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void testGetDefendingPlayer() {
-        setUp();
         ArrayList<Player> playerList = new ArrayList<>();
         playerList.add(player);
-
         assertEquals(null, risk.getDefendingPlayer("alaska") ); // this is the case because there is no countries assigned.
     }
 
 
     @org.junit.Test
     public void testCorrectInitialTroops() {
-        setUp();
         int check = risk.getInitialTroops(3);
         assertEquals(check, 35);
     }
@@ -92,11 +90,8 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void checkCurrentPlayerDesignation() {
-        setUp();
         risk.setCurrentPlayer(player);
-
         Player check = risk.getCurrentPlayer();
-
         assertEquals(player, check);
 
     }
@@ -104,8 +99,6 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void checkFortify() {
-        setUp();
-
         conqueredCountries.put(alaska, 3);
         player.setConqueredCountries(conqueredCountries);
         player.updateCountry(alaska, 3);
@@ -119,7 +112,6 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void checkManeuver() {
-        setUp();
         conqueredCountries.put(alaska, 3);
         conqueredCountries.put(alberta, 3);
         player.setConqueredCountries(conqueredCountries);
@@ -133,7 +125,6 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void checkBonusTroopsAllocation() {
-        setUp();
         Player player = new Player("Areeb", 2);
         Player player1 = new Player("Hassan", 6);
         conqueredCountries.put(alaska, 2);
@@ -156,7 +147,6 @@ public class RiskModelTest {
 
     @org.junit.Test
     public void testAttack() {
-        setUp();
         player1 = new Player("Hassan", 2);
         risk.addPlayer(player1);
         conqueredCountries.put(alaska, 3);

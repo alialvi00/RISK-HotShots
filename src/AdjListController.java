@@ -1,9 +1,10 @@
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.io.Serializable;
 
 //this controller is only used for the adjacent Jlist
-public class AdjListController implements ListSelectionListener{
+public class AdjListController implements ListSelectionListener, Serializable {
     
     private RiskView view;
 

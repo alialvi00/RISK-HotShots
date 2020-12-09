@@ -1,7 +1,8 @@
 
+import java.io.Serializable;
 import java.util.*;
 
-public class RiskMap {
+public class RiskMap implements Serializable {
     private Continent northAmerica;
     private Continent europe;
     private Continent africa;

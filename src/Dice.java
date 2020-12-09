@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.Random;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Random;
  * @version Date: 2020-10-24
  */
 
-public class Dice{
+public class Dice implements Serializable {
 
     //the value that one die rolls
     private int diceValue;

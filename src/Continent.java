@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * Continent Class of the Continents in RISK. This class provides information about the continent's name,
  * amount of reinforcement troops it is eligible for and how many countries it contains.
@@ -6,7 +8,7 @@
  */
 
 
-public class Continent{
+public class Continent implements Serializable {
 
     private String continentName;
     private int numCountries;
