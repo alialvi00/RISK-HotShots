@@ -18,6 +18,7 @@ public class ManeuverController implements ActionListener{
             view.disablePassButton();
             view.clearSelection();
             view.changeManeuverMode(true);
+            System.out.println("you are now in manuever mode \n");
         } else if(e.getActionCommand().equals("exitManeuver")){
             view.changeManeuverMode(false);
             view.clearSelection();

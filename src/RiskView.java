@@ -1159,6 +1159,7 @@ public class RiskView extends JFrame implements RiskListener{
     public void setFortifyMode(){
         selectedCountries.removeListSelectionListener(listController);
         selectedCountries.addListSelectionListener(fortifyController);
+        disableAttack();
         disablePassButton();
         disableManeuverButton();
     }
@@ -1233,6 +1234,7 @@ public class RiskView extends JFrame implements RiskListener{
             maneuverButton.setText("Exit maneuver mode");
             maneuverButton.setActionCommand("exitManeuver");
             isManeuverMode = true;
+            System.out.println("you are now in " + isManeuverMode + "\n");
         }  else{
             maneuverButton.setText("Maneuver mode");
             maneuverButton.setActionCommand("maneuverEnable");
@@ -1256,7 +1258,6 @@ public class RiskView extends JFrame implements RiskListener{
             setFortifyMode();
         }
         handleMapChange(m);
-        enableManeuverButton();
         System.out.println("\nIt is " + model.getCurrentPlayer().getName() + "'s turn \n");
     }
 

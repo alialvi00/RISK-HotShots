@@ -28,13 +28,15 @@ public class FortifyController implements ListSelectionListener{
         {
             model.updateEnemyAdjacentCountries(selectedCountry);
             int availableTroops = model.getAvailableEnforcement();
-            int usedTroops = view.getEnforcementAmount(availableTroops);
-            availableTroops = availableTroops - usedTroops;
-            if(availableTroops == 0){
-                view.setNormalMode();
-                view.addAdjListener();
+            if(availableTroops != 0){
+                int usedTroops = view.getEnforcementAmount(availableTroops);
+                availableTroops = availableTroops - usedTroops;
+                if(availableTroops == 0){
+                    view.setNormalMode();
+                    view.addAdjListener();
+                }
+                model.fortify(usedTroops, selectedCountry);
             }
-            model.fortify(usedTroops, selectedCountry);
         }
     }
 }
