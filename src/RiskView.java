@@ -1234,7 +1234,6 @@ public class RiskView extends JFrame implements RiskListener{
             maneuverButton.setText("Exit maneuver mode");
             maneuverButton.setActionCommand("exitManeuver");
             isManeuverMode = true;
-            System.out.println("you are now in " + isManeuverMode + "\n");
         }  else{
             maneuverButton.setText("Maneuver mode");
             maneuverButton.setActionCommand("maneuverEnable");
