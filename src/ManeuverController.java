@@ -1,7 +1,7 @@
 import java.awt.event.*;
 import java.io.Serializable;
 
-public class ManeuverController implements ActionListener{
+public class ManeuverController implements ActionListener, Serializable{
 
     RiskView view;
     RiskModel model;

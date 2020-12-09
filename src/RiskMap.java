@@ -24,7 +24,7 @@ public class RiskMap implements Serializable {
         String mapPath = "";
         if(filePath == null){
             System.out.println("nuldfsfdsfdsf");
-            mapPath = "C:\\Users\\hassa\\OneDrive\\University\\SYSC3110\\Project\\RISK-HotShots\\library\\Maps\\DefaultMap.json"; //defaultPath
+            mapPath = "library\\Maps\\DefaultMap.json"; //defaultPath
         } else{
             mapPath = "library\\Maps\\" + filePath;
         }

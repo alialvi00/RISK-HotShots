@@ -167,7 +167,7 @@ public class RiskView extends JFrame implements RiskListener{
         loadCustomMap = new JButton("Load Custom Map");
         loadCustomMap.setEnabled(true);
         loadCustomMap.addActionListener(filePickController);
-        //mapImage = new ImageIcon(getClass().getClassLoader().getResource("mapRisk.png"));
+        mapImage = new ImageIcon(getClass().getClassLoader().getResource("mapRisk.png"));
 
         attackButton = new JButton("Attack");
 
