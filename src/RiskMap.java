@@ -12,16 +12,24 @@ public class RiskMap {
    
     public RiskMap(){
         continentList = new ArrayList<Continent>();
-        countryList = new ArrayList<Country>(); 
-        parseMapJson();       
+        countryList = new ArrayList<Country>();       
     }
 
-    public void parseMapJson(){
-        //Path of the JSON file
-        String mapPath = "C:\\Users\\hassa\\OneDrive\\University\\SYSC3110\\Project\\RISK-HotShots\\src\\DefaultMap.json";
+    /**
+     * this method parses the JSON map into continents and countries
+     */
+    public boolean parseMapJson(String filePath){
+        String mapPath = "";
+        if(filePath == null){
+            System.out.println("nuldfsfdsfdsf");
+            mapPath = "library\\Maps\\DefaultMap.json"; //defaultPath
+        } else{
+            mapPath = "library\\Maps\\" + filePath;
+        }
         try {
              String jsonContents = new String((Files.readAllBytes(Paths.get(mapPath))));
             JSONObject o = new JSONObject(jsonContents);
+            
 
             //to iterate over the continents
             Iterator<String> continents = o.keys();
@@ -47,8 +55,12 @@ public class RiskMap {
                 }
                 continentList.add(continentObject);
             }
+            return true;
               } catch (Exception e) {
-                  e.printStackTrace();
+                  countryList.clear();
+                  continentList.clear();
+                  return false;
+                  //e.printStackTrace();
               }
     }
 
@@ -92,14 +104,22 @@ public class RiskMap {
         return null;
     }
 
+    /**
+     * validates the json map
+     * @return
+     */
     public boolean validateMap(){
         for(Continent continent: continentList){
             if(!validateContinents(continent)){
+                countryList.clear();
+                continentList.clear();
                 return false;
             }
         }
         for(Country country: countryList){
             if(!validateCountryLink(country)){
+                countryList.clear();
+                continentList.clear();
                 return false;
             }
         }
@@ -136,11 +156,6 @@ public class RiskMap {
             }
         }
         return true;
-    }
-
-    public static void main(String[] args) {
-        RiskMap map = new RiskMap();
-        System.out.println(map.validateMap());
     }
 
 }

@@ -21,6 +21,9 @@ public class RiskController implements ActionListener{
         mainView.switchView();       
         mainView.startNewGame();
         mainModel.welcome();
+        if(!mainView.mapType()){
+            mainModel.initiateMap(null);
+        }
         mainModel.setUpPlayers(mainView.getPlayerNames(), mainView.getPlayerCount(),mainView.getPlayerType());
     }
 

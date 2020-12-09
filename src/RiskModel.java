@@ -699,4 +699,21 @@ public class RiskModel{
         }
     }
 
+    /**
+     * initiates the map 
+     * @param fileName name of json file
+     * @return true if parsing is succesful, false otherwise
+     */
+    public boolean initiateMap(String fileName){
+       return map.parseMapJson(fileName);
+    }
+
+    /**
+     * validates the created map
+     * @return true if valid
+     */
+    public boolean validateMap(){
+        return map.validateMap();
+    }
+
 }
