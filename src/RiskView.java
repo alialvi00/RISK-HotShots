@@ -167,7 +167,7 @@ public class RiskView extends JFrame implements RiskListener{
         loadCustomMap = new JButton("Load Custom Map");
         loadCustomMap.setEnabled(true);
         loadCustomMap.addActionListener(filePickController);
-        mapImage = new ImageIcon(getClass().getClassLoader().getResource("mapRisk.png"));
+        //mapImage = new ImageIcon(getClass().getClassLoader().getResource("mapRisk.png"));
 
         attackButton = new JButton("Attack");
 
@@ -1189,6 +1189,7 @@ public class RiskView extends JFrame implements RiskListener{
     public void setFortifyMode(){
         selectedCountries.removeListSelectionListener(listController);
         selectedCountries.addListSelectionListener(fortifyController);
+        disableAttack();
         disablePassButton();
         disableManeuverButton();
     }
@@ -1286,7 +1287,7 @@ public class RiskView extends JFrame implements RiskListener{
             setFortifyMode();
         }
         handleMapChange(m);
-        enableManeuverButton();
+        //enableManeuverButton();
         System.out.println("\nIt is " + model.getCurrentPlayer().getName() + "'s turn \n");
     }
 

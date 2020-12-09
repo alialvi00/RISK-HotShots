@@ -5,7 +5,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class FortifyController implements ListSelectionListener, Serializable {
+public class FortifyController implements ListSelectionListener{
     private RiskModel model;
     private RiskView view;
 
@@ -33,15 +33,16 @@ public class FortifyController implements ListSelectionListener, Serializable {
         {
             model.updateEnemyAdjacentCountries(selectedCountry);
             int availableTroops = model.getAvailableEnforcement();
-            int usedTroops = view.getEnforcementAmount(availableTroops);
-            availableTroops = availableTroops - usedTroops;
-
-            if(availableTroops == 0){
-                view.setNormalMode();
-                view.addAdjListener();
-                model.setFortifyPhase(false);
+            if(availableTroops != 0){
+                int usedTroops = view.getEnforcementAmount(availableTroops);
+                availableTroops = availableTroops - usedTroops;
+                if(availableTroops == 0){
+                    view.setNormalMode();
+                    view.addAdjListener();
+                    model.setFortifyPhase(false);
+                }
+                model.fortify(usedTroops, selectedCountry);
             }
-            model.fortify(usedTroops, selectedCountry);
         }
     }
 }
