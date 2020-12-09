@@ -11,23 +11,22 @@ import java.util.*;
 public class Country implements Serializable{
 
     private String countryName;
-    private String[] adjacentCountries;
+    private ArrayList<String> adjacentCountries;
     private Continent continent;
 
 
     public Country(String countryName, Continent continent){
 
         this.countryName = countryName;
-        adjacentCountries = new String[]{};
+        adjacentCountries = new ArrayList<String>();
         this.continent = continent;
     }
 
-    public void setBorders(String[] border){
+    public void setBorders(ArrayList<String> border){
         adjacentCountries = border;
     }
 
-    public String[] getAdjacentCountries(){
-
+    public ArrayList<String> getAdjacentCountries(){
         return adjacentCountries;
     }
 

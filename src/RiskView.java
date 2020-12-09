@@ -2,6 +2,7 @@ import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.io.*;
@@ -14,6 +15,7 @@ public class RiskView extends JFrame implements RiskListener{
 
     private JButton startGame;
     private JButton loadGame;
+    private JButton loadCustomMap;
     private JButton attackButton;
     private JButton passTurn;
     private JButton confirmButton;
@@ -72,6 +74,7 @@ public class RiskView extends JFrame implements RiskListener{
     FortifyController fortifyController;
     ManeuverController maneuverController;
     SaveLoadController saveLoadController;
+    FilePickController filePickController;
 
     DefaultListModel<Country> ownedCountriesModel;
     DefaultListModel<String> adjacentCountriesModel;
@@ -104,6 +107,7 @@ public class RiskView extends JFrame implements RiskListener{
     private DefaultCaret style = new DefaultCaret();
 
     private boolean isManeuverMode;
+    private boolean isCustomMap;
 
     RiskController rController;
     RiskModel rm;
@@ -118,6 +122,7 @@ public class RiskView extends JFrame implements RiskListener{
         rController = new RiskController(rm, this);
 
         isManeuverMode = false;
+        isCustomMap = false;
 
         PlayerController pController = new PlayerController(this);
 
@@ -125,8 +130,6 @@ public class RiskView extends JFrame implements RiskListener{
 
         b1 = new BorderLayout();
         c1 = new CardLayout(5,5);
-
-        m = new RiskMap();
 
         mainGameLayout = new GridBagLayout();
         consoleLayout = new GridBagLayout();
@@ -156,7 +159,12 @@ public class RiskView extends JFrame implements RiskListener{
         loadGame = new JButton("Load the saved game");
         loadGame.setActionCommand("load");
         loadGame.addActionListener(saveLoadController);
+        filePickController = new FilePickController(rm, this);
 
+        //button for loading map
+        loadCustomMap = new JButton("Load Custom Map");
+        loadCustomMap.setEnabled(true);
+        loadCustomMap.addActionListener(filePickController);
         mapImage = new ImageIcon(getClass().getClassLoader().getResource("mapRisk.png"));
 
         attackButton = new JButton("Attack");
@@ -1270,8 +1278,52 @@ public class RiskView extends JFrame implements RiskListener{
         System.out.println("\nIt is " + model.getCurrentPlayer().getName() + "'s turn \n");
     }
 
-    public void startSavedGame(RiskModel savedModel){
-
+    /**
+     * allows the user to pick a json file as a map
+     * must be in library\\Maps folder
+     * @return
+     */
+    public String pickFile(){
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON","json");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(null);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            return chooser.getSelectedFile().getName();
+        } else{
+            return null;
+        }
     }
 
+    /**
+     * displays a message if the map is not valid
+     * @param args
+     */
+    public void fileError(){
+        String warning = "Map is not vaild. Please look at the default map for reference.\n" +
+        "Please insure that all areas are accessible and that there are no missing links";
+        JOptionPane.showMessageDialog(this, warning, "Warning",
+            JOptionPane.WARNING_MESSAGE);
+    }
+
+    /**
+     * changes map type from custom or default
+     * @param boolean
+     */
+    public void setMapType(boolean b){
+        isCustomMap = b;
+    }
+
+    /**
+     * type of map custom/default
+     * @return true if custom
+     */
+    public boolean mapType(){
+        return isCustomMap;
+    }
+
+    public static void main(String[] args) {
+        new RiskView();
+    }
 }
+

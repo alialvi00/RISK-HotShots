@@ -147,9 +147,9 @@ public class RiskModel implements Serializable {
         while (percent >= 49) {
 
             for (int i = 0; i < currentPlayer.getCountries().size(); i++) {
-                for (int j = 0; j < currentPlayer.getCountries().get(i).getAdjacentCountries().length; j++) {
+                for (int j = 0; j < currentPlayer.getCountries().get(i).getAdjacentCountries().size(); j++) {
 
-                    boolean hasAdjacentConquered = currentPlayer.hasCountry(currentPlayer.getCountries().get(i).getAdjacentCountries()[j]);
+                    boolean hasAdjacentConquered = currentPlayer.hasCountry(currentPlayer.getCountries().get(i).getAdjacentCountries().get(j));
                     int num = currentPlayer.getPlayerData().get(currentPlayer.getCountries().get(i));
 
                     if (num > 1 && !hasAdjacentConquered) {
@@ -168,14 +168,14 @@ public class RiskModel implements Serializable {
 
                 pick = generatePick.nextInt(attackCountry.size());
 
-                for (int i = 0; i < attackCountry.get(pick).getAdjacentCountries().length; i++) {
+                for (int i = 0; i < attackCountry.get(pick).getAdjacentCountries().size(); i++) {
 
-                    boolean hasAdjacentConquered = currentPlayer.hasCountry(attackCountry.get(pick).getAdjacentCountries()[i]);
+                    boolean hasAdjacentConquered = currentPlayer.hasCountry(attackCountry.get(pick).getAdjacentCountries().get(i));
 
                     if (!hasAdjacentConquered) {
 
-                        defendingPlayer = getDefendingPlayer(attackCountry.get(pick).getAdjacentCountries()[i]);
-                        defendingCountry.add(defendingPlayer.getCountryByName(attackCountry.get(pick).getAdjacentCountries()[i]));
+                        defendingPlayer = getDefendingPlayer(attackCountry.get(pick).getAdjacentCountries().get(i));
+                        defendingCountry.add(defendingPlayer.getCountryByName(attackCountry.get(pick).getAdjacentCountries().get(i)));
                     }
                 }
                 //When AI has chosen defending countries
@@ -217,9 +217,9 @@ public class RiskModel implements Serializable {
         //while(percent >= 24) {
         //Now we maneuver troops, make sure we maneuver to country that has enemy at its border so we can strengthen our country
         for (int i = 0; i < currentPlayer.getCountries().size(); i++) {
-            for (int j = 0; j < currentPlayer.getCountries().get(i).getAdjacentCountries().length; j++) {
+            for (int j = 0; j < currentPlayer.getCountries().get(i).getAdjacentCountries().size(); j++) {
 
-                boolean hasAdjacentConquered = currentPlayer.hasCountry(currentPlayer.getCountries().get(i).getAdjacentCountries()[j]);
+                boolean hasAdjacentConquered = currentPlayer.hasCountry(currentPlayer.getCountries().get(i).getAdjacentCountries().get(j));
 
                 //At least one of the destination country is owned by the current AI player
                 if (hasAdjacentConquered)
@@ -238,16 +238,16 @@ public class RiskModel implements Serializable {
 
             pick = generatePick.nextInt(destinationCountry.size());
 
-            for (int i = 0; i < destinationCountry.get(pick).getAdjacentCountries().length; i++) {
+            for (int i = 0; i < destinationCountry.get(pick).getAdjacentCountries().size(); i++) {
 
-                boolean hasAdjacentConquered = currentPlayer.hasCountry(destinationCountry.get(pick).getAdjacentCountries()[i]);
+                boolean hasAdjacentConquered = currentPlayer.hasCountry(destinationCountry.get(pick).getAdjacentCountries().get(i));
 
                 if (hasAdjacentConquered) {
 
-                    currentTroops = currentPlayer.getPlayerData().get(currentPlayer.getCountryByName(destinationCountry.get(pick).getAdjacentCountries()[i]));
+                    currentTroops = currentPlayer.getPlayerData().get(currentPlayer.getCountryByName(destinationCountry.get(pick).getAdjacentCountries().get(i)));
 
                     if(currentTroops>1)
-                        originCountry.add(currentPlayer.getCountryByName(destinationCountry.get(pick).getAdjacentCountries()[i]));
+                        originCountry.add(currentPlayer.getCountryByName(destinationCountry.get(pick).getAdjacentCountries().get(i)));
                 }
             }
             //AI Algorithm has successfully chosen countries to transfer troops from
@@ -592,7 +592,7 @@ public class RiskModel implements Serializable {
      * @param country Country
      */
     public void updateEnemyAdjacentCountries(Country country){
-        String[] allAdj = country.getAdjacentCountries();
+        ArrayList<String> allAdj = country.getAdjacentCountries();
         ArrayList<String> enemyCountries = new ArrayList<>();
         //here we will remove the countries that the player already owns
         for (String s : allAdj) {
@@ -610,7 +610,7 @@ public class RiskModel implements Serializable {
      * @param country Country
      */
     public void updateOwnedAdjacentCountries(Country country){
-        String[] allAdj = country.getAdjacentCountries();
+        ArrayList<String> allAdj = country.getAdjacentCountries();
         ArrayList<String> enemyCountries = new ArrayList<>();
         //here we will remove the countries that the player already owns
         for (String s : allAdj) {
@@ -698,6 +698,23 @@ public class RiskModel implements Serializable {
         for (RiskView rV : viewList) {
             rV.handleMapChange(new MapEvent(this, playerList));
         }
+    }
+
+    /**
+     * initiates the map 
+     * @param fileName name of json file
+     * @return true if parsing is succesful, false otherwise
+     */
+    public boolean initiateMap(String fileName){
+       return map.parseMapJson(fileName);
+    }
+
+    /**
+     * validates the created map
+     * @return true if valid
+     */
+    public boolean validateMap(){
+        return map.validateMap();
     }
 
 }

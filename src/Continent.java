@@ -1,4 +1,7 @@
+
 import java.io.Serializable;
+import java.util.ArrayList;
+
 
 /**
  * Continent Class of the Continents in RISK. This class provides information about the continent's name,
@@ -13,11 +16,11 @@ public class Continent implements Serializable {
     private String continentName;
     private int numCountries;
     private int extraTroops;
-
+    private ArrayList<Country> countryList;
 
 
     public Continent(String continentName, int numCountries, int extraTroops){
-
+        countryList = new ArrayList<Country>();
         this.continentName = continentName;
         this.numCountries = numCountries;
         this.extraTroops = extraTroops;
@@ -41,6 +44,14 @@ public class Continent implements Serializable {
 
     public String getName() {
         return continentName;
+    }
+
+    public void addCountry(Country country){
+        countryList.add(country);
+    }
+
+    public ArrayList<Country> getCountryList(){
+        return countryList;
     }
 
 }
