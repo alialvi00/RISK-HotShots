@@ -36,8 +36,10 @@ public class SaveLoadController implements ActionListener, Serializable {
         else if(e.getActionCommand().equals("load")){
 
             try {
+
                 savedGame.loadPlayer();
                 savedGame.loadModel();
+
             } catch (IOException | ClassNotFoundException | InterruptedException ioException) {
                 ioException.printStackTrace();
             }

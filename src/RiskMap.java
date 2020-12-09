@@ -23,7 +23,7 @@ public class RiskMap implements Serializable {
     public boolean parseMapJson(String filePath){
         String mapPath = "";
         if(filePath == null){
-            System.out.println("nuldfsfdsfdsf");
+            System.out.println();
             mapPath = "library\\Maps\\DefaultMap.json"; //defaultPath
         } else{
             mapPath = "library\\Maps\\" + filePath;
