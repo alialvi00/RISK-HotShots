@@ -35,9 +35,11 @@ public class FortifyController implements ListSelectionListener, Serializable {
             int availableTroops = model.getAvailableEnforcement();
             int usedTroops = view.getEnforcementAmount(availableTroops);
             availableTroops = availableTroops - usedTroops;
+
             if(availableTroops == 0){
                 view.setNormalMode();
                 view.addAdjListener();
+                model.setFortifyPhase(false);
             }
             model.fortify(usedTroops, selectedCountry);
         }

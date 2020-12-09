@@ -5,24 +5,23 @@ import java.util.*;
 public class RiskModel implements Serializable {
 
     private RiskMap map;
-    private Dice rollToBegin;
     private int playerCount;
     private Player currentPlayer;
     private ArrayList<String> playerNames;
     private ArrayList<Player> playerList;
-    private ArrayList<Integer> rolls;
-    private List<RiskView> viewList;
-    private Boolean gameEnded;
+    private final List<RiskView> viewList;
     private int checkAttack;
-    private Boolean firstAITurn;
+    private Boolean fortifyPhase;
+    private Boolean attackPhase;
+    private Boolean maneuverPhase;
 
     public RiskModel() {
         playerNames = new ArrayList<>();
         playerList = new ArrayList<>();
-        gameEnded = false;
         map = new RiskMap();
         viewList = new ArrayList<>();
         checkAttack = 0;
+        fortifyPhase = true;
     }
 
     public void setCurrentPlayer(Player currentPlayer) {
@@ -38,6 +37,7 @@ public class RiskModel implements Serializable {
      */
     public void attack(Country attackingCountry, Country defendingCountry, int attackingTroops, int defendingTroops) {
 
+        fortifyPhase = false;
         int defendingTroopsLost = 0;
         int attackingTroopsLost = 0;
         int winningTroops = 0;
@@ -49,16 +49,16 @@ public class RiskModel implements Serializable {
 
         while (!(attackingDice.isEmpty() || defendingDice.isEmpty())) {
             if (Collections.max(attackingDice) > Collections.max(defendingDice)) {
-                attackingDice.remove(attackingDice.indexOf(Collections.max(attackingDice)));
-                defendingDice.remove(defendingDice.indexOf(Collections.max(defendingDice)));
+                attackingDice.remove(Collections.max(attackingDice));
+                defendingDice.remove(Collections.max(defendingDice));
                 defendingPlayer.updateCountry(defendingCountry, -1);
                 defendingTroopsLost++;
                 winningTroops++;
                 checkAttack++;
 
             } else if (Collections.max(attackingDice) <= Collections.max(defendingDice)) {
-                attackingDice.remove(attackingDice.indexOf(Collections.max(attackingDice)));
-                defendingDice.remove(defendingDice.indexOf(Collections.max(defendingDice)));
+                attackingDice.remove(Collections.max(attackingDice));
+                defendingDice.remove(Collections.max(defendingDice));
                 currentPlayer.updateCountry(attackingCountry, -1);
 
                 attackingTroopsLost++;
@@ -101,32 +101,12 @@ public class RiskModel implements Serializable {
     public void playAI() throws InterruptedException {
 
         ArrayList<Country> countries;
-        ArrayList<Country> attackCountry = new ArrayList<>();
-        ArrayList<Country> defendingCountry = new ArrayList<>();
-        ArrayList<Country> originCountry = new ArrayList<>();
-        ArrayList<Country> destinationCountry = new ArrayList<>();
-
-        Player defendingPlayer = null; //Initial assignment as dummy
-
-        int troops; //bonusTroops available
-        int attackTroops; //troops to attack with
-        int defendTroops; //troops to defend with
-        int moveTroops; //Troops to maneuver
-        int currentTroops = 0;
-        int troopsDefending = 0;
-
         Random generatePick = new Random(); //generate first pick
-        Random generateSecondPick = new Random(); //generate second pick
         Random generatePercent = new Random(); //generate the chance percent
-        Random generateMoveTroops = new Random();
 
         int pick;
-        int secondPick;
         int percent;
-
-        boolean attack = false;
-        boolean hasEnemy = false;
-        boolean isOwned = false;
+        int troops; //bonusTroops available
 
         countries = currentPlayer.getCountries();
 
@@ -146,76 +126,116 @@ public class RiskModel implements Serializable {
         //Attack has 50% of chance to execute, this analysis was done using Bernoulli Equation square root of weighted utility
         while (percent >= 49) {
 
-            for (int i = 0; i < currentPlayer.getCountries().size(); i++) {
-                for (int j = 0; j < currentPlayer.getCountries().get(i).getAdjacentCountries().size(); j++) {
+            attackAI();
+            percent = generatePercent.nextInt(99); //percent = generatePercent.nextInt(99);
+        }
 
-                    boolean hasAdjacentConquered = currentPlayer.hasCountry(currentPlayer.getCountries().get(i).getAdjacentCountries().get(j));
-                    int num = currentPlayer.getPlayerData().get(currentPlayer.getCountries().get(i));
+        //Now we maneuver troops, make sure we maneuver to country that has enemy at its border so we can strengthen our country
+        maneuverAI();
 
-                    if (num > 1 && !hasAdjacentConquered) {
-                        attack = true;
-                    } else {
-                        attack = false;
-                    }
-                }
-                if (attack) {
-                    attackCountry.add(currentPlayer.getCountries().get(i));
+        Thread.sleep(200);
+    }
+
+    public int defendAI(int maxTroops){
+
+        Random generateTroops = new Random();
+
+        return generateTroops.nextInt(maxTroops)+1;
+    }
+
+    public void attackAI(){
+
+        boolean attack = false;
+        int attackTroops; //troops to attack with
+        int defendTroops; //troops to defend with
+        int troopsDefending;
+        ArrayList<Country> attackCountry = new ArrayList<>();
+        ArrayList<Country> defendingCountry = new ArrayList<>();
+        Player defendingPlayer = null; //Initial assignment as dummy
+
+        Random generatePick = new Random(); //generate first pick
+        Random generateSecondPick = new Random(); //generate second pick
+
+        int pick;
+        int secondPick;
+
+        for (int i = 0; i < currentPlayer.getCountries().size(); i++) {
+            for (int j = 0; j < currentPlayer.getCountries().get(i).getAdjacentCountries().size(); j++) {
+
+                boolean hasAdjacentConquered = currentPlayer.hasCountry(currentPlayer.getCountries().get(i).getAdjacentCountries().get(j));
+                int num = currentPlayer.getPlayerData().get(currentPlayer.getCountries().get(i));
+
+                attack = num > 1 && !hasAdjacentConquered;
+            }
+            if (attack) {
+                attackCountry.add(currentPlayer.getCountries().get(i));
+            }
+        }
+
+        //If AI made a choice to attack from a country
+        if (attackCountry.size() > 0) {
+
+            pick = generatePick.nextInt(attackCountry.size());
+
+            for (int i = 0; i < attackCountry.get(pick).getAdjacentCountries().size(); i++) {
+
+                boolean hasAdjacentConquered = currentPlayer.hasCountry(attackCountry.get(pick).getAdjacentCountries().get(i));
+
+                if (!hasAdjacentConquered) {
+
+                    defendingPlayer = getDefendingPlayer(attackCountry.get(pick).getAdjacentCountries().get(i));
+                    defendingCountry.add(defendingPlayer.getCountryByName(attackCountry.get(pick).getAdjacentCountries().get(i)));
                 }
             }
+            //When AI has chosen defending countries
+            if (defendingCountry.size() > 0) {
 
-            //If AI made a choice to attack from a country
-            if (attackCountry.size() > 0) {
+                secondPick = generateSecondPick.nextInt(defendingCountry.size());
+                attackTroops = getMaxAttackingTroops(attackCountry.get(pick));
 
-                pick = generatePick.nextInt(attackCountry.size());
-
-                for (int i = 0; i < attackCountry.get(pick).getAdjacentCountries().size(); i++) {
-
-                    boolean hasAdjacentConquered = currentPlayer.hasCountry(attackCountry.get(pick).getAdjacentCountries().get(i));
-
-                    if (!hasAdjacentConquered) {
-
-                        defendingPlayer = getDefendingPlayer(attackCountry.get(pick).getAdjacentCountries().get(i));
-                        defendingCountry.add(defendingPlayer.getCountryByName(attackCountry.get(pick).getAdjacentCountries().get(i)));
-                    }
+                if(attackTroops <= 0){
+                    return;
                 }
-                //When AI has chosen defending countries
-                if (defendingCountry.size() > 0) {
 
-                    secondPick = generateSecondPick.nextInt(defendingCountry.size());
-                    attackTroops = getMaxAttackingTroops(attackCountry.get(pick));
+                if (defendingPlayer.hasCountry(defendingCountry.get(secondPick).toString())) {
 
-                    if(attackTroops <= 0){
-                        break;
-                    }
+                    defendTroops = getMaxDefendingTroops(defendingCountry.get(secondPick), defendingPlayer);
 
-                    if (defendingPlayer.hasCountry(defendingCountry.get(secondPick).toString())) {
+                    if(defendTroops>0) {
 
-                        defendTroops = getMaxDefendingTroops(defendingCountry.get(secondPick), defendingPlayer);
-
-                        if(defendTroops>0) {
-
-                            if (!defendingPlayer.getIsAI()) {
-                                for (RiskView rv : viewList) {
-                                    defendTroops = rv.getDefendingTroops(defendTroops, defendingPlayer);
-                                    initiateAttack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, defendTroops);
-                                }
-                            } else {
-
-                                troopsDefending = defendAI(defendTroops);
-                                initiateAttack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, troopsDefending);
-                                percent = generatePercent.nextInt(99);
+                        if (!defendingPlayer.getIsAI()) {
+                            for (RiskView rv : viewList) {
+                                defendTroops = rv.getDefendingTroops(defendTroops, defendingPlayer,defendingCountry.get(secondPick));
+                                initiateAttack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, defendTroops);
                             }
+                        } else {
+
+                            troopsDefending = defendAI(defendTroops);
+                            initiateAttack(attackCountry.get(pick), defendingCountry.get(secondPick), attackTroops, troopsDefending);
                         }
                     }
                 }
             }
         }
+    }
 
-        //percent = generatePercent.nextInt(99);
+    public void maneuverAI(){
 
-        //75 percent of chance to maneuver troops
-        //while(percent >= 24) {
-        //Now we maneuver troops, make sure we maneuver to country that has enemy at its border so we can strengthen our country
+        fortifyPhase = false;
+        boolean hasEnemy = false;
+        boolean isOwned = false;
+        int currentTroops;
+        int troops; //bonusTroops available
+        int pick;
+        int secondPick;
+
+        Random generateMoveTroops = new Random();
+        Random generatePick = new Random(); //generate first pick
+        Random generateSecondPick = new Random(); //generate second pick
+
+        ArrayList<Country> originCountry = new ArrayList<>();
+        ArrayList<Country> destinationCountry = new ArrayList<>();
+
         for (int i = 0; i < currentPlayer.getCountries().size(); i++) {
             for (int j = 0; j < currentPlayer.getCountries().get(i).getAdjacentCountries().size(); j++) {
 
@@ -262,33 +282,27 @@ public class RiskModel implements Serializable {
                 }
             }
         }
-        Thread.sleep(200);
-    //}
     }
 
-    public int defendAI(int maxTroops){
+    public boolean ifFortify(){
+        return fortifyPhase;
+    }
 
-        Random generateTroops = new Random();
-        int troops = generateTroops.nextInt(maxTroops)+1;
-
-        return troops;
+    public void setFortifyPhase(Boolean value){
+        fortifyPhase = value;
     }
 
     public boolean getCheckAttack() {
-        if (checkAttack > 0) return true;
-        return false;
+        return checkAttack > 0;
     }
 
         /**
          * checks if a player lost all his countries
-         * @param defendingPlayer
-         * @return
+         * @param defendingPlayer is the player defending
+         * @return boolean of whether player owns any country
          */
         private boolean checkPlayerLost(Player defendingPlayer) {
-            if(defendingPlayer.getCountries().size() == 0){
-                return true;
-            } 
-            return false;
+            return defendingPlayer.getCountries().size() == 0;
         }
 
         /**
@@ -333,9 +347,7 @@ public class RiskModel implements Serializable {
      * @param players String
      */
     public void setPlayerNames(ArrayList<String> players) {
-        for (String p: players){
-            playerNames.add(p);
-        }
+        playerNames.addAll(players);
     }
 
     /**
@@ -399,21 +411,17 @@ public class RiskModel implements Serializable {
      * @return int
      */
     public int getInitialTroops(int playerCount) {
-        switch (playerCount) {
-            case 2:
-                return 50;
-            case 3:
-                return 35;
-            case 4:
-                return 30;
-            case 5:
-                return 25;
-        }
-        return 20;
+        return switch (playerCount) {
+            case 2 -> 50;
+            case 3 -> 35;
+            case 4 -> 30;
+            case 5 -> 25;
+            default -> 20;
+        };
     }
 
     public void whoStarts() {
-        rolls = new ArrayList<>();
+        ArrayList<Integer> rolls = new ArrayList<>();
         for (int i = 0; i < playerList.size(); i++) {
             rolls.add(rollDice());
         }
@@ -424,6 +432,8 @@ public class RiskModel implements Serializable {
                 currentPlayer = playerList.get(i);
             }
         }
+
+        fortifyPhase = true;
         bonusTroops();
 
         SwingUtilities.invokeLater(() -> {
@@ -431,9 +441,6 @@ public class RiskModel implements Serializable {
                 if(currentPlayer.getIsAI()){
                     playAI();
                     nextTurn();
-                }
-                else{
-                    return;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -455,7 +462,10 @@ public class RiskModel implements Serializable {
         } else {
             currentPlayer = playerList.get(0);
         }
+
+        fortifyPhase = true;
         bonusTroops();
+
         for (RiskView rV : viewList) {
             rV.handleNewTurn(new MapEvent(this, playerList));
         }
@@ -467,9 +477,6 @@ public class RiskModel implements Serializable {
                     nextTurn();
 
                 }
-                else{
-                    return;
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -477,7 +484,7 @@ public class RiskModel implements Serializable {
     }
 
     public int rollDice() {
-        rollToBegin = new Dice();
+        Dice rollToBegin = new Dice();
         return rollToBegin.getDiceValue();
     }
 
@@ -492,10 +499,7 @@ public class RiskModel implements Serializable {
     }
 
     public boolean checkGameOver(ArrayList players) {
-        if(players.size() == 1){
-            return true;
-        }
-        return false;
+        return players.size() == 1;
     }
 
     public Boolean isValidNumber(String num){
@@ -511,7 +515,7 @@ public class RiskModel implements Serializable {
 
     /**
      * adds observers
-     * @param view
+     * @param view adds view
      */
     public void addView(RiskView view) {
         viewList.add(view);
@@ -521,6 +525,10 @@ public class RiskModel implements Serializable {
         return currentPlayer;
     }
 
+    public void updateCurrentPlayer(Player currentPlayer){
+        this.currentPlayer = currentPlayer;
+    }
+
     /**
      * returns the maximum amount of troops for an attacking country
      * @param country of type Country
@@ -528,29 +536,22 @@ public class RiskModel implements Serializable {
      */
     public int getMaxAttackingTroops(Country country){
         int troops = currentPlayer.getPlayerData().get(country) - 1;
-        if(troops > 3){
-            return 3;
-        }
-        else {
-            return troops;
-        }
+        return Math.min(troops, 3);
     }
 
     /**
      * returns the maximum amount of troops for a defending country 
      * @param country Country
-     * @param player
+     * @param player is the defending player
      * @return int
      */
     public int getMaxDefendingTroops(Country country, Player player){
         if(player==null){
             System.out.println("Null Country");
         }
+        assert player != null;
         int troops = player.getPlayerData().get(country);
-        if(troops > 2){
-            return 2;
-        }
-        else{return troops;}
+        return Math.min(troops, 2);
     }
 
     /**
@@ -559,6 +560,7 @@ public class RiskModel implements Serializable {
      * @param playerCount int
      */
     public void setUpPlayers(ArrayList<String> playerNames, int playerCount,ArrayList<Boolean> playerType) {
+
         setPlayerCount(playerCount);
         setPlayerNames(playerNames);
         setPlayers(playerType);
@@ -588,7 +590,7 @@ public class RiskModel implements Serializable {
 
 
     /**
-     * updates the adjacent list for a country, only displayes the enemies countries
+     * updates the adjacent list for a country, only displays the enemies countries
      * @param country Country
      */
     public void updateEnemyAdjacentCountries(Country country){
@@ -606,7 +608,7 @@ public class RiskModel implements Serializable {
     }
 
     /**
-     * updates the adjacent list for a country, only displayes the owned countries
+     * updates the adjacent list for a country, only displays the owned countries
      * @param country Country
      */
     public void updateOwnedAdjacentCountries(Country country){
@@ -651,6 +653,9 @@ public class RiskModel implements Serializable {
         currentPlayer.updateCountry(country, troops);
         currentPlayer.updateEnforcements(-troops);
         System.out.println("\n" + currentPlayer.getName() + " has now placed " + troops + " bonus troops in " + country.toString() + "\n");
+
+        fortifyPhase = false;
+
         for (RiskView rV : viewList) {
             rV.handleMapChange(new MapEvent(this, playerList));
         }
@@ -703,7 +708,7 @@ public class RiskModel implements Serializable {
     /**
      * initiates the map 
      * @param fileName name of json file
-     * @return true if parsing is succesful, false otherwise
+     * @return true if parsing is successful, false otherwise
      */
     public boolean initiateMap(String fileName){
        return map.parseMapJson(fileName);

@@ -1,12 +1,17 @@
 import java.awt.event.*;
+import java.io.Serializable;
 
-public class FilePickController implements ActionListener{
+public class FilePickController implements ActionListener, Serializable {
 
     RiskView view;
     RiskModel model;
 
     public FilePickController(RiskModel model, RiskView view) {
         this.view = view;
+        this.model = model;
+    }
+
+    public void changeModel(RiskModel model){
         this.model = model;
     }
 

@@ -1,10 +1,12 @@
 import org.json.*;
+
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
+public class RiskMap implements Serializable {
 
     ArrayList<Country> countryList;
     private ArrayList<Continent> continentList;
