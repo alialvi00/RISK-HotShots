@@ -7,7 +7,7 @@ public class SaveLoadController implements ActionListener, Serializable {
 
     RiskModel model;
     RiskView view;
-    MainClass newGame = new MainClass();
+    SaveLoad savedGame;
 
     public SaveLoadController(RiskModel model, RiskView view){
 
@@ -22,37 +22,25 @@ public class SaveLoadController implements ActionListener, Serializable {
     @Override
     public void actionPerformed(ActionEvent e) {
 
+        savedGame = new SaveLoad(model,view);
+
         if(e.getActionCommand().equals("save")){
+
             try {
-                writeToFile();
+                savedGame.saveCurrentPlayer();
+                savedGame.saveModel();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         }
         else if(e.getActionCommand().equals("load")){
+
             try {
-                FileInputStream saveFile = new FileInputStream("savegame.ser");
-                ObjectInputStream save = new ObjectInputStream(saveFile);
-                model = (RiskModel ) save.readObject();
-                //System.out.println(gameElements.r_flag);
-                save.close();
-                view.changeModel(model);
-                model.addView(view);
-                view.switchView();
-                view.startNewGame();
-                view.handleInitialMap(new MapEvent(model,model.showPlayerList()));
-            } catch (FileNotFoundException fileNotFoundException) {
-                fileNotFoundException.printStackTrace();
-            } catch (IOException | ClassNotFoundException ioException) {
+                savedGame.loadPlayer();
+                savedGame.loadModel();
+            } catch (IOException | ClassNotFoundException | InterruptedException ioException) {
                 ioException.printStackTrace();
             }
         }
-    }
-
-    public void writeToFile() throws IOException {
-       FileOutputStream saveFile = new FileOutputStream("savegame.ser");
-       ObjectOutputStream save = new ObjectOutputStream(saveFile);
-       save.writeObject(model);
-       save.close();
     }
 }

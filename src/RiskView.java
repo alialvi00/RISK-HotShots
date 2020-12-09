@@ -117,8 +117,9 @@ public class RiskView extends JFrame implements RiskListener{
 
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        rm = new RiskModel();
+
         //initializing the controller and the model
+        rm = new RiskModel();
         rController = new RiskController(rm, this);
 
         isManeuverMode = false;
@@ -155,11 +156,12 @@ public class RiskView extends JFrame implements RiskListener{
         fortifyController = new FortifyController(rm, this);
         maneuverController = new ManeuverController(rm, this);
         saveLoadController = new SaveLoadController(rm,this);
+        filePickController = new FilePickController(rm, this);
 
         loadGame = new JButton("Load the saved game");
         loadGame.setActionCommand("load");
         loadGame.addActionListener(saveLoadController);
-        filePickController = new FilePickController(rm, this);
+
 
         //button for loading map
         loadCustomMap = new JButton("Load Custom Map");
@@ -327,6 +329,10 @@ public class RiskView extends JFrame implements RiskListener{
 
         a1.gridx = 0;
         a1.gridy = 3;
+        askCount.add(loadCustomMap, a1);
+
+        a1.gridx = 0;
+        a1.gridy = 4;
         askCount.add(loadGame, a1);
     }
 
@@ -967,15 +973,18 @@ public class RiskView extends JFrame implements RiskListener{
      * @param maxTroops maximum number of troops that can be used
      * @return the number of defending troops
      */
-    public int getDefendingTroops(int maxTroops, Player player){
+    public int getDefendingTroops(int maxTroops, Player player, Country defendingCountry){
         Integer[] options = new Integer[maxTroops];
 
         for(int i = 0; i < maxTroops; i++){
             options[i] = i + 1;
         }
 
-        String message = player.getName() + ", " + getDestinationCountry() + " is being attacked! Choose the number of troops you would like to defend with";
 
+        String message = player.getName() + ", " + getDestinationCountry() + " is being attacked! Choose the number of troops you would like to defend with";
+        if(rm.getCurrentPlayer().getIsAI() && defendingCountry != null){
+            message = player.getName() + ", " + defendingCountry.toString() + " is being attacked! Choose the number of troops you would like to defend with";
+        }
 
         int choice = JOptionPane.showOptionDialog(this, message,
                 "Defend!",
@@ -992,10 +1001,12 @@ public class RiskView extends JFrame implements RiskListener{
      * @param availableTroops int
      * @return int
      */
-    public int getEnforcementAmount(int availableTroops){
+    public int  getEnforcementAmount(int availableTroops){
+
         Integer[] options = new Integer[availableTroops];
 
-        for(int i = 0; i < availableTroops; i++){
+
+        for (int i = 0; i < availableTroops; i++) {
             options[i] = i + 1;
         }
 
@@ -1124,6 +1135,7 @@ public class RiskView extends JFrame implements RiskListener{
         fortifyController.changeModel(rm);
         maneuverController.changeModel(rm);
         saveLoadController.changeModel(rm);
+        filePickController.changeModel(rm);
     }
 
     /**
@@ -1177,6 +1189,7 @@ public class RiskView extends JFrame implements RiskListener{
     public void setFortifyMode(){
         selectedCountries.removeListSelectionListener(listController);
         selectedCountries.addListSelectionListener(fortifyController);
+        disableAttack();
         disablePassButton();
         disableManeuverButton();
     }
@@ -1274,7 +1287,7 @@ public class RiskView extends JFrame implements RiskListener{
             setFortifyMode();
         }
         handleMapChange(m);
-        enableManeuverButton();
+        //enableManeuverButton();
         System.out.println("\nIt is " + model.getCurrentPlayer().getName() + "'s turn \n");
     }
 
@@ -1297,7 +1310,6 @@ public class RiskView extends JFrame implements RiskListener{
 
     /**
      * displays a message if the map is not valid
-     * @param args
      */
     public void fileError(){
         String warning = "Map is not vaild. Please look at the default map for reference.\n" +
@@ -1308,7 +1320,7 @@ public class RiskView extends JFrame implements RiskListener{
 
     /**
      * changes map type from custom or default
-     * @param boolean
+     * @param b
      */
     public void setMapType(boolean b){
         isCustomMap = b;

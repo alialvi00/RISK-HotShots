@@ -35,7 +35,7 @@ public class AttackController implements ActionListener, Serializable {
             defendingTroops = mainModel.defendAI(maxDefendingTroops);
         }
         else {
-            defendingTroops = mainView.getDefendingTroops(maxDefendingTroops, defendingPlayer);
+            defendingTroops = mainView.getDefendingTroops(maxDefendingTroops, defendingPlayer,null);
         }
 
         mainModel.initiateAttack(originCountry, destinationCountry, attackingTroops, defendingTroops);
