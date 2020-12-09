@@ -12,7 +12,7 @@ public class AttackController implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e){
 
-        mainView.playSoundEffect("library/AttackButtonSound.wav");
+        mainView.playSoundEffect(getClass().getResource("AttackButtonSound.wav"));
         Country originCountry = mainView.getOriginCountry();
         Player defendingPlayer = mainModel.getDefendingPlayer(mainView.getDestinationCountry());
 

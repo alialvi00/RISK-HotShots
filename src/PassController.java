@@ -13,7 +13,7 @@ public class PassController implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e){
 
-        view.playSoundEffect("library/PassButtonSound.wav");
+        view.playSoundEffect(getClass().getResource("PassButtonSound.wav"));
         view.clearSelection();
         view.setFortifyMode();
         model.nextTurn();
