@@ -722,4 +722,12 @@ public class RiskModel implements Serializable {
         return map.validateMap();
     }
 
+    /**
+     * return list of continents
+     * @return
+     */
+    public ArrayList<Continent> getContinents(){
+        return map.getContinentList();
+    }
+
 }
