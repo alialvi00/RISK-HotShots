@@ -1,4 +1,7 @@
+import org.json.simple.parser.ParseException;
+
 import java.awt.event.*;
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -36,7 +39,13 @@ public class RiskController implements ActionListener, Serializable {
         mainView.startNewGame();
         mainModel.welcome();
         if(!mainView.mapType()){
-            mainModel.initiateMap(null);
+            try {
+                mainModel.initiateMap(null);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (ParseException parseException) {
+                parseException.printStackTrace();
+            }
         }
         mainModel.setUpPlayers(mainView.getPlayerNames(), mainView.getPlayerCount(),mainView.getPlayerType());
     }

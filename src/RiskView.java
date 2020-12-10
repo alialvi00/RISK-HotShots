@@ -181,12 +181,7 @@ public class RiskView extends JFrame implements RiskListener{
 
         isAI = new ArrayList<>();
 
-        /*northAmericaPanel = new JPanel();
-        southAmericaPanel = new JPanel();
-        europePanel = new JPanel();
-        africaPanel = new JPanel();
-        asiaPanel = new JPanel();
-        australiaPanel = new JPanel();*/
+        mapImage = new ImageIcon(getClass().getClassLoader().getResource("mapRisk.png"));
 
         mapScroll = new JScrollPane(new JLabel(mapImage));
 
@@ -1220,6 +1215,7 @@ public class RiskView extends JFrame implements RiskListener{
      */
     public String pickFile(){
         JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("library/Maps"));
         FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON","json");
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(null);
@@ -1263,10 +1259,6 @@ public class RiskView extends JFrame implements RiskListener{
      */
     public boolean mapType(){
         return isCustomMap;
-    }
-
-    public static void main(String[] args) {
-        new RiskView();
     }
 }
 

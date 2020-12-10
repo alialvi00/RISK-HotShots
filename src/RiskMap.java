@@ -1,6 +1,11 @@
+import com.intellij.json.JsonParser;
 import org.json.*;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.io.Serializable;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -13,42 +18,65 @@ public class RiskMap implements Serializable {
 
    
     public RiskMap(){
-        continentList = new ArrayList<Continent>();
-        countryList = new ArrayList<Country>();       
+        continentList = new ArrayList<>();
+        countryList = new ArrayList<>();
     }
 
     /**
      * this method parses the JSON map into continents and countries
      */
-    public boolean parseMapJson(String filePath){
+    public boolean parseMapJson(String filePath) throws IOException, ParseException {
         String mapPath = "";
-        if(filePath == null){
-            mapPath = "library\\Maps\\DefaultMap.json"; //defaultPath
-        } else{
-            mapPath = "library\\Maps\\" + filePath;
+        JSONParser parser = new JSONParser();
+        Object readFile;
+        try{
+            InputStream readLine;
+            readLine = getClass().getResourceAsStream("library\\Maps\\DefaultMap.json");
+            if(filePath != null) {
+                readLine = getClass().getResourceAsStream("/" + filePath);
+            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(readLine));
+            readFile = parser.parse(reader);
         }
+        catch(Exception e){
+            if(filePath == null){
+                mapPath = "library\\Maps\\DefaultMap.json"; //defaultPath
+                FileReader fileReader = new FileReader(mapPath);
+                readFile = parser.parse(fileReader);
+            } else{
+                mapPath = "library\\Maps\\" + filePath;
+                FileReader fileReader = new FileReader(mapPath);
+                readFile = parser.parse(fileReader);
+            }
+        }
+
+        JSONObject o = (JSONObject)readFile;
+
         try {
-             String jsonContents = new String((Files.readAllBytes(Paths.get(mapPath))));
-            JSONObject o = new JSONObject(jsonContents);
-            
+
+            //String jsonContents = new String((Files.readAllBytes(Paths.get(mapPath))));
+
+
 
             //to iterate over the continents
-            Iterator<String> continents = o.keys();
+            Iterator continents = o.keySet().iterator();
             while(continents.hasNext()){
-                 String continentKey = continents.next();
-                 JSONObject continent = o.getJSONObject(continentKey);
-                 //add each continent to the list of continents 
-                 int numOfCountries = continent.getInt("numberOfCountries");
-                 int extraTroops = continent.getInt("extraTroops");
+                 String continentKey = (String) continents.next();
+                 JSONObject continent = (JSONObject) o.get(continentKey);
+                 //add each continent to the list of continents
+                 int numOfCountries = ((Long)continent.get("numberOfCountries")).intValue();
+                 int extraTroops = ((Long)continent.get("extraTroops")).intValue();
                  Continent continentObject = createContinent(continentKey, numOfCountries, extraTroops);
-                //to itterate over countries
-                Iterator<String> countries = continent.getJSONObject("countries").keys();
-                while(countries.hasNext()){                   
-                     String countryName = countries.next();
-                     JSONObject country = continent.getJSONObject("countries").getJSONObject(countryName);
-                     JSONArray adjCountries = country.getJSONArray("adjacentCountries");
-                     ArrayList<String> adjCountriesList = new ArrayList<String>();
-                    for(int i = 0; i < adjCountries.length(); i++){
+                //to iterate over countries
+                JSONObject allCountries = (JSONObject)continent.get("countries");
+                Iterator countries = allCountries.keySet().iterator();
+
+                while(countries.hasNext()){
+                     String countryName = (String) countries.next();
+                     JSONObject country = (JSONObject) ((JSONObject) continent.get("countries")).get(countryName);
+                     JSONArray adjCountries = (JSONArray) country.get("adjacentCountries");
+                     ArrayList<String> adjCountriesList = new ArrayList<>();
+                    for(int i = 0; i < adjCountries.size(); i++){
                         adjCountriesList.add(adjCountries.get(i).toString());
                     }
                     Country newCountry = createCountry(countryName, continentObject, adjCountriesList);
@@ -57,12 +85,13 @@ public class RiskMap implements Serializable {
                 continentList.add(continentObject);
             }
             return true;
-              } catch (Exception e) {
-                  countryList.clear();
-                  continentList.clear();
-                  return false;
-                  //e.printStackTrace();
-              }
+        }catch (Exception e) {
+              countryList.clear();
+              continentList.clear();
+              e.printStackTrace();
+              return false;
+
+        }
     }
 
     public Continent createContinent(String name, int numCountries, int extraTroops) {
@@ -133,6 +162,7 @@ public class RiskMap implements Serializable {
      */
     public boolean validateContinents(Continent continent){
         for(Country country: continent.getCountryList()){
+            System.out.println(country.toString());
             for(String adj: country.getAdjacentCountries()){
                 Country adjCountry = getCountryByName(adj);
                 if(adjCountry.getContinent() != country.getContinent()){
@@ -159,4 +189,10 @@ public class RiskMap implements Serializable {
         return true;
     }
 
+    /**public static void main(String[] args){
+        RiskMap m = new RiskMap();
+        m.parseMapJson("custom1.json");
+        m.validateMap();
+     }
+    **/
 }
