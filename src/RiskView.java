@@ -54,12 +54,13 @@ public class RiskView extends JFrame implements RiskListener{
     private JPanel actionPanel;
     private JPanel infoPanel;
 
-    private JPanel northAmericaPanel;
+    /*private JPanel northAmericaPanel;
     private JPanel southAmericaPanel;
     private JPanel europePanel;
     private JPanel africaPanel;
     private JPanel asiaPanel;
-    private JPanel australiaPanel;
+    private JPanel australiaPanel;*/
+    ArrayList<JPanel> continentPanels;
 
     private JScrollPane consoleMove;
     private JScrollPane mapScroll;
@@ -167,7 +168,7 @@ public class RiskView extends JFrame implements RiskListener{
         loadCustomMap = new JButton("Load Custom Map");
         loadCustomMap.setEnabled(true);
         loadCustomMap.addActionListener(filePickController);
-        mapImage = new ImageIcon(getClass().getClassLoader().getResource("mapRisk.png"));
+       // mapImage = new ImageIcon(getClass().getClassLoader().getResource("mapRisk.png"));
 
         attackButton = new JButton("Attack");
 
@@ -180,12 +181,12 @@ public class RiskView extends JFrame implements RiskListener{
 
         isAI = new ArrayList<>();
 
-        northAmericaPanel = new JPanel();
+        /*northAmericaPanel = new JPanel();
         southAmericaPanel = new JPanel();
         europePanel = new JPanel();
         africaPanel = new JPanel();
         asiaPanel = new JPanel();
-        australiaPanel = new JPanel();
+        australiaPanel = new JPanel();*/
 
         mapScroll = new JScrollPane(new JLabel(mapImage));
 
@@ -256,6 +257,8 @@ public class RiskView extends JFrame implements RiskListener{
 
         mainGameScene.setBackground(Color.black);
         startBackgroundMusic(getClass().getResource("BackgroundMusic.wav"));
+        
+        continentPanels = new ArrayList<JPanel>();
 
         this.add(mainCont);
         this.setLocationRelativeTo(null);
@@ -621,7 +624,7 @@ public class RiskView extends JFrame implements RiskListener{
         a2.weighty = 0.5;
         a2.gridx = 3;
         a2.gridy = 0;
-        mainGameScene.add(setInfoPanel(),a2);
+        //mainGameScene.add(setInfoPanel(),a2);
 
     }
 
@@ -800,139 +803,6 @@ public class RiskView extends JFrame implements RiskListener{
         return actionPanel;
     }
 
-    public JPanel setInfoPanel(){
-
-        infoPanel.setPreferredSize(new Dimension(320,980));
-
-        infoPanel.setBackground(Color.gray);
-
-        northAmericaPanel.setBackground(Color.white);
-        southAmericaPanel.setBackground(Color.white);
-        asiaPanel.setBackground(Color.white);
-        africaPanel.setBackground(Color.white);
-        australiaPanel.setBackground(Color.white);
-        europePanel.setBackground(Color.white);
-
-        //repeat the code below for all continent panels : @Hassan
-        northAmericaPanel.setPreferredSize(new Dimension(320,100));
-        northAmericaPanel.setLayout(new GridLayout(5,2,5,5));
-
-        asiaPanel.setPreferredSize(new Dimension(320,100));
-        asiaPanel.setLayout(new GridLayout(5,2,5,5));
-
-        africaPanel.setPreferredSize(new Dimension(320,100));
-        africaPanel.setLayout(new GridLayout(5,2,5,5));
-
-        europePanel.setPreferredSize(new Dimension(320,100));
-        europePanel.setLayout(new GridLayout(5,2,5,5));
-
-        southAmericaPanel.setPreferredSize(new Dimension(320,100));
-        southAmericaPanel.setLayout(new GridLayout(5,2,5,5));
-
-        australiaPanel.setPreferredSize(new Dimension(320,100));
-        australiaPanel.setLayout(new GridLayout(5,2,5,5));
-
-        GridBagConstraints a5 = new GridBagConstraints();
-
-        a5.fill = GridBagConstraints.BOTH;
-        a5.insets = new Insets(5, 5, 5, 5);
-        a5.weightx = 0.5;
-        a5.weighty = 0.5;
-        a5.gridx = 0;
-        a5.gridy = 0;
-        infoPanel.add(new JLabel("North America"), a5);
-
-        a5.fill = GridBagConstraints.BOTH;
-        a5.insets = new Insets(5, 5, 5, 5);
-        a5.weightx = 0.5;
-        a5.weighty = 0.5;
-        a5.gridx = 0;
-        a5.gridy = 1;
-        infoPanel.add(northAmericaPanel, a5);
-
-        a5.fill = GridBagConstraints.BOTH;
-        a5.insets = new Insets(5, 5, 5, 5);
-        a5.weightx = 0.5;
-        a5.weighty = 0.5;
-        a5.gridx = 0;
-        a5.gridy = 2;
-        infoPanel.add(new JLabel("South America"), a5);
-
-        a5.fill = GridBagConstraints.BOTH;
-        a5.insets = new Insets(5, 5, 5, 5);
-        a5.weightx = 0.5;
-        a5.weighty = 0.5;
-        a5.gridx = 0;
-        a5.gridy = 3;
-        infoPanel.add(southAmericaPanel, a5);
-
-        a5.fill = GridBagConstraints.BOTH;
-        a5.insets = new Insets(5, 5, 5, 5);
-        a5.weightx = 0.5;
-        a5.weighty = 0.5;
-        a5.gridx = 0;
-        a5.gridy = 4;
-        infoPanel.add(new JLabel("Europe"), a5);
-
-        a5.fill = GridBagConstraints.BOTH;
-        a5.insets = new Insets(5, 5, 5, 5);
-        a5.weightx = 0.5;
-        a5.weighty = 0.5;
-        a5.gridx = 0;
-        a5.gridy = 5;
-        infoPanel.add(europePanel, a5);
-
-        a5.fill = GridBagConstraints.BOTH;
-        a5.insets = new Insets(5, 5, 5, 5);
-        a5.weightx = 0.5;
-        a5.weighty = 0.5;
-        a5.gridx = 0;
-        a5.gridy = 6;
-        infoPanel.add(new JLabel("Africa"), a5);
-
-        a5.fill = GridBagConstraints.BOTH;
-        a5.insets = new Insets(5, 5, 5, 5);
-        a5.weightx = 0.5;
-        a5.weighty = 0.5;
-        a5.gridx = 0;
-        a5.gridy = 7;
-        infoPanel.add(africaPanel, a5);
-
-        a5.fill = GridBagConstraints.BOTH;
-        a5.insets = new Insets(5, 5, 5, 5);
-        a5.weightx = 0.5;
-        a5.weighty = 0.5;
-        a5.gridx = 0;
-        a5.gridy = 8;
-        infoPanel.add(new JLabel("Asia"), a5);
-
-        a5.fill = GridBagConstraints.BOTH;
-        a5.insets = new Insets(5, 5, 5, 5);
-        a5.weightx = 0.5;
-        a5.weighty = 0.5;
-        a5.gridx = 0;
-        a5.gridy = 9;
-        infoPanel.add(asiaPanel, a5);
-
-        a5.fill = GridBagConstraints.BOTH;
-        a5.insets = new Insets(5, 5, 5, 5);
-        a5.weightx = 0.5;
-        a5.weighty = 0.5;
-        a5.gridx = 0;
-        a5.gridy = 10;
-        infoPanel.add(new JLabel("Australia"), a5);
-
-        a5.fill = GridBagConstraints.BOTH;
-        a5.insets = new Insets(5, 5, 5, 5);
-        a5.weightx = 0.5;
-        a5.weighty = 0.5;
-        a5.gridx = 0;
-        a5.gridy = 11;
-        infoPanel.add(australiaPanel, a5);
-
-        return infoPanel;
-    }
-
     public void updateCountriesJlist(Player p) {
         if(!ownedCountriesModel.isEmpty()){
             ownedCountriesModel.removeAllElements();
@@ -1073,25 +943,46 @@ public class RiskView extends JFrame implements RiskListener{
     public void handleInitialMap(MapEvent m) {
 
         RiskModel model = (RiskModel) m.getSource();
+        ArrayList<Continent> continents = model.getContinents();
+        GridBagConstraints a5 = new GridBagConstraints();
+       
+        infoPanel.setPreferredSize(new Dimension(320,980));
+        infoPanel.setBackground(Color.gray);
+        int count = 0;
 
-        for (Player p : m.getPlayerList()) {
-            for (Country c : p.getCountries()) {
-                JLabel countryLabel = new JLabel(c + ", " + p.getName() + ", " + p.getPlayerData().get(c));
-                if(c.getContinent().getName().equals("North America")){
-                    northAmericaPanel.add(countryLabel);
-                } else if(c.getContinent().getName().equals("Europe")){
-                    europePanel.add(countryLabel);
-                } else if(c.getContinent().getName().equals("Africa")){
-                    africaPanel.add(countryLabel);
-                } else if(c.getContinent().getName().equals("Australia")){
-                    australiaPanel.add(countryLabel);
-                } else if(c.getContinent().getName().equals("Asia")){
-                    asiaPanel.add(countryLabel);
-                }else{
-                    southAmericaPanel.add(countryLabel);
+        for (Continent continent: continents){
+            JPanel panel = new JPanel();
+            panel.setBackground(Color.white);
+            panel.setPreferredSize(new Dimension(320,100));
+            panel.setLayout(new GridLayout(5,2,5,5));
+            a5.fill = GridBagConstraints.BOTH;
+            a5.insets = new Insets(5, 5, 5, 5);
+            a5.weightx = 0.5;
+            a5.weighty = 0.5;
+            a5.gridx = 0;
+            a5.gridy = count;
+            String continentName = continent.getName();
+            infoPanel.add(new JLabel(continentName), a5);
+            count++;
+            a5.fill = GridBagConstraints.BOTH;
+            a5.insets = new Insets(5, 5, 5, 5);
+            a5.weightx = 0.5;
+            a5.weighty = 0.5;
+            a5.gridx = 0;
+            a5.gridy = count;
+            infoPanel.add(panel, a5);
+            count++;
+            for (Player p : m.getPlayerList()) {
+                for (Country c : p.getCountries()){
+                    JLabel countryLabel = new JLabel(c + ", " + p.getName() + ", " + p.getPlayerData().get(c));
+                    if(c.getContinent().getName().equals(continentName)){
+                        panel.add(countryLabel);
+                    }
                 }
-            }
+            }   
         }
+
+        mainGameScene.add(infoPanel,a2);
         updatePlayerJLabel(model.getCurrentPlayer());
 
         System.out.println("");
@@ -1107,33 +998,47 @@ public class RiskView extends JFrame implements RiskListener{
 
         RiskModel model = (RiskModel) m.getSource();
         updateCountriesJlist(model.getCurrentPlayer());
+        ArrayList<Continent> continents = model.getContinents();
+        GridBagConstraints a5 = new GridBagConstraints();
+       
+        infoPanel.removeAll();
+        infoPanel.setPreferredSize(new Dimension(320,980));
+        infoPanel.setBackground(Color.gray);
+        int count = 0;
 
-        //updating the map (infoPanel)
-        northAmericaPanel.removeAll();
-        asiaPanel.removeAll();
-        southAmericaPanel.removeAll();
-        africaPanel.removeAll();
-        australiaPanel.removeAll();
-        europePanel.removeAll();
-
-        for (Player p : m.getPlayerList()) {
-            for (Country c : p.getCountries()) {
-                JLabel countryLabel = new JLabel(c + ", " + p.getName() + ", " + p.getPlayerData().get(c));
-                if(c.getContinent().getName().equals("North America")){
-                    northAmericaPanel.add(countryLabel);
-                } else if(c.getContinent().getName().equals("Europe")){
-                    europePanel.add(countryLabel);
-                } else if(c.getContinent().getName().equals("Africa")){
-                    africaPanel.add(countryLabel);
-                } else if(c.getContinent().getName().equals("Australia")){
-                    australiaPanel.add(countryLabel);
-                } else if(c.getContinent().getName().equals("Asia")){
-                    asiaPanel.add(countryLabel);
-                }else{
-                    southAmericaPanel.add(countryLabel);
+        for (Continent continent: continents){
+            JPanel panel = new JPanel();
+            panel.setBackground(Color.white);
+            panel.setPreferredSize(new Dimension(320,100));
+            panel.setLayout(new GridLayout(5,2,5,5));
+            a5.fill = GridBagConstraints.BOTH;
+            a5.insets = new Insets(5, 5, 5, 5);
+            a5.weightx = 0.5;
+            a5.weighty = 0.5;
+            a5.gridx = 0;
+            a5.gridy = count;
+            String continentName = continent.getName();
+            infoPanel.add(new JLabel(continentName), a5);
+            count++;
+            a5.fill = GridBagConstraints.BOTH;
+            a5.insets = new Insets(5, 5, 5, 5);
+            a5.weightx = 0.5;
+            a5.weighty = 0.5;
+            a5.gridx = 0;
+            a5.gridy = count;
+            infoPanel.add(panel, a5);
+            count++;
+            for (Player p : m.getPlayerList()) {
+                for (Country c : p.getCountries()){
+                    JLabel countryLabel = new JLabel(c + ", " + p.getName() + ", " + p.getPlayerData().get(c));
+                    if(c.getContinent().getName().equals(continentName)){
+                        panel.add(countryLabel);
+                    }
                 }
-            }
+            }   
         }
+
+        mainGameScene.add(infoPanel,a2);
         updatePlayerJLabel(model.getCurrentPlayer());
 
         revalidate();
