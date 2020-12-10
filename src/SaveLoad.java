@@ -14,14 +14,14 @@ public class SaveLoad implements Serializable {
     }
 
     public void saveModel() throws IOException {
-        FileOutputStream saveFile = new FileOutputStream("ModelClass.ser");
+        FileOutputStream saveFile = new FileOutputStream("library/ModelClass.ser");
         ObjectOutputStream save = new ObjectOutputStream(saveFile);
         save.writeObject(model);
         save.close();
     }
 
     public void saveCurrentPlayer() throws IOException {
-        FileOutputStream saveFile = new FileOutputStream("PlayerClass.ser");
+        FileOutputStream saveFile = new FileOutputStream("library/PlayerClass.ser");
         ObjectOutputStream save = new ObjectOutputStream(saveFile);
         save.writeObject(currentPlayer);
         save.close();
@@ -29,7 +29,7 @@ public class SaveLoad implements Serializable {
 
     public void loadPlayer() throws IOException, ClassNotFoundException {
 
-        FileInputStream saveFile = new FileInputStream("PlayerClass.ser");
+        FileInputStream saveFile = new FileInputStream("library/PlayerClass.ser");
         ObjectInputStream save = new ObjectInputStream(saveFile);
         currentPlayer = (Player) save.readObject();
         save.close();
@@ -37,7 +37,7 @@ public class SaveLoad implements Serializable {
 
     public void loadModel() throws IOException, ClassNotFoundException, InterruptedException {
 
-        FileInputStream saveFile = new FileInputStream("ModelClass.ser");
+        FileInputStream saveFile = new FileInputStream("library/ModelClass.ser");
         ObjectInputStream save = new ObjectInputStream(saveFile);
         model = (RiskModel) save.readObject();
         save.close();

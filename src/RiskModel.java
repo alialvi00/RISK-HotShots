@@ -1,4 +1,7 @@
+import org.json.simple.parser.ParseException;
+
 import javax.swing.*;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -710,7 +713,7 @@ public class RiskModel implements Serializable {
      * @param fileName name of json file
      * @return true if parsing is successful, false otherwise
      */
-    public boolean initiateMap(String fileName){
+    public boolean initiateMap(String fileName) throws IOException, ParseException {
        return map.parseMapJson(fileName);
     }
 
