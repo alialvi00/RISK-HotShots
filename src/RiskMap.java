@@ -31,7 +31,7 @@ public class RiskMap implements Serializable {
         Object readFile;
         try{
             InputStream readLine;
-            readLine = getClass().getResourceAsStream("library\\Maps\\DefaultMap.json");
+            readLine = getClass().getResourceAsStream("DefaultMap.json");
             if(filePath != null) {
                 readLine = getClass().getResourceAsStream("/" + filePath);
             }
@@ -53,8 +53,6 @@ public class RiskMap implements Serializable {
         JSONObject o = (JSONObject)readFile;
 
         try {
-
-            //String jsonContents = new String((Files.readAllBytes(Paths.get(mapPath))));
 
 
 
